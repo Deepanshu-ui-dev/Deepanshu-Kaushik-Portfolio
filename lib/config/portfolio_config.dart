@@ -8,7 +8,7 @@ class PortfolioConfig {
   static const String phone = '+91 9582405021';
 
   static const String githubUrl = 'https://github.com/Deepanshu-ui-dev';
-  static const String resumeUrl = 'https://drive.google.com/file/d/13DlMr7MfBh8kz5IzYKE3XHK9S-YF9bix/view?usp=sharing';
+  static const String resumeUrl = 'https://drive.google.com/file/d/1pljNCb9yXzrtyHjMgQpAuhskZcyRy6FW/view?usp=sharing';
   static const String githubUsername = 'Deepanshu-ui-dev';
   static const String linkedinUrl = 'https://www.linkedin.com/in/imdeepanshukaushik/';
   static const String twitterUrl = 'https://x.com/Deepanshu25u';
