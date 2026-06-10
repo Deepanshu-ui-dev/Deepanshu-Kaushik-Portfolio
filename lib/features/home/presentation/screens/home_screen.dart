@@ -21,7 +21,8 @@ import '../widgets/opportunities_banner.dart';
 // ─────────────────────────────────────────────
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  final ScrollController? scrollController;
+  const HomeScreen({super.key, this.scrollController});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -49,80 +50,127 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final padding = AppSpacing.horizontalPadding(context);
-    final isMobile = AppSpacing.isMobile(context);
-    // Tighter vertical spacing on mobile — everything was oversized
-    final vPad = isMobile ? AppSpacing.lg : AppSpacing.xl;
-    final sectionGap = isMobile ? AppSpacing.xl : AppSpacing.xxxl;
-
     return FadeTransition(
       opacity: _fadeAnim,
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          controller: widget.scrollController,
+          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: padding, vertical: vPad),
+              padding: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 24,
+                bottom: 120,
+              ),
               sliver: SliverList.list(
                 children: [
-                  const RepaintBoundary(child: OpportunitiesBanner()),
-                  SizedBox(height: sectionGap),
-                  const RepaintBoundary(child: HeroSection()),
-                  SizedBox(height: sectionGap),
-                  const DashedDivider(),
-                  SizedBox(height: sectionGap),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 60),
-                    child: const RepaintBoundary(child: _HomeHeatmapSection()),
-                  ),
-                  SizedBox(height: sectionGap),
-                  const DashedDivider(),
-                  SizedBox(height: sectionGap),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 120),
-                    child: const RepaintBoundary(child: _ExperienceSection()),
-                  ),
-                  SizedBox(height: isMobile ? 36 : 64),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 180),
-                    child: const RepaintBoundary(child: _EducationSection()),
-                  ),
-                  SizedBox(height: isMobile ? 36 : 64),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 240),
-                    child: const RepaintBoundary(child: _ProjectsSection()),
-                  ),
-                  SizedBox(height: isMobile ? 36 : 64),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 300),
-                    child: const RepaintBoundary(child: _AchievementsSection()),
-                  ),
-                  SizedBox(height: isMobile ? 36 : 64),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 360),
-                    child: const RepaintBoundary(child: _LeadershipSection()),
-                  ),
-                  SizedBox(height: isMobile ? 36 : 64),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 420),
-                    child: const RepaintBoundary(child: _PhotographySection()),
-                  ),
-                  SizedBox(height: isMobile ? 32 : 48),
-                  const DashedDivider(),
-                  SizedBox(height: isMobile ? 32 : 48),
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 480),
-                    child: const RepaintBoundary(child: _HobbiesSection()),
-                  ),
-                  SizedBox(height: isMobile ? 90 : 120),
+                  // ── Profile / Identity ──────────────────────────────
+                  const RepaintBoundary(child: _LeftPanel()),
+
+                  const SizedBox(height: 32),
+                  const SectionDivider(),
+                  const SizedBox(height: 32),
+
+                  ..._buildRightContent(),
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  List<Widget> _buildRightContent() {
+    final isMobile = AppSpacing.isMobile(context);
+    return [
+      // ── 01 Heatmap ────────────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 0),
+        child: RepaintBoundary(child: _HomeHeatmapSection()),
+      ),
+
+      const SizedBox(height: 32),
+      const SectionDivider(),
+      const SizedBox(height: 32),
+
+      // ── 02 Experience ─────────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 60),
+        child: RepaintBoundary(child: _ExperienceSection()),
+      ),
+      SizedBox(height: isMobile ? 28 : 40),
+
+      // ── 03 Education ──────────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 120),
+        child: RepaintBoundary(child: _EducationSection()),
+      ),
+
+      const SizedBox(height: 32),
+      const SectionDivider(),
+      const SizedBox(height: 32),
+
+      // ── 04 Projects ───────────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 180),
+        child: RepaintBoundary(child: _ProjectsSection()),
+      ),
+      SizedBox(height: isMobile ? 28 : 40),
+
+      // ── 05 Achievements ───────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 240),
+        child: RepaintBoundary(child: _AchievementsSection()),
+      ),
+
+      const SizedBox(height: 32),
+      const SectionDivider(),
+      const SizedBox(height: 32),
+
+      // ── 06 Leadership ─────────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 300),
+        child: RepaintBoundary(child: _LeadershipSection()),
+      ),
+      SizedBox(height: isMobile ? 28 : 40),
+
+      // ── 07 Photography ────────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 420),
+        child: RepaintBoundary(child: _PhotographySection()),
+      ),
+
+      const SizedBox(height: 32),
+      const SectionDivider(),
+      const SizedBox(height: 32),
+
+      // ── 08 Hobbies ────────────────────────────────────
+      const ScrollFadeIn(
+        delay: Duration(milliseconds: 480),
+        child: RepaintBoundary(child: _HobbiesSection()),
+      ),
+      SizedBox(height: isMobile ? 90 : 120),
+    ];
+  }
+}
+
+
+class _LeftPanel extends StatelessWidget {
+  const _LeftPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RepaintBoundary(child: OpportunitiesBanner()),
+        SizedBox(height: 20),
+        RepaintBoundary(child: HeroSection()),
+      ],
     );
   }
 }
@@ -174,17 +222,8 @@ class _HeatmapShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceElev = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
-    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
-
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-      decoration: BoxDecoration(
-        color: surfaceElev.withValues(alpha: 0.3),
-        border: Border.all(color: border),
-      ),
       child: child,
     );
   }
@@ -236,7 +275,7 @@ class _HeatmapSkeletonState extends State<_HeatmapSkeleton>
             final cellSize = constraints.maxWidth < 420 ? 6.0 : 8.0;
 
             return Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -317,7 +356,7 @@ class _ResponsiveHeatmap extends StatelessWidget {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -570,9 +609,8 @@ class _ProjectCardState extends State<_ProjectCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
-        transform: Matrix4.identity()
-          ..translate(0.0, _hovered ? -4.0 : 0.0)
-          ..scale(_hovered ? 1.015 : 1.0, _hovered ? 1.015 : 1.0),
+        transform: Matrix4.translationValues(0.0, _hovered ? -4.0 : 0.0, 0.0)
+          * Matrix4.diagonal3Values(_hovered ? 1.015 : 1.0, _hovered ? 1.015 : 1.0, 1.0),
         decoration: BoxDecoration(
           color: _hovered ? surfaceEl : surface,
           border: Border.all(color: _hovered ? border2 : border, width: 1),

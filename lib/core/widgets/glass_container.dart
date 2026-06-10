@@ -1,5 +1,5 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../theme/app_theme.dart';
 
 class GlassContainer extends StatelessWidget {
   final Widget child;
@@ -29,40 +29,24 @@ class GlassContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultBorderRadius = borderRadius ?? BorderRadius.circular(16);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surface = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
+    final defaultBorderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
+    
+    // Flat editorial card instead of glassmorphism
+    final defaultBorderRadius = borderRadius ?? AppRadius.card;
+    
     return Container(
       margin: margin,
       width: width,
       height: height,
+      padding: padding,
       decoration: BoxDecoration(
+        color: color ?? surface,
         borderRadius: defaultBorderRadius,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 20,
-            spreadRadius: -5,
-          ),
-        ],
+        border: border ?? Border.all(color: defaultBorderColor, width: 0.5),
       ),
-      child: ClipRRect(
-        borderRadius: defaultBorderRadius,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              color: color ?? Theme.of(context).colorScheme.surface.withOpacity(opacity),
-              borderRadius: defaultBorderRadius,
-              border: border ??
-                  Border.all(
-                    color: Colors.white.withOpacity(0.08),
-                    width: 1.0,
-                  ),
-            ),
-            child: child,
-          ),
-        ),
-      ),
+      child: child,
     );
   }
 }

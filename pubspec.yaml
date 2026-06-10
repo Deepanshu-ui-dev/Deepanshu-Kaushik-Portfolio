@@ -5,7 +5,7 @@ description: >
   Features interactive theme switching, responsive layouts, and pixel-perfect
   design across mobile and web platforms.
 publish_to: "none"
-version: 1.0.0+1
+version: 2.0.0+2
 homepage: https://github.com/Deepanshu-ui-dev/Deepanshu-Kaushik-Portfolio
 repository: https://github.com/Deepanshu-ui-dev/Deepanshu-Kaushik-Portfolio
 issue_tracker: https://github.com/Deepanshu-ui-dev/Deepanshu-Kaushik-Portfolio/issues
@@ -31,6 +31,7 @@ dependencies:
   lucide_icons: ^0.257.0
   redacted: ^1.0.12
   supabase_flutter: ^2.5.0
+  visibility_detector: ^0.4.0+2
 
   # Content & Data
   flutter_markdown: ^0.6.19
@@ -56,8 +57,21 @@ flutter:
         - asset: assets/fonts/JetBrainsMono-Regular.ttf
         - asset: assets/fonts/JetBrainsMono-Bold.ttf
           weight: 700
+    - family: Outfit
+      fonts:
+        - asset: assets/fonts/Outfit-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Outfit-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Outfit-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Outfit-ExtraBold.ttf
+          weight: 800
 
   assets:
+    - assets/fonts/
     - assets/icons/github.svg
     - assets/icons/linkedin.svg
     - assets/icons/x.svg

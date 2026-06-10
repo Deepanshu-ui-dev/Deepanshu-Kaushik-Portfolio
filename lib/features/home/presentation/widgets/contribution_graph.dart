@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../features/github/data/github_repository.dart';
+import 'heatmap_wave_reveal.dart';
 
 // ─────────────────────────────────────────────────────────────
 // CONTRIBUTION GRAPH
@@ -15,7 +16,7 @@ import '../../../../features/github/data/github_repository.dart';
 //     weeks instead of full year) to keep cells readable
 //   • Day-of-week labels hidden on very narrow screens
 //   • Month labels are spaced relative to cell size
-//   • 2px rounded corners on cells, subtle border on active cells
+//   • 2px rounded corners on cells, subtle border on empty cells
 //   • Hover → inverts to white (dark) / black (light) for clarity
 // ─────────────────────────────────────────────────────────────
 
@@ -31,16 +32,14 @@ class ContributionGraph extends StatefulWidget {
 class _ContributionGraphState extends State<ContributionGraph> {
   ContributionDay? _hoveredDay;
   late List<List<ContributionDay?>> _weeks;
-  late Map<int, String> _monthLabels;
 
   static const int _rows = 7;
-  static const double _cellGap = 2.5;
+  static const double _cellGap = 3.0;
 
   @override
   void initState() {
     super.initState();
     _weeks = _buildWeeks();
-    _monthLabels = _buildMonthLabels(_weeks);
   }
 
   @override
@@ -48,7 +47,6 @@ class _ContributionGraphState extends State<ContributionGraph> {
     super.didUpdateWidget(oldWidget);
     if (widget.contributions != oldWidget.contributions) {
       _weeks = _buildWeeks();
-      _monthLabels = _buildMonthLabels(_weeks);
     }
   }
 
@@ -98,12 +96,12 @@ class _ContributionGraphState extends State<ContributionGraph> {
 
   Color _colorForLevel(int level) {
     switch (level) {
-      case 0: return AppColors.contrib0;
-      case 1: return AppColors.contrib1;
-      case 2: return AppColors.contrib2;
-      case 3: return AppColors.contrib3;
-      case 4: return AppColors.contrib4;
-      case 5: return AppColors.contrib5;
+      case 0:  return AppColors.contrib0;
+      case 1:  return AppColors.contrib1;
+      case 2:  return AppColors.contrib2;
+      case 3:  return AppColors.contrib3;
+      case 4:  return AppColors.contrib4;
+      case 5:  return AppColors.contrib5;
       default: return AppColors.contrib5;
     }
   }
@@ -149,7 +147,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
       cellSize = cellSize.clamp(5.0, 15.0);
 
       final weekStep = cellSize + _cellGap;
-      final rowStep = cellSize + _cellGap;
+      final rowStep  = cellSize + _cellGap;
       final gridHeight = _rows * rowStep - _cellGap;
 
       // Month labels need to be re-filtered based on 'weeks' sublist
@@ -223,7 +221,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
                   ),
                 ),
 
-              // Cell grid — using CustomPaint for performance
+              // Cell grid
               Expanded(
                 child: RepaintBoundary(
                   child: SizedBox(
@@ -285,7 +283,7 @@ class _HeatmapGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weekStep = cellSize + cellGap;
-    final rowStep = cellSize + cellGap;
+    final rowStep  = cellSize + cellGap;
 
     return MouseRegion(
       onExit: (_) => onExit(),
@@ -295,15 +293,18 @@ class _HeatmapGrid extends StatelessWidget {
             for (int d = 0; d < 7; d++)
               Positioned(
                 left: w * weekStep,
-                top: d * rowStep,
+                top:  d * rowStep,
                 child: weeks[w][d] != null
-                    ? _HeatmapCell(
-                        day: weeks[w][d]!,
-                        size: cellSize,
-                        color: colorForLevel(weeks[w][d]!.level),
-                        isHovered: hoveredDay == weeks[w][d],
-                        onHover: onHover,
-                        formatDate: formatDate,
+                    ? HeatmapWaveReveal(
+                        columnIndex: w,
+                        child: _HeatmapCell(
+                          day: weeks[w][d]!,
+                          size: cellSize,
+                          color: colorForLevel(weeks[w][d]!.level),
+                          isHovered: hoveredDay == weeks[w][d],
+                          onHover: onHover,
+                          formatDate: formatDate,
+                        ),
                       )
                     : SizedBox(width: cellSize, height: cellSize),
               ),
@@ -312,6 +313,10 @@ class _HeatmapGrid extends StatelessWidget {
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────
+// HEATMAP CELL
+// ─────────────────────────────────────────────────────────────
 
 class _HeatmapCell extends StatelessWidget {
   final ContributionDay day;
@@ -332,6 +337,8 @@ class _HeatmapCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return MouseRegion(
       onEnter: (_) => onHover(day),
       child: Tooltip(
@@ -346,29 +353,28 @@ class _HeatmapCell extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: AppColors.surfaceElev,
-          border: Border.all(
-            color: AppColors.border,
-          ),
+          border: Border.all(color: AppColors.border),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Container(
           width: size,
           height: size,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            border: () {
-              final isDark = Theme.of(context).brightness == Brightness.dark;
-              return !isDark && day.level == 0
-                  ? Border.all(color: AppColors.border.withValues(alpha: 0.5), width: 0.5)
-                  : null;
-            }(),
+            // Square cells — matches reference blockRadius=0
+            borderRadius: BorderRadius.zero,
+            // Subtle border on empty cells only, using GitHub's exact color
+            border: day.level == 0
+                ? Border.all(
+                    color: isDark
+                        ? const Color(0xFF21262D) // GitHub dark empty-cell border
+                        : const Color(0xFFD0D7DE).withValues(alpha: 0.5), // GitHub light
+                    width: 0.5,
+                  )
+                : null,
             color: isHovered
-                ? () {
-                    final isDark = Theme.of(context).brightness == Brightness.dark;
-                    return isDark
-                        ? Colors.white.withValues(alpha: 0.85)
-                        : Colors.black.withValues(alpha: 0.6);
-                  }()
+                ? (isDark
+                    ? Colors.white.withValues(alpha: 0.9)
+                    : Colors.black.withValues(alpha: 0.55))
                 : color,
           ),
         ),

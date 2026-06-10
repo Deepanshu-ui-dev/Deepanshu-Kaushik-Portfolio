@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 
-/// A wrapper that plays a fade + slide-up animation the first time
+/// A wrapper that plays a spring-driven fade + slide-up the first time
 /// its child is built in the widget tree.
 ///
-/// Uses a lightweight approach: after the first frame it triggers
-/// the entrance animation with an optional [delay], making it easy
-/// to stagger siblings by incrementing delay.
+/// Uses a SpringSimulation so the entrance feels alive and physical —
+/// the element snaps up and gently overshoots before settling, rather
+/// than decelerating at a fixed mathematical rate.
 ///
-/// Curve: `Cubic(0.16, 1.0, 0.3, 1.0)` — an easeOutExpo approximation
-/// that feels snappy and premium without being jarring.
+/// Spring presets:
+///   mass: 0.5   → light, responsive object
+///   stiffness: 220 → pulls back quickly, sharp entry
+///   damping: 22    → just enough bounce suppression to look premium
 class ScrollFadeIn extends StatefulWidget {
   final Widget child;
 
   /// Extra delay before the animation starts (for staggering siblings).
   final Duration delay;
-
-  /// Total animation duration.
-  final Duration duration;
 
   /// How far the widget slides up from (fraction of its own height).
   final double slideBegin;
@@ -25,47 +25,53 @@ class ScrollFadeIn extends StatefulWidget {
     super.key,
     required this.child,
     this.delay = Duration.zero,
-    this.duration = const Duration(milliseconds: 420),
-    this.slideBegin = 0.04,
+    this.slideBegin = 0.035,
   });
 
   @override
   State<ScrollFadeIn> createState() => _ScrollFadeInState();
 }
 
-// easeOutExpo approximation — snappy deceleration, premium feel.
-const _kExpoOut = Cubic(0.16, 1.0, 0.3, 1.0);
-
 class _ScrollFadeInState extends State<ScrollFadeIn>
     with SingleTickerProviderStateMixin {
+  // Unbounded controller — spring can overshoot past 1.0
   late final AnimationController _ctrl;
-  late final Animation<double> _opacity;
-  late final Animation<Offset> _offset;
   bool _triggered = false;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: widget.duration);
-    _opacity = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
-    _offset = Tween<Offset>(
-      begin: Offset(0, widget.slideBegin),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: _kExpoOut));
 
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkAndAnimate());
+    // Unbounded so spring overshoot is not silently clamped
+    _ctrl = AnimationController.unbounded(vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAnimate());
   }
 
-  void _checkAndAnimate() {
+  void _maybeAnimate() {
     if (_triggered || !mounted) return;
     _triggered = true;
 
+    void runSpring() {
+      if (!mounted) return;
+      _ctrl.animateWith(
+        SpringSimulation(
+          const SpringDescription(
+            mass: 0.5,
+            stiffness: 200,
+            damping: 18,
+          ),
+          0.0, // start value
+          1.0, // end value
+          0.0, // initial velocity
+        ),
+      );
+    }
+
     if (widget.delay == Duration.zero) {
-      _ctrl.forward();
+      runSpring();
     } else {
-      Future.delayed(widget.delay, () {
-        if (mounted) _ctrl.forward();
-      });
+      Future.delayed(widget.delay, runSpring);
     }
   }
 
@@ -77,12 +83,24 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _opacity,
-      child: SlideTransition(
-        position: _offset,
-        child: widget.child,
-      ),
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) {
+        final val = _ctrl.value;
+        // Opacity clamped [0, 1]
+        final opacity = val.clamp(0.0, 1.0);
+        // Slide uses the raw spring value directly, allowing bounce overshoot
+        final slide = Offset(0, widget.slideBegin * (1.0 - val));
+
+        return Opacity(
+          opacity: opacity,
+          child: FractionalTranslation(
+            translation: slide,
+            child: child,
+          ),
+        );
+      },
+      child: widget.child,
     );
   }
 }

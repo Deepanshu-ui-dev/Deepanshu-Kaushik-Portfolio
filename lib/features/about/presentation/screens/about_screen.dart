@@ -9,7 +9,8 @@ import '../../../blog/presentation/screens/blog_detail_screen.dart';
 import 'volunteer_detail_screen.dart';
 
 class AboutScreen extends StatefulWidget {
-  const AboutScreen({super.key});
+  final ScrollController? scrollController;
+  const AboutScreen({super.key, this.scrollController});
 
   @override
   State<AboutScreen> createState() => _AboutScreenState();
@@ -45,6 +46,7 @@ class _AboutScreenState extends State<AboutScreen>
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
+          controller: widget.scrollController,
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverPadding(
@@ -57,7 +59,7 @@ class _AboutScreenState extends State<AboutScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _SectionLabel(index: '01', label: 'THE PERSON BEHIND THE PIXELS'),
+                        const _SectionLabel(index: '01', label: 'THE PERSON BEHIND THE PIXELS'),
                         const SizedBox(height: 14),
                         Text(
                           "My personal digital space.",
@@ -90,14 +92,14 @@ class _AboutScreenState extends State<AboutScreen>
                   const SizedBox(height: AppSpacing.xxl),
 
                   // ── 02 / Bucket List ──
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 100),
+                  const ScrollFadeIn(
+                    delay: Duration(milliseconds: 100),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _SectionLabel(index: '02', label: 'BUCKET LIST'),
-                        const SizedBox(height: 16),
-                        const _BucketListSection(),
+                        SizedBox(height: 16),
+                        _BucketListSection(),
                       ],
                     ),
                   ),
@@ -112,7 +114,7 @@ class _AboutScreenState extends State<AboutScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _SectionLabel(index: '03', label: 'COMMUNITY CONTRIBUTIONS'),
+                        const _SectionLabel(index: '03', label: 'COMMUNITY CONTRIBUTIONS'),
                         const SizedBox(height: 6),
                         Text(
                           'Communities I\'ve helped build and grown in.',
@@ -132,14 +134,14 @@ class _AboutScreenState extends State<AboutScreen>
                   const SizedBox(height: AppSpacing.xxl),
 
                   // ── 05 / Brain Dumps ──
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 300),
+                  const ScrollFadeIn(
+                    delay: Duration(milliseconds: 300),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _SectionLabel(index: '04', label: 'BRAIN DUMPS'),
-                        const SizedBox(height: 16),
-                        const _JournalFeed(),
+                        SizedBox(height: 16),
+                        _JournalFeed(),
                       ],
                     ),
                   ),
@@ -345,7 +347,7 @@ class _VolunteerExperienceFeed extends StatelessWidget {
               'Founded in 2019, GDG On Campus ABESEC has grown into a vibrant tech community of 1,500+ developers, designers, and innovators. We bridge the gap between classroom learning and real-world tech through workshops, hackathons, and hands-on experiences.',
               'We\'ve hosted 670+ attendees, featured industry leaders like Love Babbar and Arsh Goyal, and organized flagship events such as:\n\n* **Mind the Gap** - fun, interactive UI/UX foundations\n* **HackHaven** - a 24-hour hackathon powered by teamwork\n* **Innovate Workshop** - AR/VR gaming & web development\n* **Git & Solana Workshop** - version control meets blockchain',
               '### Current Role',
-              'Today, as a Co-Organizer, I help lead the community I once joined as a curious attendee. GDG isn\'t just a club for me anymore, it\'s where I grew, designed, learned, and got inspired to create things that matter.',
+              'Today, as a Co-Organizer, I help lead the community I once joined as a curious attendee. GDG isn\'t just a club for me anymore, it\'s where I grew, designed, learned, and felt driven to create things that matter.',
             ],
             stats: [
               _VolunteerStat(value: '670+', label: 'Attendees'),
@@ -381,21 +383,21 @@ class _VolunteerExperienceFeed extends StatelessWidget {
           );
 
           if (isWide) {
-            return IntrinsicHeight(
+            return const IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(child: gdg),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(child: codeChef),
                 ],
               ),
             );
           }
-          return Column(
+          return const Column(
             children: [
               gdg,
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               codeChef,
             ],
           );

@@ -62,7 +62,7 @@ class BlogScreen extends StatelessWidget {
                       text:
                           ': I write about the tech I build and my experiences in development. I am not a professional writer, so if I write something inaccurate, please feel free to ',
                     ),
-                    WidgetSpan(
+                    const WidgetSpan(
                       alignment: PlaceholderAlignment.baseline,
                       baseline: TextBaseline.alphabetic,
                       child: _InlineLink(

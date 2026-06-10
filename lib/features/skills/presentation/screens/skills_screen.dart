@@ -9,7 +9,8 @@ import '../../../../core/widgets/shared_widgets.dart';
 // ─────────────────────────────────────────────────────────────
 
 class SkillsScreen extends StatefulWidget {
-  const SkillsScreen({super.key});
+  final ScrollController? scrollController;
+  const SkillsScreen({super.key, this.scrollController});
 
   @override
   State<SkillsScreen> createState() => _SkillsScreenState();
@@ -76,15 +77,16 @@ class _SkillsScreenState extends State<SkillsScreen>
     ),
     _SkillSectionData(
       index: '04',
-      title: 'Database & Cloud',
-      subtitle: 'Backends, data layers, and deployment.',
+      title: 'Database & Backend',
+      subtitle: 'Server runtimes, databases, and cloud infrastructure.',
       skills: [
+        _Skill(label: 'Node.js',    icon: 'nodedotjs',    hex: '5FA04E', highlight: true),
+        _Skill(label: 'Express',    icon: 'express',       hex: '808080', sublabel: 'REST API'),
         _Skill(label: 'Firebase',   icon: 'firebase',      hex: 'FFCA28'),
         _Skill(label: 'Supabase',   icon: 'supabase',      hex: '3ECF8E'),
         _Skill(label: 'MySQL',      icon: 'mysql',         hex: '4479A1'),
         _Skill(label: 'GCP',        icon: 'googlecloud',   hex: '4285F4'),
-        _Skill(label: 'AWS',        icon: 'amazonaws',     hex: '232F3E'),
-        _Skill(label: 'Linux',      icon: 'linux',         hex: 'FCC624'),
+        _Skill(label: 'AWS',        icon: 'amazonaws',     hex: 'FF9900'),
       ],
     ),
     _SkillSectionData(
@@ -107,6 +109,7 @@ class _SkillsScreenState extends State<SkillsScreen>
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
+          controller: widget.scrollController,
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverPadding(
@@ -635,7 +638,6 @@ class _PhiloRowState extends State<_PhiloRow> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         margin: const EdgeInsets.only(bottom: 2),
-        transform: Matrix4.translationValues((_hovered ? 10.0 : 0.0), 0.0, 0.0),
         decoration: BoxDecoration(
           border: Border(
             left: BorderSide(
@@ -645,7 +647,7 @@ class _PhiloRowState extends State<_PhiloRow> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 13, 14, 13),
+          padding: EdgeInsets.fromLTRB(_hovered ? 10 : 0, 13, 14, 13),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

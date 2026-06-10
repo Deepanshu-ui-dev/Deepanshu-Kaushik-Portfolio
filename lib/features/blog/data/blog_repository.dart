@@ -15,7 +15,7 @@ class BlogPost {
 }
 
 final List<BlogPost> blogPosts = [
-  BlogPost(
+  const BlogPost(
     slug: 'design-to-development-workflow',
     title: 'My Design-to-Development Workflow',
     date: '2026-02-18',

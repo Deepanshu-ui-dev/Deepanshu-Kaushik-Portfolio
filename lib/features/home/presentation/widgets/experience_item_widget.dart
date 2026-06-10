@@ -48,7 +48,7 @@ class _ExperienceItemWidgetState extends State<ExperienceItemWidget>
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.5)),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
       ),
       child: Column(
         children: [
@@ -106,7 +106,7 @@ class _ExperienceItemWidgetState extends State<ExperienceItemWidget>
                 children: [
                   Container(
                     height: 1,
-                    color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     margin: const EdgeInsets.only(bottom: AppSpacing.md),
                   ),
                   ...widget.item.bullets.map((b) => Padding(

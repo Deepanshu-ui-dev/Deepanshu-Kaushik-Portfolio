@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 /// A subtle grain/noise overlay that gives the UI an editorial, tactile feel.

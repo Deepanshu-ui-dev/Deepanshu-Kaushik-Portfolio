@@ -36,7 +36,7 @@ class GitHubScreen extends ConsumerWidget {
           data: (data) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FadeSlideIn(child: const SectionHeader('GitHub')),
+              const FadeSlideIn(child: SectionHeader('GitHub')),
               const StripeBand(),
               FadeSlideIn(delay: 100, child: _StatsRow(data: data)),
               const SizedBox(height: AppSpacing.xl),
@@ -69,9 +69,9 @@ class GitHubScreen extends ConsumerWidget {
                 ),
               ),
               const StripeBand(),
-              FadeSlideIn(
+              const FadeSlideIn(
                   delay: 300,
-                  child: const SectionHeader('Repositories')),
+                  child: SectionHeader('Repositories')),
               if (data.pinnedRepos.isEmpty)
                 FadeSlideIn(
                   delay: 350,
@@ -130,7 +130,7 @@ class _StatBox extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.5)),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,8 +186,8 @@ class _RepoCardState extends State<_RepoCard> {
           decoration: BoxDecoration(
             border: Border.all(
               color: _hovered
-                  ? Theme.of(context).colorScheme.onSurface.withOpacity(0.3)
-                  : Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                  ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)
+                  : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
             ),
             color: _hovered
                 ? Theme.of(context).colorScheme.surfaceContainerHighest

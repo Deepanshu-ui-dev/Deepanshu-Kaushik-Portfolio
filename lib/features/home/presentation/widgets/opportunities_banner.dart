@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/shared_widgets.dart';
 
 class OpportunitiesBanner extends StatefulWidget {
   const OpportunitiesBanner({super.key});
@@ -159,22 +160,19 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    'STATUS // 00',
+                  TypewriterLine(
+                    phrases: const [
+                      'STATUS // OPEN TO WORK',
+                      'ROLE // FLUTTER & DART',
+                      'DESIGN // TACTILE UI/UX',
+                      'VERSION // 2.0.0+2',
+                    ],
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: dimColor,
                           fontSize: 9,
                           letterSpacing: 0.14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'v2026',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: dimColor,
-                          fontSize: 8,
-                          letterSpacing: 0.1,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'JetBrainsMono',
                         ),
                   ),
                 ],
@@ -207,7 +205,7 @@ class _DashedLine extends StatelessWidget {
           count,
           (_) => Row(children: [
             Container(width: dashW, height: 1, color: color),
-            SizedBox(width: gapW),
+            const SizedBox(width: gapW),
           ]),
         ),
       );

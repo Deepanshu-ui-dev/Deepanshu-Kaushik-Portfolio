@@ -7,6 +7,7 @@
 /// ```dart
 /// import 'core/core_exports.dart';
 /// ```
+library;
 
 // Theme exports
 export 'theme/app_theme.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'glass_container.dart';
+import '../theme/app_theme.dart';
 
 class AnimatedHoverCard extends StatefulWidget {
   final Widget child;
@@ -25,33 +24,33 @@ class _AnimatedHoverCardState extends State<AnimatedHoverCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surface = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
+    final surfElev = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
+    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final border2 = isDark ? AppColors.border2Dark : AppColors.border2Light;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
+      cursor: widget.onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
       child: GestureDetector(
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 150),
           curve: Curves.easeOutCubic,
-          transform: Matrix4.identity()..scale(_isHovered ? 1.02 : 1.0),
-          transformAlignment: Alignment.center,
           margin: widget.margin,
-          child: GlassContainer(
-            padding: widget.padding ?? const EdgeInsets.all(24),
-            opacity: _isHovered ? 0.08 : 0.03,
+          padding: widget.padding ?? const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: _isHovered ? surfElev : surface,
             border: Border.all(
-              color: _isHovered
-                  ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
-                  : Colors.white.withOpacity(0.05),
-              width: 1,
+              color: _isHovered ? border2 : border,
+              width: 0.5,
             ),
-            child: widget.child,
-          ).animate(target: _isHovered ? 1 : 0).custom(
-            builder: (context, value, child) {
-              return child;
-            },
+            borderRadius: AppRadius.card, // Flat editorial cards
           ),
+          child: widget.child,
         ),
       ),
     );

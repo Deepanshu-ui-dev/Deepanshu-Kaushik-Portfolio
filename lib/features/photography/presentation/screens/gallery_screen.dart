@@ -30,7 +30,7 @@ class GalleryScreen extends StatelessWidget {
     final textSec = AppColors.textSecondary;
     final accent = AppColors.accent;
 
-    return GridBackground(
+    return HatchBackground(
       child: Scaffold(
         body: SafeArea(
           bottom: false,

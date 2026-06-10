@@ -13,7 +13,8 @@ import '../../../../core/widgets/shared_widgets.dart';
 // ─────────────────────────────────────────────────────────────
 
 class ProjectsScreen extends StatefulWidget {
-  const ProjectsScreen({super.key});
+  final ScrollController? scrollController;
+  const ProjectsScreen({super.key, this.scrollController});
 
   @override
   State<ProjectsScreen> createState() => _ProjectsScreenState();
@@ -28,7 +29,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   static const _filterTags = ['UI/UX', 'Flutter', 'CLI', 'Web', 'Open Source'];
 
   List<ProjectItem> get _filtered {
-    final all = PortfolioConfig.projects;
+    const all = PortfolioConfig.projects;
     if (_activeFilter == null) return all;
     return all
         .where((p) =>
@@ -61,6 +62,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
+          controller: widget.scrollController,
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverPadding(
@@ -95,9 +97,9 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                   const SizedBox(height: 64),
                   
                   // ── OPEN SOURCE CALLOUT ───────────────────────────
-                  ScrollFadeIn(
-                    delay: const Duration(milliseconds: 200),
-                    child: const _OpenSourceSection(),
+                  const ScrollFadeIn(
+                    delay: Duration(milliseconds: 200),
+                    child: _OpenSourceSection(),
                   ),
 
                   const SizedBox(height: 120),
@@ -262,7 +264,6 @@ class _FilterChipState extends State<_FilterChip> {
     final isDark   = Theme.of(context).brightness == Brightness.dark;
     final textSec  = isDark ? AppColors.textSecDark     : AppColors.textSecLight;
     final surface  = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
-    final bg       = isDark ? AppColors.bgDark          : AppColors.bgLight;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -351,7 +352,7 @@ class _ProjectGrid extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Expanded(child: child),
-                    SizedBox(width: spacing),
+                    const SizedBox(width: spacing),
                     Expanded(child: nextChild),
                   ],
                 ),
@@ -363,19 +364,19 @@ class _ProjectGrid extends StatelessWidget {
               Row(
                 children: [
                   Expanded(child: child),
-                  SizedBox(width: spacing),
+                  const SizedBox(width: spacing),
                   const Spacer(),
                 ],
               ),
             );
           }
           if (i < projects.length - 1) {
-            children.add(SizedBox(height: spacing));
+            children.add(const SizedBox(height: spacing));
           }
         } else {
           children.add(child);
           if (i < projects.length - 1) {
-            children.add(SizedBox(height: spacing));
+            children.add(const SizedBox(height: spacing));
           }
         }
       }
@@ -397,45 +398,16 @@ class _ProjectCard extends StatefulWidget {
 }
 
 class _ProjectCardState extends State<_ProjectCard> {
-  bool _hovered = false;
-
   @override
   Widget build(BuildContext context) {
     final isDark   = Theme.of(context).brightness == Brightness.dark;
-    final border   = isDark ? AppColors.borderDark  : AppColors.borderLight;
-    final border2  = isDark ? AppColors.border2Dark : AppColors.border2Light;
-    final surface  = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
-    final surfaceEl= isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
     final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
     final accent   = isDark ? AppColors.accentDark  : AppColors.accentLight;
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutCubic,
-        transform: Matrix4.identity()
-          ..translate(0.0, _hovered ? -4.0 : 0.0, 0.0)
-          ..scale(_hovered ? 1.015 : 1.0, _hovered ? 1.015 : 1.0, 1.0),
-        decoration: BoxDecoration(
-          color: _hovered ? surfaceEl : surface,
-          border: Border.all(color: _hovered ? border2 : border, width: 1),
-          // SHARP CORNERS — unified with Home screen for editorial look
-          borderRadius: BorderRadius.zero,
-          boxShadow: _hovered
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.06),
-                    blurRadius: 16,
-                    offset: const Offset(0, 8),
-                  )
-                ]
-              : null,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    return LeftBorderHover(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
             const _BrowserMock(),
             Padding(
               padding: const EdgeInsets.all(14),
@@ -533,8 +505,7 @@ class _ProjectCardState extends State<_ProjectCard> {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 }
 

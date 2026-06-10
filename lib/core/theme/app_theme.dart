@@ -2,127 +2,126 @@ import 'package:flutter/material.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // COLORS
-// Design language: "Obsidian & Citron"
+// Design language: "Obsidian & Zinc"
 //
-// Dark  → True-black obsidian base. Zero blue tint. Warm stone text.
-//          Citron yellow-green accent — electric but not gaudy.
-// Light → Antique parchment base. Warm cream surfaces.
-//          Deep forest-ink accent — ink-on-paper editorial feel.
+// Dark  → True cold-black zinc base. Clearer surface depth layering.
+//          More perceptible steps between bg → surface → elevated → pop.
+// Light → True white base. Cooler, airier. Strong ink contrast.
 //
-// Palette philosophy:
-//  • Every shade is hand-tuned — no algorithmic generation.
-//  • Surfaces step by exactly +8 lightness (perceptual) per elevation level.
-//  • Text ramp: 4 stops, each ~40% of previous opacity — clean hierarchy.
-//  • Accent is never diluted — it appears only where it matters.
-//  • Semantic colors (error/warning/success) are warm-shifted to match the
-//    overall temperature, avoiding jarring cold-blue-adjacent hues.
+// Changes from v1:
+//  • Dark surfaces: more distinct steps so cards "lift" off the page.
+//  • Dark borders: slightly more visible (0.5px lines need enough contrast).
+//  • Dark text secondary: bumped from zinc-400 to zinc-300 for readability.
+//  • Light bg: true white base instead of zinc-100 (was too gray).
+//  • Light surfaces: zinc-50 for panels, zinc-100 for elevated, cleaner ramp.
+//  • Light borders: tighter — zinc-400 default, zinc-500 emphasis.
+//  • Contribution heatmap: sharper delta between levels for readability.
+//  • Semantic colors: error/warning/success all slightly more vivid on dark.
 // ─────────────────────────────────────────────────────────────────────────────
 
 class AppColors {
   // ════════════════════════════════════════════════════════════════
-  // DARK THEME — Obsidian + Citron
+  // DARK THEME — Obsidian Zinc (deeper surface stack)
   // ════════════════════════════════════════════════════════════════
 
-  // Backgrounds — true warm black, stepping up in +6-7L increments
-  static const Color bgDark           = Color(0xFF080807); // True obsidian
-  static const Color surfaceDark      = Color(0xFF111110); // First step up
-  static const Color surfaceElevDark  = Color(0xFF222220); // Raised card — boosted
-  static const Color surfacePopDark   = Color(0xFF2A2A27); // Popover/sheet
-  static const Color surfaceHoverDark = Color(0xFF323230); // Hover state — boosted
+  // Backgrounds — clear depth: 09 → 10 → 14 → 1C → 24
+  static const Color bgDark           = Color(0xFF090909); // near-black — page
+  static const Color surfaceDark      = Color(0xFF101012); // zinc-900 — cards/panels
+  static const Color surfaceElevDark  = Color(0xFF18181B); // zinc-900 raised
+  static const Color surfacePopDark   = Color(0xFF1C1C1F); // popovers / dropdowns
+  static const Color surfaceHoverDark = Color(0xFF242428); // hover state — clear delta
 
-  // Borders — warm, never blue-gray
-  static const Color borderDark       = Color(0xFF282825); // Default separator
-  static const Color border2Dark      = Color(0xFF383835); // Emphasis
-  static const Color borderFocusDark  = Color(0xFF706E66); // Focus ring
+  // Borders — enough presence for 0.5px lines
+  static const Color borderDark       = Color(0xFF3F3F46); // zinc-700 — default
+  static const Color border2Dark      = Color(0xFF52525B); // zinc-600 — emphasis
+  static const Color borderFocusDark  = Color(0x99F4F4F5); // 60% accent — was 50%
 
-  // Text — warm stone ramp, 4-stop hierarchy
-  static const Color textPrimaryDark  = Color(0xFFF0EDE6); // Near-white ivory
-  static const Color textSecDark      = Color(0xFFB0AEA0); // Boosted for readability
-  static const Color textTerDark      = Color(0xFF7A7870); // Boosted for readability
-  static const Color textMutedDark    = Color(0xFF504E48); // Boosted for readability
-  static const Color textDisabledDark = Color(0xFF2D2B26); // Disabled
+  // Text — readable secondary (zinc-300 not zinc-400)
+  static const Color textPrimaryDark  = Color(0xFFF4F4F5); // zinc-100
+  static const Color textSecDark      = Color(0xFFD4D4D8); // zinc-300 ← bumped
+  static const Color textTerDark      = Color(0xFF71717A); // zinc-500
+  static const Color textMutedDark    = Color(0xFF3F3F46); // zinc-700
+  static const Color textDisabledDark = Color(0xFF27272A); // zinc-800
 
-  // Accent — Citron (yellow-green, 550nm territory)
-  // Named for its specificity: not lime, not yellow, but the exact
-  // shade of a Meyer lemon rind under warm light.
-  static const Color accentDark       = Color(0xFFBEE33A); // Citron core
-  static const Color accentDimDark    = Color(0xFF9AB82E); // Pressed / active
-  static const Color accentGlowDark   = Color(0xFFD4F055); // Hover highlight
-  static const Color accentSubtleDark = Color(0xFF1A2500); // Accent-tinted bg
-  static const Color accentTintDark   = Color(0xFF243300); // Accent hover bg
-  static const Color accentInkDark    = Color(0xFFE8F7A8); // Text on accent bg
+  // Accent — near-white zinc
+  static const Color accentDark       = Color(0xFFF4F4F5); // zinc-100
+  static const Color accentDimDark    = Color(0xFFE4E4E7); // zinc-200
+  static const Color accentGlowDark   = Color(0xFFFFFFFF); // white
+  static const Color accentSubtleDark = Color(0xFF1C1C1F); // zinc-900 tint
+  static const Color accentTintDark   = Color(0xFF27272A); // zinc-800
+  static const Color accentInkDark    = Color(0xFF09090B); // zinc-950
 
-  // Semantic — warm-shifted to match temperature
-  static const Color errorDark        = Color(0xFFFF6B6B); // Warm coral red
-  static const Color errorSubtleDark  = Color(0xFF2C0A0A); // Red-tinted bg
-  static const Color warningDark      = Color(0xFFFFAA33); // Warm amber
-  static const Color warnSubtleDark   = Color(0xFF2A1800); // Amber-tinted bg
-  static const Color successDark      = Color(0xFF4ECC8A); // Mint green
-  static const Color successSubtleDark= Color(0xFF042215); // Green-tinted bg
-  static const Color infoDark         = Color(0xFF60B8E8); // Sky, desaturated
-  static const Color infoSubtleDark   = Color(0xFF041A28); // Blue-tinted bg
+  // Semantic — slightly more vivid on dark for better status readability
+  static const Color errorDark        = Color(0xFFFF7070); // was 6B6B — more pop
+  static const Color errorSubtleDark  = Color(0xFF2C0A0A);
+  static const Color warningDark      = Color(0xFFFFB347); // was FFAA33 — warmer
+  static const Color warnSubtleDark   = Color(0xFF2A1800);
+  static const Color successDark      = Color(0xFF50D68E); // was 4ECC8A — brighter
+  static const Color successSubtleDark= Color(0xFF042215);
+  static const Color infoDark         = Color(0xFF6EC0EC); // was 60B8E8 — clearer
+  static const Color infoSubtleDark   = Color(0xFF041A28);
 
   // ════════════════════════════════════════════════════════════════
-  // LIGHT THEME — Parchment + Forest Ink
+  // LIGHT THEME — True White + Cool Ink
   // ════════════════════════════════════════════════════════════════
 
-  // Backgrounds — antique parchment, warm cream
-  static const Color bgLight          = Color(0xFFF5F2EB); // Parchment base
-  static const Color surfaceLight     = Color(0xFFEEEBE2); // Vellum
-  static const Color surfaceElevLight = Color(0xFFE5E2D8); // Linen card
-  static const Color surfacePopLight  = Color(0xFFFBF9F4); // Bright cream popover
-  static const Color surfaceHoverLight= Color(0xFFDDDAD0); // Hover
+  // Backgrounds — true white base, zinc-50 surfaces, cleaner ramp
+  static const Color bgLight          = Color(0xFFFFFFFF); // pure white — page bg
+  static const Color surfaceLight     = Color(0xFFFAFAFA); // zinc-50 — cards/panels
+  static const Color surfaceElevLight = Color(0xFFF4F4F5); // zinc-100 — elevated
+  static const Color surfacePopLight  = Color(0xFFFFFFFF); // white popover
+  static const Color surfaceHoverLight= Color(0xFFE4E4E7); // zinc-200 — hover
 
-  // Borders — warm tan, zero cool-gray contamination
-  static const Color borderLight      = Color(0xFFD5D2C6); // Warm separator
-  static const Color border2Light     = Color(0xFFBCB9AC); // Emphasis
-  static const Color borderFocusLight = Color(0xFF1E1E1A); // Near-black focus
+  // Borders — tighter for light mode (dark text does the heavy lifting)
+  static const Color borderLight      = Color(0xFFA1A1AA); // zinc-400 ← was zinc-500
+  static const Color border2Light     = Color(0xFF71717A); // zinc-500 ← was zinc-600
+  static const Color borderFocusLight = Color(0x9918181B); // 60% accent
 
-  // Text — dark ink ramp, warm-shifted
-  static const Color textPrimaryLight = Color(0xFF0C0C0A); // Near-black ink
-  static const Color textSecLight     = Color(0xFF3A3936); // Dark warm gray
-  static const Color textTerLight     = Color(0xFF6E6C64); // Medium stone
-  static const Color textMutedLight   = Color(0xFF9E9C94); // Faded stone
-  static const Color textDisabledLight= Color(0xFFBCBAB2); // Disabled
+  // Text — unchanged, strong ink ramp
+  static const Color textPrimaryLight = Color(0xFF09090B); // zinc-950
+  static const Color textSecLight     = Color(0xFF52525B); // zinc-600
+  static const Color textTerLight     = Color(0xFF71717A); // zinc-500
+  static const Color textMutedLight   = Color(0xFFA1A1AA); // zinc-400
+  static const Color textDisabledLight= Color(0xFFD4D4D8); // zinc-300
 
-  // Accent — Forest Ink (deep botanical green)
-  // The same visual weight as a fountain-pen mark on cream paper.
-  static const Color accentLight      = Color(0xFF2E5E00); // Forest ink
-  static const Color accentDimLight   = Color(0xFF224600); // Pressed
-  static const Color accentGlowLight  = Color(0xFF3E7800); // Hover
-  static const Color accentSubtleLight= Color(0xFFDFF0B8); // Accent-tinted bg
-  static const Color accentTintLight  = Color(0xFFCCE89E); // Accent hover bg
-  static const Color accentInkLight   = Color(0xFF1A3800); // Text on accent bg
+  // Accent — near-black ink
+  static const Color accentLight      = Color(0xFF18181B); // zinc-900
+  static const Color accentDimLight   = Color(0xFF27272A); // zinc-800
+  static const Color accentGlowLight  = Color(0xFF09090B); // zinc-950
+  static const Color accentSubtleLight= Color(0xFFF4F4F5); // zinc-100
+  static const Color accentTintLight  = Color(0xFFE4E4E7); // zinc-200
+  static const Color accentInkLight   = Color(0xFFFAFAFA); // zinc-50
 
-  // Semantic
-  static const Color errorLight       = Color(0xFFB81C1C); // Deep warm red
-  static const Color errorSubtleLight = Color(0xFFFFF0F0); // Red-50
-  static const Color warningLight     = Color(0xFF924800); // Burnt sienna
-  static const Color warnSubtleLight  = Color(0xFFFFF4E0); // Amber-50
-  static const Color successLight     = Color(0xFF1E6B3C); // Forest green
-  static const Color successSubtleLight=Color(0xFFEAF7EE); // Green-50
-  static const Color infoLight        = Color(0xFF1A5E8C); // Ink blue
-  static const Color infoSubtleLight  = Color(0xFFEBF4FC); // Blue-50
+  // Semantic — unchanged, already correct for light mode
+  static const Color errorLight       = Color(0xFFB81C1C);
+  static const Color errorSubtleLight = Color(0xFFFFF0F0);
+  static const Color warningLight     = Color(0xFF924800);
+  static const Color warnSubtleLight  = Color(0xFFFFF4E0);
+  static const Color successLight     = Color(0xFF1E6B3C);
+  static const Color successSubtleLight=Color(0xFFEAF7EE);
+  static const Color infoLight        = Color(0xFF1A5E8C);
+  static const Color infoSubtleLight  = Color(0xFFEBF4FC);
 
   // ════════════════════════════════════════════════════════════════
-  // CONTRIBUTION HEATMAP
+  // CONTRIBUTION HEATMAP — Sharper ramp for readability
+  // More distinct deltas between levels 0–5
   // ════════════════════════════════════════════════════════════════
 
-  // Dark — Citron ramp (5 steps, perceptually even)
-  static const Color contrib0Dark     = Color(0xFF181816); // Empty — warm void
-  static const Color contrib1Dark     = Color(0xFF1C2A00); // Faint sprout
-  static const Color contrib2Dark     = Color(0xFF304600); // Low growth
-  static const Color contrib3Dark     = Color(0xFF527800); // Mid growth
-  static const Color contrib4Dark     = Color(0xFF8AB800); // Strong
-  static const Color contrib5Dark     = Color(0xFFBEE33A); // Peak — accent
+  // Dark — wider steps, level 4 is lighter, level 5 stays pure white
+  static const Color contrib0Dark     = Color(0xFF111113); // surface (empty)
+  static const Color contrib1Dark     = Color(0xFF27272A); // zinc-800
+  static const Color contrib2Dark     = Color(0xFF3F3F46); // zinc-700
+  static const Color contrib3Dark     = Color(0xFF71717A); // zinc-500 ← was zinc-600
+  static const Color contrib4Dark     = Color(0xFFE4E4E7); // zinc-200 ← was zinc-300
+  static const Color contrib5Dark     = Color(0xFFFFFFFF); // white (peak)
 
-  // Light — Forest ramp
-  static const Color contrib0Light    = Color(0xFFE2DFD6); // Empty
-  static const Color contrib1Light    = Color(0xFFCCE898); // Faint
-  static const Color contrib2Light    = Color(0xFF9DC84A); // Low
-  static const Color contrib3Light    = Color(0xFF6A9E18); // Mid
-  static const Color contrib4Light    = Color(0xFF427800); // Strong
-  static const Color contrib5Light    = Color(0xFF2E5E00); // Peak — accent
+  // Light — stronger contrast, peak is true black
+  static const Color contrib0Light    = Color(0xFFE4E4E7); // zinc-200 (empty)
+  static const Color contrib1Light    = Color(0xFFD4D4D8); // zinc-300
+  static const Color contrib2Light    = Color(0xFFA1A1AA); // zinc-400
+  static const Color contrib3Light    = Color(0xFF71717A); // zinc-500
+  static const Color contrib4Light    = Color(0xFF3F3F46); // zinc-700 ← was zinc-600
+  static const Color contrib5Light    = Color(0xFF09090B); // zinc-950 (peak)
 
   // ════════════════════════════════════════════════════════════════
   // THEME FLAG & DYNAMIC ACCESSORS
@@ -157,10 +156,9 @@ class AppColors {
   static Color get accentDim      => isDarkMode ? accentDimDark      : accentDimLight;
   static Color get accentGlow     => isDarkMode ? accentGlowDark     : accentGlowLight;
   static Color get accentSubtle   => isDarkMode ? accentSubtleDark   : accentSubtleLight;
-  static Color get accentMuted    => accentSubtle; // alias
+  static Color get accentMuted    => accentSubtle;
   static Color get accentTint     => isDarkMode ? accentTintDark     : accentTintLight;
   static Color get accentText     => isDarkMode ? accentInkDark      : accentInkLight;
-  // Legacy alias
   static Color get accentHover    => accentGlow;
 
   // Semantic
@@ -192,34 +190,34 @@ class AppColors {
     }
   }
 
-  // Grid dot — very subtle, theme-aware
+  // Hatch background dots — very subtle
   static Color get gridDotColor => isDarkMode
-      ? Colors.white.withValues(alpha: 0.03)
-      : Colors.black.withValues(alpha: 0.03);
+      ? Colors.white.withValues(alpha: 0.025)
+      : Colors.black.withValues(alpha: 0.025);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SPACING
-// 8-pt grid throughout. Named scale communicates intent, not raw numbers.
+// Editorial tight grid. 720px max content width.
 // ─────────────────────────────────────────────────────────────────────────────
 
 class AppSpacing {
   // Breakpoints
   static const double mobileMax       = 650;
   static const double tabletMax       = 1100;
-  static const double maxContentWidth = 1080;
+  static const double maxContentWidth = 720; // editorial centering
 
-  // Scale — strict 8-pt grid
+  // Scale — tighter than before
   static const double xxs   = 2;   // hairline / icon nudge
   static const double xs    = 4;   // tight inline gap
-  static const double sm    = 8;   // default inline gap
-  static const double md    = 12;  // component internal padding
+  static const double sm    = 6;   // default inline gap (prefer 6 over 8)
+  static const double md    = 10;  // component internal gap (prefer 10 over 12)
   static const double base  = 16;  // base unit
   static const double lg    = 24;  // section internal gap
   static const double xl    = 32;  // card padding / section gap
-  static const double xxl   = 48;  // major section separation
-  static const double xxxl  = 64;  // hero / above-fold spacing
-  static const double section= 96; // between page sections
+  static const double xxl   = 40;  // major section separation (was 48)
+  static const double xxxl  = 56;  // hero / above-fold spacing
+  static const double section= 80; // between page sections
 
   // Breakpoint helpers
   static bool isMobile(BuildContext context) =>
@@ -233,14 +231,14 @@ class AppSpacing {
   static bool isLaptop(BuildContext context) =>
       MediaQuery.sizeOf(context).width >= tabletMax;
 
-  // Responsive horizontal padding — fluid ramp
+  // Responsive horizontal padding — centers content at 720px max
   static double horizontalPadding(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
-    if (w >= 1400)      return (w - maxContentWidth) / 2;
-    if (w >= tabletMax) return 60;
+    if (w >= 1400) return (w - maxContentWidth) / 2;
+    if (w >= tabletMax) return 80;
     if (w >= mobileMax) return 40;
-    if (w >= 400)       return 30;
-    return 20;
+    if (w >= 400)       return 24;
+    return 16;
   }
 
   // Responsive headline sizing
@@ -258,15 +256,14 @@ class AppSpacing {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RADIUS
-// Deliberately minimal — sharp corners convey the editorial/utilitarian tone.
-// Only use rounding where it reduces visual tension (pills, avatars, badges).
+// Sharp editorial — minimal rounding, zero on cards by default.
 // ─────────────────────────────────────────────────────────────────────────────
 
 class AppRadius {
   static const double none  = 0;
-  static const double xs    = 2;   // Subtle — input corners
+  static const double xs    = 2;   // Subtle — input corners, tech chips
   static const double sm    = 4;   // Tags / chips
-  static const double md    = 6;   // Buttons / small cards
+  static const double md    = 6;   // Buttons
   static const double lg    = 8;   // Standard cards
   static const double xl    = 12;  // Large cards / modals
   static const double xxl   = 16;  // Sheet / bottom drawer
@@ -274,18 +271,17 @@ class AppRadius {
 
   static const BorderRadius zero    = BorderRadius.zero;
   static const BorderRadius subtle  = BorderRadius.all(Radius.circular(xs));
-  static const BorderRadius card    = BorderRadius.all(Radius.circular(sm));
+  static const BorderRadius card    = BorderRadius.zero; // flat editorial cards
   static const BorderRadius dialog  = BorderRadius.all(Radius.circular(md));
-  static const BorderRadius button  = BorderRadius.all(Radius.circular(md));
-  static const BorderRadius chip    = BorderRadius.all(Radius.circular(pill));
+  static const BorderRadius button  = BorderRadius.all(Radius.circular(sm));
+  static const BorderRadius chip    = BorderRadius.all(Radius.circular(xs));
   static const BorderRadius avatar  = BorderRadius.all(Radius.circular(pill));
   static const BorderRadius sheet   = BorderRadius.vertical(top: Radius.circular(xxl));
-  
+
   static const BorderRadius borderRadiusXs = BorderRadius.all(Radius.circular(xs));
   static const BorderRadius borderRadiusSm = BorderRadius.all(Radius.circular(sm));
 
-  // Helpers for legacy / specific widget structures
-  static const double cardValue = sm;
+  static const double cardValue = 0; // flat
   static BorderRadius top(double radius) => BorderRadius.vertical(top: Radius.circular(radius));
 }
 
@@ -300,7 +296,6 @@ class AppTheme {
   static ThemeData _build({required bool isDark}) {
     const mono = 'JetBrainsMono';
 
-    // Resolve raw color values for this mode
     final bg           = isDark ? AppColors.bgDark           : AppColors.bgLight;
     final surface      = isDark ? AppColors.surfaceDark      : AppColors.surfaceLight;
     final surfaceElev  = isDark ? AppColors.surfaceElevDark  : AppColors.surfaceElevLight;
@@ -316,29 +311,27 @@ class AppTheme {
     final accentSubtle = isDark ? AppColors.accentSubtleDark : AppColors.accentSubtleLight;
     final accentInk    = isDark ? AppColors.accentInkDark    : AppColors.accentInkLight;
     final error        = isDark ? AppColors.errorDark        : AppColors.errorLight;
-    final warning      = isDark ? AppColors.warningDark      : AppColors.warningLight;
-    final success      = isDark ? AppColors.successDark      : AppColors.successLight;
 
     final colorScheme = ColorScheme.fromSeed(
-      seedColor:  accent,
+      seedColor: accent,
       brightness: isDark ? Brightness.dark : Brightness.light,
     ).copyWith(
-      primary:           accent,
-      onPrimary:         isDark ? AppColors.bgDark : Colors.white,
-      primaryContainer:  accentSubtle,
-      onPrimaryContainer:accentInk,
-      secondary:         accent,
-      onSecondary:       isDark ? AppColors.bgDark : Colors.white,
-      surface:           surface,
-      onSurface:         textPrimary,
-      surfaceContainer:  surfaceElev,
+      primary:              accent,
+      onPrimary:            accentInk,
+      primaryContainer:     accentSubtle,
+      onPrimaryContainer:   accent,
+      secondary:            accent,
+      onSecondary:          accentInk,
+      surface:              surface,
+      onSurface:            textPrimary,
+      surfaceContainer:     surfaceElev,
       surfaceContainerHigh: isDark ? AppColors.surfaceHoverDark : AppColors.surfaceHoverLight,
-      outline:           border,
-      outlineVariant:    border2,
-      tertiary:          textTer,
-      onTertiary:        bg,
-      error:             error,
-      onError:           isDark ? AppColors.bgDark : Colors.white,
+      outline:              border,
+      outlineVariant:       border2,
+      tertiary:             textTer,
+      onTertiary:           bg,
+      error:                error,
+      onError:              accentInk,
     );
 
     return ThemeData(
@@ -352,57 +345,54 @@ class AppTheme {
       fontFamily:               mono,
 
       // ── Text theme ─────────────────────────────────────────────────────────
-      // Scale: Display → Headline → Body → Label
-      // Weight range: 400–700 only (no 800 — too heavy for mono)
-      // Letter-spacing: negative on large sizes, 0 on body, slight positive on labels
       textTheme: TextTheme(
 
-        // Display — hero-level text
+        // Display — hero headlines, Outfit ExtraBold
         displayLarge: TextStyle(
-          fontFamily: mono, fontSize: 40, fontWeight: FontWeight.w700,
-          color: textPrimary, letterSpacing: -2.0, height: 1.05,
+          fontFamily: 'Outfit', fontSize: 36, fontWeight: FontWeight.w800,
+          color: textPrimary, letterSpacing: -1.2, height: 1.0,
         ),
         displayMedium: TextStyle(
-          fontFamily: mono, fontSize: 28, fontWeight: FontWeight.w700,
-          color: textPrimary, letterSpacing: -1.2, height: 1.1,
+          fontFamily: 'Outfit', fontSize: 28, fontWeight: FontWeight.w700,
+          color: textPrimary, letterSpacing: -0.8, height: 1.05,
         ),
         displaySmall: TextStyle(
-          fontFamily: mono, fontSize: 22, fontWeight: FontWeight.w600,
-          color: textPrimary, letterSpacing: -0.8, height: 1.15,
+          fontFamily: 'Outfit', fontSize: 22, fontWeight: FontWeight.w700,
+          color: textPrimary, letterSpacing: -0.5, height: 1.1,
         ),
 
-        // Headline — section and card titles
+        // Headline — section and card titles, Outfit SemiBold
         headlineLarge: TextStyle(
-          fontFamily: mono, fontSize: 16, fontWeight: FontWeight.w600,
-          color: textPrimary, letterSpacing: -0.4, height: 1.4,
+          fontFamily: 'Outfit', fontSize: 17, fontWeight: FontWeight.w600,
+          color: textPrimary, letterSpacing: -0.2, height: 1.35,
         ),
         headlineMedium: TextStyle(
-          fontFamily: mono, fontSize: 14, fontWeight: FontWeight.w600,
-          color: textPrimary, letterSpacing: -0.2, height: 1.4,
+          fontFamily: 'Outfit', fontSize: 15, fontWeight: FontWeight.w600,
+          color: textPrimary, letterSpacing: -0.1, height: 1.35,
         ),
         headlineSmall: TextStyle(
-          fontFamily: mono, fontSize: 12, fontWeight: FontWeight.w600,
-          color: textPrimary, letterSpacing: 0, height: 1.4,
+          fontFamily: 'Outfit', fontSize: 14, fontWeight: FontWeight.w600,
+          color: textPrimary, letterSpacing: 0, height: 1.35,
         ),
 
-        // Body — prose and UI content
+        // Body — Outfit Regular, natural reading rhythm
         bodyLarge: TextStyle(
-          fontFamily: mono, fontSize: 14, fontWeight: FontWeight.w400,
-          color: textPrimary, height: 1.75, letterSpacing: 0,
+          fontFamily: 'Outfit', fontSize: 15, fontWeight: FontWeight.w400,
+          color: textPrimary, height: 1.65, letterSpacing: 0,
         ),
         bodyMedium: TextStyle(
-          fontFamily: mono, fontSize: 13, fontWeight: FontWeight.w400,
-          color: textSec, height: 1.75, letterSpacing: 0,
-        ),
-        bodySmall: TextStyle(
-          fontFamily: mono, fontSize: 11.5, fontWeight: FontWeight.w400,
+          fontFamily: 'Outfit', fontSize: 13.5, fontWeight: FontWeight.w400,
           color: textSec, height: 1.65, letterSpacing: 0,
         ),
+        bodySmall: TextStyle(
+          fontFamily: 'Outfit', fontSize: 12, fontWeight: FontWeight.w400,
+          color: textSec, height: 1.6, letterSpacing: 0,
+        ),
 
-        // Label — metadata, tags, eyebrow text
+        // Label — JetBrainsMono for code / metadata / tags
         labelLarge: TextStyle(
           fontFamily: mono, fontSize: 11, fontWeight: FontWeight.w500,
-          color: textPrimary, letterSpacing: 1.2,
+          color: textPrimary, letterSpacing: 0.88,
         ),
         labelMedium: TextStyle(
           fontFamily: mono, fontSize: 10, fontWeight: FontWeight.w400,
@@ -410,7 +400,7 @@ class AppTheme {
         ),
         labelSmall: TextStyle(
           fontFamily: mono, fontSize: 9, fontWeight: FontWeight.w400,
-          color: textMuted, letterSpacing: 1.0,
+          color: textMuted, letterSpacing: 0.72,
         ),
       ),
 
@@ -419,26 +409,26 @@ class AppTheme {
         filled: true,
         fillColor: surface,
         hoverColor: surfaceElev,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         border: OutlineInputBorder(
-          borderRadius: AppRadius.card,
-          borderSide: BorderSide(color: border),
+          borderRadius: AppRadius.button,
+          borderSide: BorderSide(color: border, width: 0.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: AppRadius.card,
-          borderSide: BorderSide(color: border),
+          borderRadius: AppRadius.button,
+          borderSide: BorderSide(color: border, width: 0.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: AppRadius.card,
-          borderSide: BorderSide(color: borderFocus, width: 1.5),
+          borderRadius: AppRadius.button,
+          borderSide: BorderSide(color: borderFocus, width: 1.0),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.card,
-          borderSide: BorderSide(color: error),
+          borderRadius: AppRadius.button,
+          borderSide: BorderSide(color: error, width: 0.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: AppRadius.card,
-          borderSide: BorderSide(color: error, width: 1.5),
+          borderRadius: AppRadius.button,
+          borderSide: BorderSide(color: error, width: 1.0),
         ),
         hintStyle: TextStyle(
           fontFamily: mono, fontSize: 12,
@@ -448,32 +438,32 @@ class AppTheme {
         floatingLabelStyle: TextStyle(fontFamily: mono, fontSize: 10, color: accent),
       ),
 
-      // ── Elevated / Filled buttons — accent-colored ──────────────────────────
+      // ── Elevated buttons ───────────────────────────────────────────────────
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor:    accent,
-          foregroundColor:    isDark ? AppColors.bgDark : Colors.white,
+          foregroundColor:    accentInk,
           disabledBackgroundColor: isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight,
-          disabledForegroundColor: isDark ? AppColors.textMutedDark  : AppColors.textMutedLight,
+          disabledForegroundColor: isDark ? AppColors.textMutedDark   : AppColors.textMutedLight,
           elevation: 0,
           shadowColor: Colors.transparent,
           shape: const RoundedRectangleBorder(borderRadius: AppRadius.button),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
-          textStyle: TextStyle(
-            fontFamily: mono, fontSize: 12, fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          textStyle: const TextStyle(
+            fontFamily: mono, fontSize: 12, fontWeight: FontWeight.w500,
+            letterSpacing: 0.4,
           ),
         ),
       ),
 
-      // ── Outlined buttons — ghost style ─────────────────────────────────────
+      // ── Outlined buttons ───────────────────────────────────────────────────
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: textPrimary,
-          side: BorderSide(color: border2),
+          side: BorderSide(color: border2, width: 0.5),
           shape: const RoundedRectangleBorder(borderRadius: AppRadius.button),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
-          textStyle: TextStyle(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          textStyle: const TextStyle(
             fontFamily: mono, fontSize: 12, fontWeight: FontWeight.w500,
           ),
         ),
@@ -484,19 +474,22 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: accent,
           shape: const RoundedRectangleBorder(borderRadius: AppRadius.button),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          textStyle: TextStyle(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          textStyle: const TextStyle(
             fontFamily: mono, fontSize: 12, fontWeight: FontWeight.w500,
           ),
         ),
       ),
 
-      // ── Cards ───────────────────────────────────────────────────────────────
+      // ── Cards ──────────────────────────────────────────────────────────────
       cardTheme: CardThemeData(
-        color: surfaceElev,
+        color: surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.card),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.card,
+          side: BorderSide(color: border, width: 0.5),
+        ),
         margin: EdgeInsets.zero,
       ),
 
@@ -505,7 +498,10 @@ class AppTheme {
         backgroundColor: surfacePop,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.dialog),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.dialog,
+          side: BorderSide(color: border, width: 0.5),
+        ),
       ),
 
       // ── Bottom sheet ────────────────────────────────────────────────────────
@@ -513,23 +509,26 @@ class AppTheme {
         backgroundColor: surfacePop,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.sheet),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.sheet,
+          side: BorderSide(color: border, width: 0.5),
+        ),
         dragHandleColor: border2,
-        dragHandleSize: const Size(36, 4),
+        dragHandleSize: const Size(36, 3),
       ),
 
-      // ── Dividers ────────────────────────────────────────────────────────────
+      // ── Dividers — hairlines ─────────────────────────────────────────────────
       dividerTheme: DividerThemeData(
         color: border,
-        thickness: 1,
-        space: 1,
+        thickness: 0.5,
+        space: 0.5,
       ),
 
-      // ── Scrollbar ───────────────────────────────────────────────────────────
+      // ── Scrollbar ────────────────────────────────────────────────────────────
       scrollbarTheme: ScrollbarThemeData(
         thumbColor: WidgetStateProperty.resolveWith((s) =>
             s.contains(WidgetState.hovered) ? border2 : border),
-        thickness: WidgetStateProperty.all(3),
+        thickness: WidgetStateProperty.all(2),
         radius: const Radius.circular(AppRadius.xs),
         interactive: true,
         mainAxisMargin: 2,
@@ -539,31 +538,31 @@ class AppTheme {
       // ── Tooltip ─────────────────────────────────────────────────────────────
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
-          color: surfacePop,
-          border: Border.all(color: border2),
-          borderRadius: AppRadius.card,
+          color: surfaceElev,
+          border: Border.all(color: border, width: 0.5),
+          borderRadius: AppRadius.subtle,
         ),
         textStyle: TextStyle(
           fontFamily: mono, fontSize: 10,
           fontWeight: FontWeight.w400, color: textPrimary,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         waitDuration: const Duration(milliseconds: 300),
         showDuration: const Duration(seconds: 3),
       ),
 
-      // ── Chips ───────────────────────────────────────────────────────────────
+      // ── Chips ─────────────────────────────────────────────────────────────
       chipTheme: ChipThemeData(
-        backgroundColor: surfaceElev,
+        backgroundColor: Colors.transparent,
         selectedColor: accentSubtle,
         disabledColor: surface,
         labelStyle: TextStyle(
-          fontFamily: mono, fontSize: 10.5,
+          fontFamily: mono, fontSize: 10,
           fontWeight: FontWeight.w400, color: textSec,
         ),
-        side: BorderSide(color: border),
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.card),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        side: BorderSide(color: border, width: 0.5),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.chip),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         elevation: 0,
         pressElevation: 0,
       ),
@@ -572,8 +571,8 @@ class AppTheme {
       listTileTheme: ListTileThemeData(
         tileColor: Colors.transparent,
         selectedTileColor: accentSubtle,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.card),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.zero),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
         titleTextStyle: TextStyle(
           fontFamily: mono, fontSize: 13,
           fontWeight: FontWeight.w400, color: textPrimary,
@@ -590,7 +589,7 @@ class AppTheme {
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((s) =>
             s.contains(WidgetState.selected)
-                ? (isDark ? AppColors.bgDark : Colors.white)
+                ? accentInk
                 : border2),
         trackColor: WidgetStateProperty.resolveWith((s) =>
             s.contains(WidgetState.selected) ? accent : surfaceElev),
@@ -602,9 +601,8 @@ class AppTheme {
       checkboxTheme: CheckboxThemeData(
         fillColor: WidgetStateProperty.resolveWith((s) =>
             s.contains(WidgetState.selected) ? accent : Colors.transparent),
-        checkColor: WidgetStateProperty.all(
-            isDark ? AppColors.bgDark : Colors.white),
-        side: BorderSide(color: border2, width: 1.5),
+        checkColor: WidgetStateProperty.all(accentInk),
+        side: BorderSide(color: border2, width: 0.5),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(AppRadius.xs))),
         overlayColor: WidgetStateProperty.resolveWith((s) =>
@@ -628,10 +626,10 @@ class AppTheme {
         activeTrackColor:   accent,
         inactiveTrackColor: border2,
         thumbColor:         accent,
-        overlayColor:       accent.withValues(alpha: 0.12),
-        trackHeight: 2,
-        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-        overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+        overlayColor:       accent.withValues(alpha: 0.1),
+        trackHeight: 1.5,
+        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
+        overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
       ),
 
       // ── Progress indicator ──────────────────────────────────────────────────
@@ -639,39 +637,41 @@ class AppTheme {
         color: accent,
         linearTrackColor: accentSubtle,
         circularTrackColor: Colors.transparent,
-        linearMinHeight: 2,
+        linearMinHeight: 1.5,
       ),
 
       // ── Tab bar ─────────────────────────────────────────────────────────────
       tabBarTheme: TabBarThemeData(
-        labelColor: accent,
+        labelColor: textPrimary,
         unselectedLabelColor: textTer,
         indicatorColor: accent,
         indicatorSize: TabBarIndicatorSize.label,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           fontFamily: mono, fontSize: 11,
-          fontWeight: FontWeight.w600, letterSpacing: 0.2,
+          fontWeight: FontWeight.w600, letterSpacing: 0.4,
         ),
-        unselectedLabelStyle: TextStyle(
+        unselectedLabelStyle: const TextStyle(
           fontFamily: mono, fontSize: 11,
           fontWeight: FontWeight.w400,
         ),
         dividerColor: border,
       ),
 
-      // ── AppBar ──────────────────────────────────────────────────────────────
+      // ── AppBar ─────────────────────────────────────────────────────────────
       appBarTheme: AppBarTheme(
-        backgroundColor: bg,
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         titleTextStyle: TextStyle(
-          fontFamily: mono, fontSize: 13,
-          fontWeight: FontWeight.w600, color: textPrimary,
+          fontFamily: mono, fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: textPrimary,
+          letterSpacing: 0.6,
         ),
-        iconTheme: IconThemeData(color: textSec, size: 18),
-        actionsIconTheme: IconThemeData(color: textSec, size: 18),
-        toolbarHeight: 52,
+        iconTheme: IconThemeData(color: textSec, size: 16),
+        actionsIconTheme: IconThemeData(color: textSec, size: 16),
+        toolbarHeight: 48,
       ),
 
       // ── Navigation bar (bottom) ─────────────────────────────────────────────
@@ -689,10 +689,10 @@ class AppTheme {
         iconTheme: WidgetStateProperty.resolveWith((s) =>
             IconThemeData(
               color: s.contains(WidgetState.selected) ? accent : textTer,
-              size: 20,
+              size: 18,
             )),
         elevation: 0,
-        height: 62,
+        height: 58,
       ),
 
       // ── Popup menu ──────────────────────────────────────────────────────────
@@ -701,8 +701,8 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: AppRadius.dialog,
-          side: BorderSide(color: border),
+          borderRadius: AppRadius.subtle,
+          side: BorderSide(color: border, width: 0.5),
         ),
         labelTextStyle: WidgetStateProperty.all(
           TextStyle(
@@ -723,7 +723,10 @@ class AppTheme {
           color: isDark ? AppColors.textPrimaryDark : AppColors.bgLight,
         ),
         actionTextColor: accent,
-        shape: const RoundedRectangleBorder(borderRadius: AppRadius.button),
+        shape: RoundedRectangleBorder(
+          borderRadius: AppRadius.button,
+          side: BorderSide(color: border, width: 0.5),
+        ),
         behavior: SnackBarBehavior.floating,
         elevation: 0,
       ),
@@ -731,18 +734,18 @@ class AppTheme {
       // ── Badge ───────────────────────────────────────────────────────────────
       badgeTheme: BadgeThemeData(
         backgroundColor: accent,
-        textColor: isDark ? AppColors.bgDark : Colors.white,
-        textStyle: TextStyle(
-          fontFamily: mono, fontSize: 9, fontWeight: FontWeight.w600,
+        textColor: accentInk,
+        textStyle: const TextStyle(
+          fontFamily: mono, fontSize: 9, fontWeight: FontWeight.w500,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-        largeSize: 18,
-        smallSize: 8,
+        largeSize: 16,
+        smallSize: 6,
       ),
 
       // ── Icons ───────────────────────────────────────────────────────────────
-      iconTheme: IconThemeData(color: textSec, size: 18),
-      primaryIconTheme: IconThemeData(color: accent, size: 18),
+      iconTheme: IconThemeData(color: textSec, size: 16),
+      primaryIconTheme: IconThemeData(color: accent, size: 16),
     );
   }
 }

@@ -1,14 +1,17 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:redacted/redacted.dart';
 import '../supabase/supabase_config.dart';
-import '../../config/portfolio_config.dart';
 import '../theme/app_theme.dart';
 export 'skeleton_loaders.dart';
 export 'magnet.dart';
-export 'grid_background.dart';
+export 'hatch_background.dart';
+export 'scroll_border_app_bar.dart';
+export 'floating_nav_bar.dart';
+export 'tech_chip.dart';
+export 'left_border_hover.dart';
+export 'stagger_reveal.dart';
 
 /// ── Dashed Divider ──────────────────────────────────────────
 class DashedDivider extends StatelessWidget {
@@ -70,7 +73,7 @@ class DashedVerticalDivider extends StatelessWidget {
     final effectiveColor =
         color ?? Theme.of(context).dividerTheme.color ?? AppColors.border;
 
-    return Container(
+    return SizedBox(
       width: width,
       height: double.infinity,
       child: CustomPaint(
@@ -103,31 +106,17 @@ class _DashedLinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Replaced expensive dashed stroke with a simple solid line for massive performance gains
+    // and a cleaner aesthetic.
     final paint = Paint()
       ..color = color
       ..strokeWidth = thickness
       ..style = PaintingStyle.stroke;
 
     if (isHorizontal) {
-      double startX = 0;
-      while (startX < size.width) {
-        canvas.drawLine(
-          Offset(startX, size.height / 2),
-          Offset(startX + dashWidth, size.height / 2),
-          paint,
-        );
-        startX += dashWidth + dashGap;
-      }
+      canvas.drawLine(Offset(0, size.height / 2), Offset(size.width, size.height / 2), paint);
     } else {
-      double startY = 0;
-      while (startY < size.height) {
-        canvas.drawLine(
-          Offset(size.width / 2, startY),
-          Offset(size.width / 2, startY + dashWidth),
-          paint,
-        );
-        startY += dashWidth + dashGap;
-      }
+      canvas.drawLine(Offset(size.width / 2, 0), Offset(size.width / 2, size.height), paint);
     }
   }
 
@@ -135,8 +124,6 @@ class _DashedLinePainter extends CustomPainter {
   bool shouldRepaint(covariant _DashedLinePainter oldDelegate) =>
       oldDelegate.color != color ||
       oldDelegate.thickness != thickness ||
-      oldDelegate.dashWidth != dashWidth ||
-      oldDelegate.dashGap != dashGap ||
       oldDelegate.isHorizontal != isHorizontal;
 }
 
@@ -170,40 +157,12 @@ class _DashedBorderPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Replaced expensive dash drawing with standard border rect
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1
       ..style = PaintingStyle.stroke;
-
-    const dash = 4.0;
-    const gap = 4.0;
-
-    void drawDashed(Offset a, Offset b) {
-      final dx = b.dx - a.dx;
-      final dy = b.dy - a.dy;
-      final len = sqrt(dx * dx + dy * dy);
-      final nx = dx / len;
-      final ny = dy / len;
-      double d = 0;
-      bool drawing = true;
-      while (d < len) {
-        final end = min(d + (drawing ? dash : gap), len);
-        if (drawing) {
-          canvas.drawLine(
-            Offset(a.dx + nx * d, a.dy + ny * d),
-            Offset(a.dx + nx * end, a.dy + ny * end),
-            paint,
-          );
-        }
-        d = end;
-        drawing = !drawing;
-      }
-    }
-
-    drawDashed(Offset.zero, Offset(size.width, 0));
-    drawDashed(Offset(size.width, 0), Offset(size.width, size.height));
-    drawDashed(Offset(size.width, size.height), Offset(0, size.height));
-    drawDashed(Offset(0, size.height), Offset.zero);
+    canvas.drawRect(Offset.zero & size, paint);
   }
 
   @override
@@ -299,12 +258,12 @@ class _StripePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Significantly lighter simple border gradient instead of 100s of diagonal lines
     final paint = Paint()
       ..color = color
-      ..strokeWidth = 1;
-    for (double x = -size.height; x < size.width; x += 8) {
-      canvas.drawLine(Offset(x, size.height), Offset(x + size.height, 0), paint);
-    }
+      ..strokeWidth = 1
+      ..style = PaintingStyle.fill;
+    canvas.drawRect(Offset.zero & size, paint);
   }
 
   @override
@@ -463,38 +422,29 @@ class _CollapsibleCardState extends State<CollapsibleCard>
     final surfaceEl= isDark ? AppColors.surfaceElevDark: AppColors.surfaceElevLight;
     final border   = isDark ? AppColors.borderDark     : AppColors.borderLight;
     final textSec  = isDark ? AppColors.textSecDark    : AppColors.textSecLight;
-    final tagBg    = isDark ? AppColors.surfaceElevDark: AppColors.surfaceElevLight;
     final accent   = isDark ? AppColors.accentDark     : AppColors.accentLight;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
+        duration: const Duration(milliseconds: 150),
         curve: Curves.easeOutCubic,
         margin: const EdgeInsets.only(bottom: 2),
-        transform: Matrix4.translationValues(0, _hovered ? -1.5 : 0.0, 0),
+        // NO translation/lift — left-border accent is the only hover signal
         decoration: BoxDecoration(
           color: _hovered ? surfaceEl : surface,
           borderRadius: BorderRadius.zero,
           border: Border(
             left: BorderSide(
               color: (_hovered || _expanded) ? accent : border,
-              width: (_hovered || _expanded) ? 2 : 1,
+              width: (_hovered || _expanded) ? 2.0 : 0.5,
             ),
-            top: BorderSide(color: border, width: 1),
-            bottom: BorderSide(color: border, width: 1),
-            right: BorderSide(color: border, width: 1),
+            top: BorderSide(color: border, width: 0.5),
+            bottom: BorderSide(color: border, width: 0.5),
+            right: BorderSide(color: border, width: 0.5),
           ),
-          boxShadow: _hovered
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  )
-                ]
-              : null,
+          // No box shadow — flat editorial aesthetic
         ),
         child: Column(
           children: [
@@ -591,23 +541,26 @@ class _CollapsibleCardState extends State<CollapsibleCard>
                                 ),
                               )),
                           if (widget.tags.isNotEmpty) ...[
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 14),
                             Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
+                              spacing: 5,
+                              runSpacing: 5,
                               children: widget.tags
                                   .map((t) => Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                         decoration: BoxDecoration(
-                                          color: tagBg,
-                                          border: Border.all(color: border, width: 1),
-                                          borderRadius: AppRadius.subtle,
+                                          color: Colors.transparent,
+                                          border: Border.all(color: border, width: 0.5),
+                                          borderRadius: AppRadius.chip,
                                         ),
                                         child: Text(t,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall
-                                                ?.copyWith(letterSpacing: 0.3, color: textSec)),
+                                            style: TextStyle(
+                                              fontFamily: 'JetBrainsMono',
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w400,
+                                              color: textSec,
+                                              letterSpacing: 0,
+                                            )),
                                       ))
                                   .toList(),
                             ),
@@ -625,16 +578,21 @@ class _CollapsibleCardState extends State<CollapsibleCard>
 }
 
 // ─── Typewriter Line ──────────────────────────────────
-class _TypewriterLine extends StatefulWidget {
+class TypewriterLine extends StatefulWidget {
   final List<String> phrases;
+  final TextStyle? style;
 
-  const _TypewriterLine({required this.phrases});
+  const TypewriterLine({
+    super.key,
+    required this.phrases,
+    this.style,
+  });
 
   @override
-  State<_TypewriterLine> createState() => _TypewriterLineState();
+  State<TypewriterLine> createState() => _TypewriterLineState();
 }
 
-class _TypewriterLineState extends State<_TypewriterLine> {
+class _TypewriterLineState extends State<TypewriterLine> {
   int _phraseIndex = 0;
   String _displayed = '';
   bool _deleting = false;
@@ -662,6 +620,7 @@ class _TypewriterLineState extends State<_TypewriterLine> {
   }
 
   void _tick() {
+    if (widget.phrases.isEmpty) return;
     final full = widget.phrases[_phraseIndex];
 
     if (!_deleting) {
@@ -686,7 +645,7 @@ class _TypewriterLineState extends State<_TypewriterLine> {
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.bodySmall;
+    final style = widget.style ?? Theme.of(context).textTheme.bodySmall;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -759,16 +718,17 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
   void initState() {
     super.initState();
     _loadAndIncrementVisitCount();
-    // Refresh count every 60 seconds for "real-time" feel
-    _refreshTimer = Timer.periodic(const Duration(seconds: 60), (_) => _refreshVisitCount());
+    _refreshTimer = Timer.periodic(
+      const Duration(seconds: 60),
+      (_) => _refreshVisitCount(),
+    );
   }
 
   Future<void> _loadAndIncrementVisitCount() async {
     try {
       final count = await supabase.rpc('increment_visits');
       if (mounted) setState(() => _visitCount = count as int);
-    } catch (e) {
-      // If RPC fails, try refreshing count without incrementing
+    } catch (_) {
       _refreshVisitCount();
     }
   }
@@ -780,8 +740,7 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
           .select('count')
           .eq('id', 1)
           .single();
-      final count = data['count'] as int;
-      if (mounted) setState(() => _visitCount = count);
+      if (mounted) setState(() => _visitCount = data['count'] as int);
     } catch (_) {}
   }
 
@@ -793,14 +752,13 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark       = Theme.of(context).brightness == Brightness.dark;
-    final bgColor      = isDark ? AppColors.bgDark      : AppColors.bgLight;
-    final borderColor  = isDark ? AppColors.borderDark  : AppColors.borderLight;
-    final textTerColor = isDark ? AppColors.textTerDark  : AppColors.textTerLight;
-    final accentColor  = isDark ? AppColors.accentDark   : AppColors.accentLight;
-    final textSecColor = isDark ? AppColors.textSecDark  : AppColors.textSecLight;
-    final creditColor  = _creditHovered ? accentColor : textSecColor;
-    final isMobile = AppSpacing.isMobile(context);
+    final isDark      = Theme.of(context).brightness == Brightness.dark;
+    final bgColor     = isDark ? AppColors.bgDark     : AppColors.bgLight;
+    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textTer     = isDark ? AppColors.textTerDark : AppColors.textTerLight;
+    final accent      = isDark ? AppColors.accentDark  : AppColors.accentLight;
+    final creditColor = _creditHovered ? accent : textTer;
+    final isMobile    = AppSpacing.isMobile(context);
 
     return Container(
       color: bgColor,
@@ -809,27 +767,77 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // ── Gradient fade rule (not a plain container) ──────────
           _FadeRuleDivider(borderColor: borderColor),
+
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: AppSpacing.horizontalPadding(context),
-              vertical: isMobile ? 24 : 18,
+              vertical: isMobile ? 16 : 14,
             ),
-            child: isMobile
-                ? _MobileFooterContent(
-                    visitCount: _visitCount,
-                    accentColor: accentColor,
-                    textTerColor: textTerColor,
-                    creditColor: creditColor,
-                    onCreditHover: (v) => setState(() => _creditHovered = v),
-                  )
-                : _DesktopFooterContent(
-                    visitCount: _visitCount,
-                    accentColor: accentColor,
-                    textTerColor: textTerColor,
-                    creditColor: creditColor,
-                    onCreditHover: (v) => setState(() => _creditHovered = v),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // ── Visitor badge (live count) ───────────────────
+                if (_visitCount > 0)
+                  _VisitorBadge(
+                    count: _visitCount,
+                    accent: accent,
+                    textTer: textTer,
                   ),
+
+                const Spacer(),
+
+                // ── Copyright + stack line ───────────────────────
+                MouseRegion(
+                  onEnter: (_) => setState(() => _creditHovered = true),
+                  onExit:  (_) => setState(() => _creditHovered = false),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Credit line with underline slide-in
+                      Stack(
+                        children: [
+                          AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 180),
+                            curve: Curves.easeOut,
+                            style: TextStyle(
+                              color: creditColor,
+                              fontFamily: 'JetBrainsMono',
+                              fontSize: 9,
+                              letterSpacing: 0.4,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            child: const Text('© 2026 Deepanshu · Built with 🤍'),
+                          ),
+                          // Underline slides in from left on hover
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: TweenAnimationBuilder<double>(
+                              tween: Tween(end: _creditHovered ? 1.0 : 0.0),
+                              duration: const Duration(milliseconds: 200),
+                              curve: Curves.easeOut,
+                              builder: (_, t, __) => FractionallySizedBox(
+                                alignment: Alignment.centerLeft,
+                                widthFactor: t,
+                                child: Container(
+                                  height: 0.5,
+                                  color: accent,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -837,112 +845,15 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
   }
 }
 
-
-// ─── Desktop Footer Content ─────────────────────────────────
-class _DesktopFooterContent extends StatelessWidget {
-  final int visitCount;
-  final Color accentColor;
-  final Color textTerColor;
-  final Color creditColor;
-  final ValueChanged<bool> onCreditHover;
-
-  const _DesktopFooterContent({
-    required this.visitCount,
-    required this.accentColor,
-    required this.textTerColor,
-    required this.creditColor,
-    required this.onCreditHover,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // ── Left/Center: Visitor badge ─────────────────────────────
-        // Show badge if count is > 0
-        if (visitCount > 0) _VisitorBadge(
-          count: visitCount,
-          accentColor: accentColor,
-          textTerColor: textTerColor,
-        ),
-        const Spacer(),
-        // ── Right: Copyright + credit ─────────────────────────
-        MouseRegion(
-          onEnter: (_) => onCreditHover(true),
-          onExit:  (_) => onCreditHover(false),
-          child: AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 180),
-            curve: Curves.easeOut,
-            style: TextStyle(
-              color: creditColor,
-              fontFamily: 'monospace',
-              fontSize: 9,
-              letterSpacing: 0.4,
-              fontWeight: FontWeight.w500,
-            ),
-            child: const Text('© 2026 Deepanshu · Built with 🤍'),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ─── Mobile Footer Content ─────────────────────────────────
-class _MobileFooterContent extends StatelessWidget {
-  final int visitCount;
-  final Color accentColor;
-  final Color textTerColor;
-  final Color creditColor;
-  final ValueChanged<bool> onCreditHover;
-
-  const _MobileFooterContent({
-    required this.visitCount,
-    required this.accentColor,
-    required this.textTerColor,
-    required this.creditColor,
-    required this.onCreditHover,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (visitCount > 0) ...[
-          _VisitorBadge(
-            count: visitCount,
-            accentColor: accentColor,
-            textTerColor: textTerColor,
-          ),
-        ],
-        const Spacer(),
-        Text(
-          '© 2026 Deepanshu',
-          style: TextStyle(
-            color: textTerColor,
-            fontFamily: 'monospace',
-            fontSize: 9,
-            letterSpacing: 0.3,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-
-
 // ─── Visitor Badge ────────────────────────────────────────
 class _VisitorBadge extends StatelessWidget {
   final int count;
-  final Color accentColor;
-  final Color textTerColor;
+  final Color accent;
+  final Color textTer;
   const _VisitorBadge({
     required this.count,
-    required this.accentColor,
-    required this.textTerColor,
+    required this.accent,
+    required this.textTer,
   });
 
   @override
@@ -954,7 +865,7 @@ class _VisitorBadge extends StatelessWidget {
     for (int i = s.length - 1; i >= 0; i--) {
       c++;
       formattedNumber = s[i] + formattedNumber;
-      if (c % 3 == 0 && i > 0) formattedNumber = ',' + formattedNumber;
+      if (c % 3 == 0 && i > 0) formattedNumber = ',$formattedNumber';
     }
     final suffix = _getOrdinalSuffix(n);
 
@@ -965,7 +876,7 @@ class _VisitorBadge extends StatelessWidget {
           width: 5,
           height: 5,
           decoration: BoxDecoration(
-            color: accentColor,
+            color: accent,
             shape: BoxShape.circle,
           ),
         ),
@@ -973,8 +884,8 @@ class _VisitorBadge extends StatelessWidget {
         RichText(
           text: TextSpan(
             style: TextStyle(
-              color: textTerColor,
-              fontFamily: 'monospace',
+              color: textTer,
+              fontFamily: 'JetBrainsMono',
               fontSize: 8,
               letterSpacing: 1.2,
               fontWeight: FontWeight.w500,
@@ -988,8 +899,8 @@ class _VisitorBadge extends StatelessWidget {
                   child: Text(
                     suffix.toUpperCase(),
                     style: TextStyle(
-                      color: textTerColor,
-                      fontFamily: 'monospace',
+                      color: textTer,
+                      fontFamily: 'JetBrainsMono',
                       fontSize: 5,
                       fontWeight: FontWeight.w600,
                     ),
@@ -1015,10 +926,6 @@ class _VisitorBadge extends StatelessWidget {
   }
 }
 
-
-/// Gradient-fade horizontal divider.
-/// Rather than a plain dashed line, the border color fades in from the
-/// edges and peaks at the center — a subtle editorial touch, no glows.
 class _FadeRuleDivider extends StatelessWidget {
   final Color borderColor;
   const _FadeRuleDivider({required this.borderColor});
@@ -1038,18 +945,17 @@ class _FadeRulePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Solid 1px line that fades out at both edges (transparent → opaque → transparent)
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0
       ..shader = LinearGradient(
         colors: [
           color.withValues(alpha: 0.0),
-          color.withValues(alpha: 0.8),
-          color.withValues(alpha: 0.8),
+          color.withValues(alpha: 1.0),
+          color.withValues(alpha: 1.0),
           color.withValues(alpha: 0.0),
         ],
-        stops: const [0.0, 0.18, 0.82, 1.0],
+        stops: const [0.0, 0.15, 0.85, 1.0],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
     canvas.drawLine(
@@ -1062,6 +968,7 @@ class _FadeRulePainter extends CustomPainter {
   @override
   bool shouldRepaint(_FadeRulePainter old) => old.color != color;
 }
+
 
 // ─────────────────────────────────────────────
 // THEME-AWARE REDACTED SKELETON LOADER

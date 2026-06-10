@@ -25,7 +25,7 @@ class VolunteerDetailScreen extends StatelessWidget {
     final textPri = AppColors.textPrimary;
     final accent = AppColors.accent;
 
-    return GridBackground(
+    return HatchBackground(
       child: Scaffold(
         body: SafeArea(
           bottom: false,
