@@ -407,10 +407,18 @@ class _SkillCardState extends State<_SkillCard> {
             decoration: BoxDecoration(
               color: _hovered
                   ? (widget.skill.highlight
-                      ? AppColors.accent.withValues(alpha: 0.1)
+                      ? AppColors.accent.withValues(alpha: 0.08)
                       : surfaceEl)
-                  : Colors.transparent,
+                  : surfaceEl.withValues(alpha: 0.5),
               borderRadius: AppRadius.subtle,
+              border: _hovered
+                  ? Border(
+                      bottom: BorderSide(
+                        color: brand.withValues(alpha: 0.8),
+                        width: 2,
+                      ),
+                    )
+                  : const Border(),
             ),
             child: Stack(
               alignment: Alignment.center,

@@ -181,6 +181,7 @@ class _GalleryImageCardState extends State<_GalleryImageCard> {
   @override
   Widget build(BuildContext context) {
     final border = AppColors.border;
+    final accent = AppColors.accent;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -191,48 +192,25 @@ class _GalleryImageCardState extends State<_GalleryImageCard> {
         onTapUp: (_) => setState(() => _hovered = false),
         onTapCancel: () => setState(() => _hovered = false),
         child: AnimatedScale(
-          scale: _hovered ? 0.98 : 1.0,
-          duration: const Duration(milliseconds: 150),
+          scale: _hovered ? 1.04 : 1.0,
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
-              border: Border.all(color: border, width: 1),
+              border: Border.all(
+                color: _hovered ? accent : border,
+                width: _hovered ? 1.5 : 1.0,
+              ),
             ),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Base colorful image
-                _SkeletonAssetImage(
-                  assetPath: widget.imagePath,
-                  fit: BoxFit.cover,
-                  cacheWidth: 450,
-                  skeletonColor: AppColors.surfaceElev,
-                  errorWidget: const Center(child: Icon(LucideIcons.imageOff)),
-                ),
-                // Black and white filter fading out on hover
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 250),
-                  opacity: _hovered ? 0.0 : 1.0,
-                  child: RepaintBoundary(
-                    child: ColorFiltered(
-                      colorFilter: const ColorFilter.matrix(<double>[
-                        0.2126, 0.7152, 0.0722, 0, 0,
-                        0.2126, 0.7152, 0.0722, 0, 0,
-                        0.2126, 0.7152, 0.0722, 0, 0,
-                        0,      0,      0,      1, 0,
-                      ]),
-                      child: _SkeletonAssetImage(
-                        assetPath: widget.imagePath,
-                        fit: BoxFit.cover,
-                        cacheWidth: 450,
-                        skeletonColor: AppColors.surfaceElev,
-                        errorWidget:
-                            const Center(child: Icon(LucideIcons.imageOff)),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            child: ClipRect(
+              child: _SkeletonAssetImage(
+                assetPath: widget.imagePath,
+                fit: BoxFit.cover,
+                cacheWidth: 450,
+                skeletonColor: AppColors.surfaceElev,
+                errorWidget: const Center(child: Icon(LucideIcons.imageOff)),
+              ),
             ),
           ),
         ),

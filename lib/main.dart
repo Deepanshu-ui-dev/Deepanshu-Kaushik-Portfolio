@@ -237,8 +237,12 @@ class _AppShellState extends ConsumerState<_AppShell>
                                       decoration: BoxDecoration(
                                         color: isDark ? AppColors.bgDark : Colors.white,
                                       ),
-                                      child: Stack(
-                                        children: [
+                                      child: DotGridBackground(
+                                        drawBackground: false,
+                                        spacing: 20.0,
+                                        dotRadius: 0.9,
+                                        child: Stack(
+                                          children: [
                                           for (int i = 0; i < 5; i++)
                                             if (_visited[i])
                                               Offstage(
@@ -271,6 +275,7 @@ class _AppShellState extends ConsumerState<_AppShell>
                                         ],
                                       ),
                                     ),
+                                  ),
                                   ),
                                 ),
                               ),

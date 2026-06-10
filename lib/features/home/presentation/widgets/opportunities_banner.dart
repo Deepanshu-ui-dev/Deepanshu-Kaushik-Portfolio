@@ -163,7 +163,9 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
                   TypewriterLine(
                     phrases: const [
                       'STATUS // OPEN TO WORK',
+                      'ROLE // SOFTWARE DEVELOPER',
                       'ROLE // FLUTTER & DART',
+                      'ROLE // ANDROID & IOS',
                       'DESIGN // TACTILE UI/UX',
                       'VERSION // 2.0.0+2',
                     ],

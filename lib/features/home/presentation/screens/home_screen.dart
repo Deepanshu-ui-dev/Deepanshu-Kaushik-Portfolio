@@ -937,31 +937,39 @@ class _AchievementRowState extends State<_AchievementRow> {
     final textPri =
         isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
     final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
+    final hoverBg = isDark
+        ? AppColors.surfaceElevDark.withValues(alpha: 0.4)
+        : AppColors.surfaceElevLight.withValues(alpha: 0.5);
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
-        margin: const EdgeInsets.only(bottom: 2),
+        margin: const EdgeInsets.only(bottom: 6),
         decoration: BoxDecoration(
+          color: _hovered ? hoverBg : Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
           border: Border(
             left: BorderSide(
-              // Left accent border appears on hover — no layout shift
               color: _hovered ? accent : Colors.transparent,
-              width: 2,
+              width: 2.5,
             ),
           ),
         ),
         child: Padding(
-          padding: EdgeInsets.fromLTRB(_hovered ? 10 : 0, 14, 0, 14),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 180),
                 style: (Theme.of(context).textTheme.bodyMedium ?? const TextStyle())
-                    .copyWith(color: _hovered ? accent : textSec, fontWeight: FontWeight.w600),
+                    .copyWith(
+                      color: _hovered ? accent : textSec, 
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'JetBrainsMono',
+                    ),
                 child: Text(widget.number),
               ),
               const SizedBox(width: 16),
@@ -969,11 +977,15 @@ class _AchievementRowState extends State<_AchievementRow> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: textPri, fontWeight: FontWeight.w700)),
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 180),
+                      style: (Theme.of(context).textTheme.bodyLarge ?? const TextStyle()).copyWith(
+                        color: _hovered ? accent : textPri,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Outfit',
+                      ),
+                      child: Text(widget.title),
+                    ),
                     const SizedBox(height: 4),
                     Text(widget.subtitle,
                         style: Theme.of(context)
@@ -1201,56 +1213,17 @@ class _PhotoCard extends StatefulWidget {
   State<_PhotoCard> createState() => _PhotoCardState();
 }
 
-class _PhotoCardState extends State<_PhotoCard>
-    with SingleTickerProviderStateMixin {
+class _PhotoCardState extends State<_PhotoCard> {
   bool _hovered = false;
-  late AnimationController _overlayCtrl;
-  late Animation<double> _overlayAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _overlayCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _overlayAnim =
-        CurvedAnimation(parent: _overlayCtrl, curve: Curves.easeOut);
-  }
-
-  @override
-  void dispose() {
-    _overlayCtrl.dispose();
-    super.dispose();
-  }
-
-  void _onHover(bool hovered) {
-    setState(() => _hovered = hovered);
-    if (hovered) {
-      _overlayCtrl.forward();
-    } else {
-      _overlayCtrl.reverse();
-    }
-  }
-
-  static const _bgColors = [
-    Color(0xFF0a1a0e),
-    Color(0xFF0d1520),
-    Color(0xFF1a0f0a),
-    Color(0xFF080e1a),
-    Color(0xFF0f0f0f),
-    Color(0xFF0e1a0c),
-  ];
 
   @override
   Widget build(BuildContext context) {
-    final idx = _PhotographySection._categories.indexOf(widget.category);
-    final bgColor = _bgColors[idx % _bgColors.length];
+    final isDark = widget.isDark;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) => _onHover(true),
-      onExit: (_) => _onHover(false),
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -1262,11 +1235,9 @@ class _PhotoCardState extends State<_PhotoCard>
           padding: const EdgeInsets.all(4),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 160),
-            transform: Matrix4.translationValues(0, _hovered ? -3.0 : 0.0, 0),
             width: widget.size,
             height: widget.size,
             decoration: BoxDecoration(
-              color: bgColor,
               border: Border.all(
                 color: _hovered ? widget.border2 : widget.border,
                 width: 1,
@@ -1275,119 +1246,100 @@ class _PhotoCardState extends State<_PhotoCard>
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // Base colored image
-                _SkeletonAssetImage(
-                  assetPath: widget.category.imagePath,
-                  fit: BoxFit.cover,
-                  cacheWidth: 320,
-                  skeletonColor: widget.isDark
-                      ? AppColors.surfaceElevDark
-                      : AppColors.surfaceElevLight,
-                  errorWidget: const SizedBox(),
+                // Base colored image with scale transition on hover
+                ClipRect(
+                  child: AnimatedScale(
+                    scale: _hovered ? 1.08 : 1.0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                    child: _SkeletonAssetImage(
+                      assetPath: widget.category.imagePath,
+                      fit: BoxFit.cover,
+                      cacheWidth: 320,
+                      skeletonColor: isDark
+                          ? AppColors.surfaceElevDark
+                          : AppColors.surfaceElevLight,
+                      errorWidget: const SizedBox(),
+                    ),
+                  ),
                 ),
-                // Grayscale overlay that smoothly fades out on hover
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 250),
-                  opacity: _hovered ? 0.0 : 1.0,
-                  child: RepaintBoundary(
-                    child: ColorFiltered(
-                      colorFilter: const ColorFilter.matrix(<double>[
-                        0.2126, 0.7152, 0.0722, 0, 0,
-                        0.2126, 0.7152, 0.0722, 0, 0,
-                        0.2126, 0.7152, 0.0722, 0, 0,
-                        0,      0,      0,      1, 0,
-                      ]),
-                      child: _SkeletonAssetImage(
-                        assetPath: widget.category.imagePath,
-                        fit: BoxFit.cover,
-                        cacheWidth: 320,
-                        skeletonColor: widget.isDark
-                            ? AppColors.surfaceElevDark
-                            : AppColors.surfaceElevLight,
-                        errorWidget: const SizedBox(),
+                // Clean bottom-heavy gradient overlay protecting text readability
+                Positioned.fill(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: _hovered ? 0.85 : 0.5),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                // Base content
-                Center(
+                // Text details overlay always visible at the bottom
+                Positioned(
+                  left: 12,
+                  right: 12,
+                  bottom: 12,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.collections_outlined,
-                        size: 22,
-                        color: widget.isDark ? Colors.white54 : AppColors.textSecLight,
+                      Row(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            width: _hovered ? 16 : 0,
+                            height: 16,
+                            margin: EdgeInsets.only(right: _hovered ? 6.0 : 0.0),
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: 150),
+                              opacity: _hovered ? 1.0 : 0.0,
+                              child: Icon(
+                                Icons.camera_alt_outlined,
+                                size: 11,
+                                color: widget.accent,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              widget.category.label.toUpperCase(),
+                              style: TextStyle(
+                                fontFamily: 'JetBrainsMono',
+                                fontSize: 10,
+                                letterSpacing: 1.5,
+                                color: _hovered ? widget.accent : Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        widget.category.label.toUpperCase(),
-                        style: TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 9,
-                          letterSpacing: 0.12,
-                          color: widget.isDark 
-                              ? Colors.white.withValues(alpha: 0.6)
-                              : AppColors.textPrimaryLight.withValues(alpha: 0.7),
-                          fontWeight: FontWeight.w500,
+                      const SizedBox(height: 3),
+                      AnimatedSlide(
+                        offset: _hovered ? Offset.zero : const Offset(0, 0.08),
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOutCubic,
+                        child: Text(
+                          widget.category.subtitle,
+                          style: TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 10.5,
+                            color: _hovered ? Colors.white : Colors.white.withValues(alpha: 0.75),
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-              // Hover overlay
-              FadeTransition(
-                opacity: _overlayAnim,
-                child: Container(
-                  color: Colors.black.withValues(alpha: 0.72),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: widget.accent, width: 1),
-                          ),
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            size: 12,
-                            color: widget.accent,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          widget.category.label,
-                          style: TextStyle(
-                            fontFamily: 'monospace',
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: widget.accent,
-                            letterSpacing: 0.08,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          widget.category.subtitle,
-                          style: TextStyle(
-                            fontFamily: 'monospace',
-                            fontSize: 9,
-                            color: Colors.white.withValues(alpha: 0.45),
-                            letterSpacing: 0.04,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
         ),
       ),
     );

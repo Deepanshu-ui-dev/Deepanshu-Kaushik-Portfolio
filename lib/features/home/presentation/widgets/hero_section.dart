@@ -104,29 +104,11 @@ class _IdentityBlock extends StatelessWidget {
             displacement: isMobile ? 0.0 : 0.1,
             child: MonofolioCornersBox(
               padding: const EdgeInsets.all(4),
-              child: Container(
-                width: isMobile ? double.infinity : 160,
-                height: isMobile ? 240 : 200,
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight,
-                  border: Border.all(color: border),
-                  borderRadius: AppRadius.subtle,
-                ),
-                child: RepaintBoundary(
-                  child: ColorFiltered(
-                    colorFilter: const ColorFilter.matrix(<double>[
-                      0.33, 0.33, 0.33, 0, 0,
-                      0.33, 0.33, 0.33, 0, 0,
-                      0.33, 0.33, 0.33, 0, 0,
-                      0,    0,    0,    1, 0,
-                    ]),
-                    child: _LazyProfileImage(
-                      skeletonColor: isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight,
-                      errorIconColor: textSec.withValues(alpha: 0.5),
-                      isMobile: isMobile,
-                    ),
-                  ),
-                ),
+              child: _AvatarWidget(
+                isMobile: isMobile,
+                isDark: isDark,
+                border: border,
+                textSec: textSec,
               ),
             ),
           );
@@ -173,6 +155,74 @@ class _IdentityBlock extends StatelessWidget {
           );
         }),
       ],
+    );
+  }
+}
+
+class _AvatarWidget extends StatefulWidget {
+  final bool isMobile;
+  final bool isDark;
+  final Color border;
+  final Color textSec;
+
+  const _AvatarWidget({
+    required this.isMobile,
+    required this.isDark,
+    required this.border,
+    required this.textSec,
+  });
+
+  @override
+  State<_AvatarWidget> createState() => _AvatarWidgetState();
+}
+
+class _AvatarWidgetState extends State<_AvatarWidget> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = widget.isDark ? AppColors.accentDark : AppColors.accentLight;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.04 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: widget.isMobile ? double.infinity : 160,
+          height: widget.isMobile ? 240 : 200,
+          decoration: BoxDecoration(
+            color: widget.isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight,
+            border: Border.all(
+              color: _hovered ? accent : widget.border,
+              width: _hovered ? 1.5 : 1.0,
+            ),
+            borderRadius: AppRadius.subtle,
+            boxShadow: _hovered
+                ? [
+                    BoxShadow(
+                      color: accent.withValues(alpha: widget.isDark ? 0.25 : 0.15),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
+          ),
+          child: ClipRRect(
+            borderRadius: AppRadius.subtle,
+            child: RepaintBoundary(
+              child: _LazyProfileImage(
+                skeletonColor: widget.isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight,
+                errorIconColor: widget.textSec.withValues(alpha: 0.5),
+                isMobile: widget.isMobile,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -494,29 +494,21 @@ class _MomentCardState extends State<_MomentCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // ── Cover image (Black & White) ──
+                // ── Cover image (Colorful) ──
                 AspectRatio(
                   aspectRatio: widget.isSecondary ? 4 / 3 : 16 / 9,
                   child: ClipRect(
-                    child: ColorFiltered(
-                      colorFilter: const ColorFilter.matrix(<double>[
-                        0.33, 0.33, 0.33, 0, 0,
-                        0.33, 0.33, 0.33, 0, 0,
-                        0.33, 0.33, 0.33, 0, 0,
-                        0,    0,    0,    1, 0,
-                      ]),
-                      child: SizedBox.expand(
-                        child: Image.asset(
-                          widget.imageAsset,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => ColoredBox(
-                            color: AppColors.surfaceElev,
-                            child: Center(
-                              child: Icon(
-                                LucideIcons.image,
-                                color: textSec.withValues(alpha: 0.3),
-                                size: 32,
-                              ),
+                    child: SizedBox.expand(
+                      child: Image.asset(
+                        widget.imageAsset,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => ColoredBox(
+                          color: AppColors.surfaceElev,
+                          child: Center(
+                            child: Icon(
+                              LucideIcons.image,
+                              color: textSec.withValues(alpha: 0.3),
+                              size: 32,
                             ),
                           ),
                         ),

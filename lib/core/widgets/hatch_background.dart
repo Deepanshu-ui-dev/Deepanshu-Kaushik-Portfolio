@@ -163,6 +163,7 @@ class DotGridBackground extends StatelessWidget {
   final double spacing;
   final double dotRadius;
   final double? opacity;
+  final bool drawBackground;
 
   const DotGridBackground({
     super.key,
@@ -170,26 +171,59 @@ class DotGridBackground extends StatelessWidget {
     this.spacing = 24.0,
     this.dotRadius = 0.75,
     this.opacity,
+    this.drawBackground = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final resolvedOpacity = opacity ?? (isDark ? 0.06 : 0.08);
+    final resolvedOpacity = opacity ?? (isDark ? 0.09 : 0.12);
 
     return Stack(
       children: [
         Positioned.fill(
           child: RepaintBoundary(
-            child: CustomPaint(
-              painter: _DotGridPainter(
-                isDark: isDark,
-                spacing: spacing,
-                dotRadius: dotRadius,
-                opacity: resolvedOpacity,
+            child: ShaderMask(
+              shaderCallback: (Rect bounds) {
+                // Layered fade: radial center-bloom + linear top/bottom fade
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.0),
+                    Colors.black.withValues(alpha: 1.0),
+                    Colors.black.withValues(alpha: 1.0),
+                    Colors.black.withValues(alpha: 0.0),
+                  ],
+                  stops: const [0.0, 0.18, 0.82, 1.0],
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.dstIn,
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return RadialGradient(
+                    center: Alignment.center,
+                    radius: 0.90,
+                    colors: [
+                      Colors.black.withValues(alpha: 1.0),
+                      Colors.black.withValues(alpha: 0.0),
+                    ],
+                    stops: const [0.45, 1.0],
+                  ).createShader(bounds);
+                },
+                blendMode: BlendMode.dstIn,
+                child: CustomPaint(
+                  painter: _DotGridPainter(
+                    isDark: isDark,
+                    spacing: spacing,
+                    dotRadius: dotRadius,
+                    opacity: resolvedOpacity,
+                    drawBackground: drawBackground,
+                  ),
+                  isComplex: true,
+                  willChange: false,
+                ),
               ),
-              isComplex: true,
-              willChange: false,
             ),
           ),
         ),
@@ -204,25 +238,32 @@ class _DotGridPainter extends CustomPainter {
   final double spacing;
   final double dotRadius;
   final double opacity;
+  final bool drawBackground;
 
   const _DotGridPainter({
     required this.isDark,
     required this.spacing,
     required this.dotRadius,
     required this.opacity,
+    this.drawBackground = true,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(
-      Offset.zero & size,
-      Paint()
-        ..color = isDark ? AppColors.bgDark : AppColors.bgLight
-        ..style = PaintingStyle.fill,
-    );
+    if (drawBackground) {
+      canvas.drawRect(
+        Offset.zero & size,
+        Paint()
+          ..color = isDark ? AppColors.bgDark : AppColors.bgLight
+          ..style = PaintingStyle.fill,
+      );
+    }
 
-    final dotColor = (isDark ? Colors.white : Colors.black)
-        .withValues(alpha: opacity);
+    // In dark mode: bright zinc-100 dots. In light mode: zinc-500 dots.
+    // This gives proper contrast without being stark on either theme.
+    final dotColor = isDark
+        ? Colors.white.withValues(alpha: opacity)
+        : const Color(0xFF71717A).withValues(alpha: opacity); // zinc-500
 
     final paint = Paint()
       ..color = dotColor
@@ -240,6 +281,7 @@ class _DotGridPainter extends CustomPainter {
     return old.isDark != isDark ||
         old.spacing != spacing ||
         old.dotRadius != dotRadius ||
+        old.drawBackground != drawBackground ||
         old.opacity != opacity;
   }
 }

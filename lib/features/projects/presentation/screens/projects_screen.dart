@@ -284,7 +284,7 @@ class _FilterChipState extends State<_FilterChip> {
                 : _hov
                     ? textSec
                     : surface,
-            borderRadius: BorderRadius.zero,
+            borderRadius: BorderRadius.circular(3),
           ),
           child: Text(
             widget.label.toUpperCase(),
@@ -405,111 +405,111 @@ class _ProjectCardState extends State<_ProjectCard> {
   @override
   Widget build(BuildContext context) {
     final isDark   = Theme.of(context).brightness == Brightness.dark;
-    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
-    final accent   = isDark ? AppColors.accentDark  : AppColors.accentLight;
+    final textSec  = isDark ? AppColors.textSecDark  : AppColors.textSecLight;
+    final accent   = isDark ? AppColors.accentDark   : AppColors.accentLight;
+    final surface  = isDark ? AppColors.surfaceElevDark : AppColors.surfaceLight;
+    final border   = isDark ? AppColors.borderDark   : AppColors.borderLight;
 
-    return LeftBorderHover(
+    return Container(
+      decoration: BoxDecoration(
+        color: surface,
+        border: Border(
+          top: BorderSide(color: accent, width: 2),
+          left: BorderSide(color: border, width: 0.5),
+          right: BorderSide(color: border, width: 0.5),
+          bottom: BorderSide(color: border, width: 0.5),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            const _BrowserMock(),
-            Padding(
-              padding: const EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title row — CrossAxisAlignment.start prevents badge from
-                  // stretching when title wraps to a second line.
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
+          const _BrowserMock(),
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.project.name,
+                        style: Theme.of(context).textTheme.headlineLarge,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ),
+                    if (widget.project.badge != null) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 7, vertical: 3),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: accent),
+                          borderRadius: AppRadius.borderRadiusXs,
+                        ),
                         child: Text(
-                          widget.project.name,
-                          style: Theme.of(context).textTheme.headlineLarge,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                          widget.project.badge!,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.copyWith(
+                                  color: accent, letterSpacing: 0.4),
                         ),
                       ),
-                      if (widget.project.badge != null) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 7, vertical: 3),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: accent),
-                            borderRadius: AppRadius.borderRadiusXs,
-                          ),
-                          child: Text(
-                            widget.project.badge!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                    color: accent, letterSpacing: 0.4),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  widget.project.description,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.7),
+                ),
+                if (widget.project.tags.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: widget.project.tags.map((t) {
+                      final isUiUx = t == 'UI/UX';
+                      return MouseRegion(
+                        cursor: isUiUx ? SystemMouseCursors.click : SystemMouseCursors.basic,
+                        child: GestureDetector(
+                          onTap: isUiUx ? () => launchUrl(Uri.parse('https://deepanshui.framer.website/')) : null,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceElev,
+                              borderRadius: AppRadius.subtle,
+                            ),
+                            child: Text(
+                              t,
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: isUiUx ? accent : textSec,
+                                decoration: isUiUx ? TextDecoration.underline : null,
+                                decorationColor: accent,
+                              ),
+                            ),
                           ),
                         ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    widget.project.description,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(height: 1.7),
-                  ),
-                  if (widget.project.tags.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 5,
-                      runSpacing: 5,
-                      children: widget.project.tags
-                          .map((t) {
-                            final isUiUx = t == 'UI/UX';
-                            return MouseRegion(
-                              cursor: isUiUx ? SystemMouseCursors.click : SystemMouseCursors.basic,
-                              child: GestureDetector(
-                                onTap: isUiUx ? () => launchUrl(Uri.parse('https://deepanshui.framer.website/')) : null,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 7, vertical: 3),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.surfaceElev,
-                                    borderRadius: AppRadius.subtle,
-                                  ),
-                                  child: Text(
-                                    t,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(
-                                          color: isUiUx ? accent : textSec,
-                                          decoration: isUiUx ? TextDecoration.underline : null,
-                                          decorationColor: accent,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          })
-                          .toList(),
-                    ),
-                  ],
-                  const SizedBox(height: 14),
-                  _ProjectLinkRow(
-                    githubUrl: widget.project.githubUrl,
-                    liveUrl: widget.project.liveUrl,
-                    figmaUrl: widget.project.figmaUrl,
-                    installUrl: widget.project.installUrl,
+                      );
+                    }).toList(),
                   ),
                 ],
-              ),
+                const SizedBox(height: 14),
+                _ProjectLinkRow(
+                  githubUrl: widget.project.githubUrl,
+                  liveUrl: widget.project.liveUrl,
+                  figmaUrl: widget.project.figmaUrl,
+                  installUrl: widget.project.installUrl,
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -536,7 +536,15 @@ class _BrowserMock extends StatelessWidget {
       height: 110,
       decoration: BoxDecoration(
         color: surface,
-        border: Border(bottom: BorderSide(color: border, width: 1)),
+        border: Border(
+          bottom: BorderSide(color: border, width: 0.5),
+          top: BorderSide(
+            color: isDark
+                ? AppColors.border2Dark
+                : AppColors.borderLight,
+            width: 1.5,
+          ),
+        ),
       ),
       child: Column(children: [
         Container(
