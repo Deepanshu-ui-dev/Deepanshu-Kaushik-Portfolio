@@ -33,23 +33,25 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
   late final AnimationController _ctrl;
   late final Animation<double> _opacity;
   late final Animation<Offset> _slide;
-  bool _triggered = false;
+
+  /// Whether _trigger() has been called and completed at least one
+  /// successful animateWith() call (i.e., the ticker was enabled).
+  bool _animated = false;
 
   @override
   void initState() {
     super.initState();
 
-    // Unbounded so spring overshoot is not silently clamped
-    _ctrl = AnimationController.unbounded(vsync: this);
+    // Unbounded so the spring overshoot is not silently clamped
+    _ctrl = AnimationController.unbounded(vsync: this)..value = 0.0;
 
-    // Clamp the unbounded value to [0,1] for opacity
-    _opacity = _ctrl.drive(
-      Tween<double>(begin: 0.0, end: 1.0).chain(
-        CurveTween(curve: const Interval(0.0, 1.0, curve: Curves.linear)),
-      ),
-    );
+    // _ClampedTween.transform() clamps t to [0,1] BEFORE delegating to
+    // super.transform(). This is the only correct way to guard against
+    // spring overshoot — overriding Curve.transformInternal() does NOT work
+    // because Curve.transform() asserts t ∈ [0,1] before calling it.
+    _opacity = _ClampedTween(begin: 0.0, end: 1.0).animate(_ctrl);
 
-    // Slide from slideBegin → 0 offset
+    // Slide from slideBegin → 0 offset (Offset lerp has no [0,1] assert)
     _slide = _ctrl.drive(
       Tween<Offset>(
         begin: Offset(0, widget.slideBegin),
@@ -60,9 +62,26 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAnimate());
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Re-attempt animation when TickerMode flips from disabled → enabled.
+    // This handles the case where the widget was built inside an Offstage
+    // or TickerMode(enabled: false) screen and the ticker was not yet active.
+    if (!_animated) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAnimate());
+    }
+  }
+
   void _maybeAnimate() {
-    if (_triggered || !mounted) return;
-    _triggered = true;
+    if (_animated || !mounted) return;
+
+    // Check if our ticker is actually enabled — if TickerMode is disabled,
+    // animateWith() is a no-op and we must retry later (via didChangeDependencies).
+    final tickerEnabled = TickerMode.of(context);
+    if (!tickerEnabled) return;
+
+    _animated = true;
 
     void runSpring() {
       if (!mounted) return;
@@ -99,10 +118,7 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
     // they never trigger a repaint of the child — only the raster layer
     // is composited at the new opacity/offset each frame.
     return FadeTransition(
-      opacity: _opacity.drive(
-        Tween<double>(begin: 0.0, end: 1.0)
-            .chain(CurveTween(curve: const _ClampCurve())),
-      ),
+      opacity: _opacity,
       child: SlideTransition(
         position: _slide,
         child: widget.child,
@@ -111,10 +127,17 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
   }
 }
 
-/// Clamps the animation value to [0, 1] so spring overshoot doesn't cause
-/// opacity > 1 (which would be invisible but wastes compositing budget).
-class _ClampCurve extends Curve {
-  const _ClampCurve();
+/// A [Tween<double>] whose [transform] clamps [t] to [0, 1] before
+/// evaluating, safely absorbing spring-animation overshoot.
+///
+/// Why not CurveTween + a clamping Curve?
+/// [Curve.transform] asserts `t >= 0.0 && t <= 1.0` BEFORE calling
+/// [transformInternal], so any subclass override of [transformInternal]
+/// never executes when t is out of range. Clamping must happen at the
+/// [Tween.transform] level instead.
+class _ClampedTween extends Tween<double> {
+  _ClampedTween({required super.begin, required super.end});
+
   @override
-  double transformInternal(double t) => t.clamp(0.0, 1.0);
+  double transform(double t) => super.transform(t.clamp(0.0, 1.0));
 }

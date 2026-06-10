@@ -693,7 +693,10 @@ class _ReachOutCardState extends State<_ReachOutCard>
                         child: Text(widget.data.label),
                       ),
                       const SizedBox(height: 2),
-                      Row(
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 0,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
                             widget.data.handle,
@@ -704,7 +707,6 @@ class _ReachOutCardState extends State<_ReachOutCard>
                               color: _hovered ? accent : textSec,
                             ),
                           ),
-                          const SizedBox(width: 5),
                           Text(
                             '//',
                             style: TextStyle(
@@ -713,16 +715,12 @@ class _ReachOutCardState extends State<_ReachOutCard>
                               color: textTer.withValues(alpha: 0.4),
                             ),
                           ),
-                          const SizedBox(width: 5),
-                          Expanded(
-                            child: Text(
-                              widget.data.sublabel,
-                              style: TextStyle(
-                                fontFamily: 'JetBrainsMono',
-                                fontSize: 8,
-                                color: textTer,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                          Text(
+                            widget.data.sublabel,
+                            style: TextStyle(
+                              fontFamily: 'JetBrainsMono',
+                              fontSize: 8,
+                              color: textTer,
                             ),
                           ),
                         ],

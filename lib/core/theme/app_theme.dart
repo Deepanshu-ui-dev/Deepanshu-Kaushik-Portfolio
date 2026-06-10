@@ -234,8 +234,7 @@ class AppSpacing {
   // Responsive horizontal padding — centers content at 720px max
   static double horizontalPadding(BuildContext context) {
     final w = MediaQuery.sizeOf(context).width;
-    if (w >= 1400) return (w - maxContentWidth) / 2;
-    if (w >= tabletMax) return 80;
+    if (w >= 760) return 20; // Centered in the 760px column (760 - 20*2 = 720 max content width)
     if (w >= mobileMax) return 40;
     if (w >= 400)       return 24;
     return 16;
