@@ -4,14 +4,9 @@ import 'package:flutter/physics.dart';
 /// A wrapper that plays a spring-driven fade + slide-up the first time
 /// its child is built in the widget tree.
 ///
-/// Uses a SpringSimulation so the entrance feels alive and physical —
-/// the element snaps up and gently overshoots before settling, rather
-/// than decelerating at a fixed mathematical rate.
-///
-/// Spring presets:
-///   mass: 0.5   → light, responsive object
-///   stiffness: 220 → pulls back quickly, sharp entry
-///   damping: 22    → just enough bounce suppression to look premium
+/// Uses FadeTransition + SlideTransition (GPU-composited) instead of
+/// Opacity + FractionalTranslation so the animation runs entirely on the
+/// raster thread with zero CPU cost per frame.
 class ScrollFadeIn extends StatefulWidget {
   final Widget child;
 
@@ -36,6 +31,8 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
     with SingleTickerProviderStateMixin {
   // Unbounded controller — spring can overshoot past 1.0
   late final AnimationController _ctrl;
+  late final Animation<double> _opacity;
+  late final Animation<Offset> _slide;
   bool _triggered = false;
 
   @override
@@ -44,6 +41,21 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
 
     // Unbounded so spring overshoot is not silently clamped
     _ctrl = AnimationController.unbounded(vsync: this);
+
+    // Clamp the unbounded value to [0,1] for opacity
+    _opacity = _ctrl.drive(
+      Tween<double>(begin: 0.0, end: 1.0).chain(
+        CurveTween(curve: const Interval(0.0, 1.0, curve: Curves.linear)),
+      ),
+    );
+
+    // Slide from slideBegin → 0 offset
+    _slide = _ctrl.drive(
+      Tween<Offset>(
+        begin: Offset(0, widget.slideBegin),
+        end: Offset.zero,
+      ),
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAnimate());
   }
@@ -83,24 +95,26 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _ctrl,
-      builder: (context, child) {
-        final val = _ctrl.value;
-        // Opacity clamped [0, 1]
-        final opacity = val.clamp(0.0, 1.0);
-        // Slide uses the raw spring value directly, allowing bounce overshoot
-        final slide = Offset(0, widget.slideBegin * (1.0 - val));
-
-        return Opacity(
-          opacity: opacity,
-          child: FractionalTranslation(
-            translation: slide,
-            child: child,
-          ),
-        );
-      },
-      child: widget.child,
+    // FadeTransition and SlideTransition are GPU-composited:
+    // they never trigger a repaint of the child — only the raster layer
+    // is composited at the new opacity/offset each frame.
+    return FadeTransition(
+      opacity: _opacity.drive(
+        Tween<double>(begin: 0.0, end: 1.0)
+            .chain(CurveTween(curve: const _ClampCurve())),
+      ),
+      child: SlideTransition(
+        position: _slide,
+        child: widget.child,
+      ),
     );
   }
+}
+
+/// Clamps the animation value to [0, 1] so spring overshoot doesn't cause
+/// opacity > 1 (which would be invisible but wastes compositing budget).
+class _ClampCurve extends Curve {
+  const _ClampCurve();
+  @override
+  double transformInternal(double t) => t.clamp(0.0, 1.0);
 }

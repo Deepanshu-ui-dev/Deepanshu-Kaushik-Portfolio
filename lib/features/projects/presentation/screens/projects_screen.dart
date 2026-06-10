@@ -56,6 +56,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   Widget build(BuildContext context) {
     final pad = AppSpacing.horizontalPadding(context);
     final filtered = _filtered;
+    final bottomClear = MediaQuery.of(context).padding.bottom + 96.0;
 
     return FadeTransition(
       opacity: _fade,
@@ -66,8 +67,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverPadding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: pad, vertical: AppSpacing.xl),
+              padding: EdgeInsets.only(
+                  left: pad,
+                  right: pad,
+                  top: AppSpacing.xl,
+                  bottom: bottomClear),
               sliver: SliverList.list(
                 children: [
                   // ── HERO ─────────────────────────────────────────
@@ -102,7 +106,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
                     child: _OpenSourceSection(),
                   ),
 
-                  const SizedBox(height: 120),
+                  const SizedBox(height: AppSpacing.xxl),
                 ],
               ),
             ),

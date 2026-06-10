@@ -40,6 +40,7 @@ class _AboutScreenState extends State<AboutScreen>
   Widget build(BuildContext context) {
     final padding = AppSpacing.horizontalPadding(context);
     final textSec = AppColors.textSecondary;
+    final bottomClear = MediaQuery.of(context).padding.bottom + 96.0;
 
     return FadeTransition(
       opacity: _fade,
@@ -50,8 +51,11 @@ class _AboutScreenState extends State<AboutScreen>
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverPadding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: padding, vertical: AppSpacing.xl),
+              padding: EdgeInsets.only(
+                  left: padding,
+                  right: padding,
+                  top: AppSpacing.xl,
+                  bottom: bottomClear),
               sliver: SliverList.list(
                 children: [
                   // ── 01 / Header ──
@@ -146,7 +150,7 @@ class _AboutScreenState extends State<AboutScreen>
                     ),
                   ),
 
-                  const SizedBox(height: 120),
+                  const SizedBox(height: AppSpacing.xxl),
                 ],
               ),
             ),

@@ -103,6 +103,7 @@ class _SkillsScreenState extends State<SkillsScreen>
   @override
   Widget build(BuildContext context) {
     final padding = AppSpacing.horizontalPadding(context);
+    final bottomClear = MediaQuery.of(context).padding.bottom + 96.0;
 
     return FadeTransition(
       opacity: _fade,
@@ -113,8 +114,11 @@ class _SkillsScreenState extends State<SkillsScreen>
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             SliverPadding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: padding, vertical: AppSpacing.xl),
+              padding: EdgeInsets.only(
+                  left: padding,
+                  right: padding,
+                  top: AppSpacing.xl,
+                  bottom: bottomClear),
               sliver: SliverList.list(
                 children: [
                   // ── HERO ──────────────────────────────────────────
@@ -149,7 +153,7 @@ class _SkillsScreenState extends State<SkillsScreen>
                     child: const RepaintBoundary(child: _PhilosophyCallout()),
                   ),
 
-                  const SizedBox(height: 120),
+                  const SizedBox(height: AppSpacing.xxl),
                 ],
               ),
             ),

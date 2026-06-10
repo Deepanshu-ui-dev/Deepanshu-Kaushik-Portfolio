@@ -13,6 +13,7 @@
 library portfolio;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -47,6 +48,16 @@ void main() async {
     url: PortfolioConfig.supabaseUrl,
     anonKey: PortfolioConfig.supabaseAnonKey,
   );
+
+  // ── Performance boosts ──────────────────────────────────────────────────
+  // Enable pointer-event resampling so touch/stylus input is interpolated
+  // between frames → eliminates jitter on 90/120 Hz displays.
+  GestureBinding.instance.resamplingEnabled = true;
+
+  // Expand image LRU cache to 256 MB (default is 100 MB).
+  // Prevents the gallery and project thumbnails from being evicted and
+  // re-decoded every time the user scrolls back.
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 256 << 20;
 
   // Pre-compute and cache all theme colors for instant access during theme switching
   ThemeTransitionUtils.initializeColorCache();
@@ -307,10 +318,10 @@ class _AppShellState extends ConsumerState<_AppShell>
                 ),
 
                 // ── Standalone Lamp ───────────────────────────
-                const Positioned(
-                  top: 0,
+                Positioned(
+                  top: MediaQuery.of(context).padding.top,
                   right: 20,
-                  child: LampThemeSwitcher(),
+                  child: const LampThemeSwitcher(),
                 ),
               ],
             ),

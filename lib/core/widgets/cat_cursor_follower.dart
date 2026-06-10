@@ -408,7 +408,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _lastTouchPos = null;
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────────
+  // ── Build ─────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -426,52 +426,61 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
         behavior: HitTestBehavior.translucent,
         child: Stack(
           children: [
-            widget.child,
+            // ── Static child — never rebuilt by cat setState ────────────────
+            RepaintBoundary(child: widget.child),
 
-            // ── Speech bubble ──────────────────────────────────────────────────
-            if (_showSpeechBubble)
-              Positioned(
-                left: _nekoPosX - 100,
-                width: 200,
-                top: _nekoPosY - 64, // slightly higher to fit the taller tail
-                height: 48,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: IgnorePointer(
-                    child: AnimatedScale(
-                      scale: _bubbleScale,
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutBack,
-                      child: AnimatedOpacity(
-                        opacity: _bubbleOpacity,
-                        duration: const Duration(milliseconds: 200),
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: CustomPaint(
-                            painter: SpeechBubblePainter(
-                              backgroundColor: isDark
-                                  ? AppColors.surfaceElevDark
-                                  : AppColors.surfaceElevLight,
-                              borderColor:
-                                  isDark ? AppColors.borderDark : AppColors.borderLight,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                                top: 6,
-                                bottom: 6 + 8, // 8 for the tail height
-                              ),
-                              child: Text(
-                                _bubbleText,
-                                style: TextStyle(
-                                  fontFamily: 'Outfit',
-                                  fontSize: 11,
-                                  color: isDark
-                                      ? AppColors.textPrimaryDark
-                                      : AppColors.textPrimaryLight,
-                                  fontWeight: FontWeight.w600,
-                                  decoration: TextDecoration.none,
+            // ── Cat overlay — only this layer repaints on each tick ─────────
+            RepaintBoundary(
+              child: Stack(
+                children: [
+                  // ── Speech bubble ─────────────────────────────────────────
+                  if (_showSpeechBubble)
+                    Positioned(
+                      left: _nekoPosX - 100,
+                      width: 200,
+                      top: _nekoPosY - 64,
+                      height: 48,
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: IgnorePointer(
+                          child: AnimatedScale(
+                            scale: _bubbleScale,
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeOutBack,
+                            child: AnimatedOpacity(
+                              opacity: _bubbleOpacity,
+                              duration: const Duration(milliseconds: 200),
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: CustomPaint(
+                                  painter: SpeechBubblePainter(
+                                    backgroundColor: isDark
+                                        ? AppColors.surfaceElevDark
+                                        : AppColors.surfaceElevLight,
+                                    borderColor: isDark
+                                        ? AppColors.borderDark
+                                        : AppColors.borderLight,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 10,
+                                      right: 10,
+                                      top: 6,
+                                      bottom: 6 + 8,
+                                    ),
+                                    child: Text(
+                                      _bubbleText,
+                                      style: TextStyle(
+                                        fontFamily: 'Outfit',
+                                        fontSize: 11,
+                                        color: isDark
+                                            ? AppColors.textPrimaryDark
+                                            : AppColors.textPrimaryLight,
+                                        fontWeight: FontWeight.w600,
+                                        decoration: TextDecoration.none,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -479,54 +488,54 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
 
-            // ── Exclamation ────────────────────────────────────────────────────
-            if (_showExclamation && !_showSpeechBubble)
-              Positioned(
-                left: _nekoPosX + 10,
-                top:  _nekoPosY - 24,
-                child: const IgnorePointer(
-                  child: Text(
-                    '!',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                      height: 1,
-                    ),
-                  ),
-                ),
-              ),
-
-            // ── Cat sprite ────────────────────────────────────────────────────
-            Positioned(
-              left: _nekoPosX - 16,
-              top:  _nekoPosY - 16,
-              child: IgnorePointer(
-                child: SizedBox(
-                  width: 32,
-                  height: 32,
-                  child: ClipRect(
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          left: _currentSprite[0] * 32.0,
-                          top:  _currentSprite[1] * 32.0,
-                          child: Image.asset(
-                            'assets/images/oneko.gif',
-                            width:  256,
-                            height: 128,
-                            fit: BoxFit.fill,
-                            filterQuality: FilterQuality.none,
+                  // ── Exclamation ───────────────────────────────────────────
+                  if (_showExclamation && !_showSpeechBubble)
+                    Positioned(
+                      left: _nekoPosX + 10,
+                      top:  _nekoPosY - 24,
+                      child: const IgnorePointer(
+                        child: Text(
+                          '!',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                            height: 1,
                           ),
                         ),
-                      ],
+                      ),
+                    ),
+
+                  // ── Cat sprite ────────────────────────────────────────────
+                  Positioned(
+                    left: _nekoPosX - 16,
+                    top:  _nekoPosY - 16,
+                    child: IgnorePointer(
+                      child: SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: ClipRect(
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                left: _currentSprite[0] * 32.0,
+                                top:  _currentSprite[1] * 32.0,
+                                child: Image.asset(
+                                  'assets/images/oneko.gif',
+                                  width:  256,
+                                  height: 128,
+                                  fit: BoxFit.fill,
+                                  filterQuality: FilterQuality.none,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
           ],

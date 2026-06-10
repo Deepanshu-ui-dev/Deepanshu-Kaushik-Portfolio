@@ -44,6 +44,7 @@ class _ContactScreenState extends State<ContactScreen>
     final screenWidth = MediaQuery.sizeOf(context).width;
     final isMobile = screenWidth < 650;
     final hPad = AppSpacing.horizontalPadding(context);
+    final bottomClear = MediaQuery.of(context).padding.bottom + 96.0;
 
     return FadeTransition(
       opacity: _fade,
@@ -59,7 +60,7 @@ class _ContactScreenState extends State<ContactScreen>
                 left: hPad,
                 right: hPad,
                 top: 24,
-                bottom: 120,
+                bottom: bottomClear,
               ),
               sliver: SliverList.list(
                 children: [

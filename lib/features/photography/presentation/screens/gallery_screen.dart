@@ -116,7 +116,9 @@ class GalleryScreen extends StatelessWidget {
               
               // Grid Section
               SliverPadding(
-                padding: EdgeInsets.fromLTRB(padding, 0, padding, AppSpacing.xl + 40),
+                padding: EdgeInsets.fromLTRB(
+                    padding, 0, padding,
+                    MediaQuery.of(context).padding.bottom + AppSpacing.xl),
                 sliver: SliverLayoutBuilder(
                   builder: (context, constraints) {
                     final isMobile = constraints.crossAxisExtent < AppSpacing.mobileMax;

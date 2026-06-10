@@ -50,6 +50,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final hPad = AppSpacing.horizontalPadding(context);
+    // Bottom clearance = nav bar height (~76px) + bottom safe area inset
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final bottomClear = bottomInset + 96.0;
+
     return FadeTransition(
       opacity: _fadeAnim,
       child: SafeArea(
@@ -59,11 +64,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding: const EdgeInsets.only(
-                left: 24,
-                right: 24,
-                top: 24,
-                bottom: 120,
+              padding: EdgeInsets.only(
+                left: hPad,
+                right: hPad,
+                top: AppSpacing.xl,
+                bottom: bottomClear,
               ),
               sliver: SliverList.list(
                 children: [
