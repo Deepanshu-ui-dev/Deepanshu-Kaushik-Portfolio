@@ -2,10 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/shared_widgets.dart';
+import '../../../../core/widgets/smooth_scroll.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class GalleryScreen extends StatelessWidget {
+class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
+
+  @override
+  State<GalleryScreen> createState() => _GalleryScreenState();
+}
+
+class _GalleryScreenState extends State<GalleryScreen> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   static const _images = [
     'assets/images/aabes.jpeg',
@@ -34,8 +54,11 @@ class GalleryScreen extends StatelessWidget {
       child: Scaffold(
         body: SafeArea(
           bottom: false,
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          child: SmoothScroll(
+            controller: _scrollController,
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             slivers: [
               // Header Section
               SliverPadding(
@@ -161,6 +184,7 @@ class GalleryScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
         ),
       ),
     );

@@ -30,7 +30,6 @@ class ContributionGraph extends StatefulWidget {
 }
 
 class _ContributionGraphState extends State<ContributionGraph> {
-  ContributionDay? _hoveredDay;
   late List<List<ContributionDay?>> _weeks;
 
   static const int _rows = 7;
@@ -231,17 +230,6 @@ class _ContributionGraphState extends State<ContributionGraph> {
                       cellSize: cellSize,
                       cellGap: _cellGap,
                       colorForLevel: _colorForLevel,
-                      hoveredDay: _hoveredDay,
-                      onHover: (day) {
-                        if (_hoveredDay != day) {
-                          setState(() => _hoveredDay = day);
-                        }
-                      },
-                      onExit: () {
-                        if (_hoveredDay != null) {
-                          setState(() => _hoveredDay = null);
-                        }
-                      },
                       formatDate: _formatDate,
                     ),
                   ),
@@ -264,9 +252,6 @@ class _HeatmapGrid extends StatelessWidget {
   final double cellSize;
   final double cellGap;
   final Color Function(int level) colorForLevel;
-  final ContributionDay? hoveredDay;
-  final ValueChanged<ContributionDay?> onHover;
-  final VoidCallback onExit;
   final String Function(DateTime) formatDate;
 
   const _HeatmapGrid({
@@ -274,9 +259,6 @@ class _HeatmapGrid extends StatelessWidget {
     required this.cellSize,
     required this.cellGap,
     required this.colorForLevel,
-    required this.hoveredDay,
-    required this.onHover,
-    required this.onExit,
     required this.formatDate,
   });
 
@@ -285,31 +267,26 @@ class _HeatmapGrid extends StatelessWidget {
     final weekStep = cellSize + cellGap;
     final rowStep  = cellSize + cellGap;
 
-    return MouseRegion(
-      onExit: (_) => onExit(),
-      child: Stack(
-        children: [
-          for (int w = 0; w < weeks.length; w++)
-            for (int d = 0; d < 7; d++)
-              Positioned(
-                left: w * weekStep,
-                top:  d * rowStep,
-                child: weeks[w][d] != null
-                    ? HeatmapWaveReveal(
-                        columnIndex: w,
-                        child: _HeatmapCell(
-                          day: weeks[w][d]!,
-                          size: cellSize,
-                          color: colorForLevel(weeks[w][d]!.level),
-                          isHovered: hoveredDay == weeks[w][d],
-                          onHover: onHover,
-                          formatDate: formatDate,
-                        ),
-                      )
-                    : SizedBox(width: cellSize, height: cellSize),
-              ),
-        ],
-      ),
+    return Stack(
+      children: [
+        for (int w = 0; w < weeks.length; w++)
+          for (int d = 0; d < 7; d++)
+            Positioned(
+              left: w * weekStep,
+              top:  d * rowStep,
+              child: weeks[w][d] != null
+                  ? HeatmapWaveReveal(
+                      columnIndex: w,
+                      child: _HeatmapCell(
+                        day: weeks[w][d]!,
+                        size: cellSize,
+                        color: colorForLevel(weeks[w][d]!.level),
+                        formatDate: formatDate,
+                      ),
+                    )
+                  : SizedBox(width: cellSize, height: cellSize),
+            ),
+      ],
     );
   }
 }
@@ -318,32 +295,36 @@ class _HeatmapGrid extends StatelessWidget {
 // HEATMAP CELL
 // ─────────────────────────────────────────────────────────────
 
-class _HeatmapCell extends StatelessWidget {
+class _HeatmapCell extends StatefulWidget {
   final ContributionDay day;
   final double size;
   final Color color;
-  final bool isHovered;
-  final ValueChanged<ContributionDay?> onHover;
   final String Function(DateTime) formatDate;
 
   const _HeatmapCell({
     required this.day,
     required this.size,
     required this.color,
-    required this.isHovered,
-    required this.onHover,
     required this.formatDate,
   });
+
+  @override
+  State<_HeatmapCell> createState() => _HeatmapCellState();
+}
+
+class _HeatmapCellState extends State<_HeatmapCell> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return MouseRegion(
-      onEnter: (_) => onHover(day),
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
       child: Tooltip(
         message:
-            '${formatDate(day.date)} · ${day.count} contribution${day.count == 1 ? '' : 's'}',
+            '${widget.formatDate(widget.day.date)} · ${widget.day.count} contribution${widget.day.count == 1 ? '' : 's'}',
         preferBelow: false,
         waitDuration: Duration.zero,
         textStyle: TextStyle(
@@ -357,13 +338,13 @@ class _HeatmapCell extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         child: Container(
-          width: size,
-          height: size,
+          width: widget.size,
+          height: widget.size,
           decoration: BoxDecoration(
             // Square cells — matches reference blockRadius=0
             borderRadius: BorderRadius.zero,
             // Subtle border on empty cells only, using GitHub's exact color
-            border: day.level == 0
+            border: widget.day.level == 0
                 ? Border.all(
                     color: isDark
                         ? const Color(0xFF21262D) // GitHub dark empty-cell border
@@ -371,11 +352,11 @@ class _HeatmapCell extends StatelessWidget {
                     width: 0.5,
                   )
                 : null,
-            color: isHovered
+            color: _isHovered
                 ? (isDark
                     ? Colors.white.withValues(alpha: 0.9)
                     : Colors.black.withValues(alpha: 0.55))
-                : color,
+                : widget.color,
           ),
         ),
       ),

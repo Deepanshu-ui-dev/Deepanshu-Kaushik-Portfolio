@@ -26,6 +26,7 @@ import 'core/widgets/shared_widgets.dart';
 import 'core/widgets/lamp_theme_switcher.dart';
 import 'core/widgets/circular_reveal_transition.dart';
 import 'core/widgets/cat_cursor_follower.dart';
+import 'core/widgets/smooth_scroll.dart';
 
 // ── Screens ──────────────────────────────────────────────────
 import 'features/home/presentation/screens/home_screen.dart';
@@ -141,14 +142,16 @@ class _AppShellState extends ConsumerState<_AppShell>
 
   Widget _buildScreen(int index) {
     final sc = _controllerFor(index);
+    Widget screen;
     switch (index) {
-      case 0:  return HomeScreen(scrollController: sc);
-      case 1:  return AboutScreen(scrollController: sc);
-      case 2:  return ProjectsScreen(scrollController: sc);
-      case 3:  return SkillsScreen(scrollController: sc);
-      case 4:  return ContactScreen(scrollController: sc);
-      default: return const SizedBox.shrink();
+      case 0:  screen = HomeScreen(scrollController: sc); break;
+      case 1:  screen = AboutScreen(scrollController: sc); break;
+      case 2:  screen = ProjectsScreen(scrollController: sc); break;
+      case 3:  screen = SkillsScreen(scrollController: sc); break;
+      case 4:  screen = ContactScreen(scrollController: sc); break;
+      default: screen = const SizedBox.shrink();
     }
+    return SmoothScroll(controller: sc, child: screen);
   }
 
   void _openTab(int index) {
