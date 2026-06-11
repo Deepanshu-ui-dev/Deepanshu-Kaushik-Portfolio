@@ -1,7 +1,7 @@
 {
-  "buildCommand": "bash build.sh",
   "outputDirectory": "build/web",
   "installCommand": "echo 'skip'",
+  "buildCommand": "echo 'skip'",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
