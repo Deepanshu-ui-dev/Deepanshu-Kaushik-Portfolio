@@ -3,23 +3,28 @@
 # Exit immediately if any command exits with a non-zero status
 set -e
 
-# Clone or update Flutter SDK
-if [ -d "flutter" ]; then
-  echo "==> Flutter SDK directory exists. Updating..."
-  cd flutter
-  git pull
-  cd ..
+FLUTTER_VERSION="3.44.1"
+FLUTTER_DIR="flutter"
+
+# Clone Flutter SDK if not already present
+if [ -d "$FLUTTER_DIR/.git" ]; then
+  echo "==> Flutter SDK directory exists. Skipping clone."
 else
-  echo "==> Cloning Flutter SDK (version 3.41.6)..."
-  git clone https://github.com/flutter/flutter.git --depth 1 -b 3.41.6
+  echo "==> Cloning Flutter SDK (version $FLUTTER_VERSION)..."
+  git clone https://github.com/flutter/flutter.git --depth 1 -b "$FLUTTER_VERSION" "$FLUTTER_DIR"
 fi
 
-# Configure and build the Flutter Web project
+# Add Flutter to PATH for this script
+export PATH="$PWD/$FLUTTER_DIR/bin:$PATH"
+
+# Configure Flutter Web support
 echo "==> Configuring Flutter Web support..."
-flutter/bin/flutter config --enable-web
+flutter config --enable-web
 
+# Get project dependencies
 echo "==> Getting project dependencies..."
-flutter/bin/flutter pub get
+flutter pub get
 
+# Build the web application
 echo "==> Building web application..."
-flutter/bin/flutter build web --release
+flutter build web --release --no-tree-shake-icons
