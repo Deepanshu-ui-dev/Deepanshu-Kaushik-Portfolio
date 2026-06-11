@@ -21,5 +21,5 @@ flutter/bin/flutter config --enable-web
 echo "==> Getting project dependencies..."
 flutter/bin/flutter pub get
 
-echo "==> Building web application with CanvasKit renderer..."
-flutter/bin/flutter build web --release --web-renderer canvaskit
+echo "==> Building web application..."
+flutter/bin/flutter build web --release
