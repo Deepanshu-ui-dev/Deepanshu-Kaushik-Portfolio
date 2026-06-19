@@ -44,6 +44,15 @@ class PortfolioConfig {
       installUrl: 'https://github.com/Deepanshu-ui-dev/Codexa-App/releases/latest/',
     ),
     ProjectItem(
+  name: 'FinTrack',
+  description:
+      'Developed a premium personal finance management application using Flutter with an offline-first architecture. Implemented expense tracking, budget goals, financial analytics, biometric authentication, local notifications, and responsive cross-platform UI with Riverpod state management and Hive local database.',
+  tags: ['Flutter', 'FinTech', 'Riverpod', 'Hive'],
+  badge: 'Featured',
+  githubUrl: 'https://github.com/Deepanshu-ui-dev/Fintrack',
+  installUrl: 'https://github.com/Deepanshu-ui-dev/Fintrack/releases/latest/',
+),
+    ProjectItem(
       name: 'Document-Search-Engine',
       description: 'Built a document search engine using an inverted index and TF-IDF ranking, supporting fast keyword and phrase queries via positional indexing.',
       tags: ['CLI', 'Algorithm'],
