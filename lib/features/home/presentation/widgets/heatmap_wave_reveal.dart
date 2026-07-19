@@ -32,7 +32,7 @@ class _HeatmapWaveRevealState extends State<HeatmapWaveReveal>
       CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
     );
 
-    // Wave delay based on column index
+    
     Future.delayed(Duration(milliseconds: widget.columnIndex * 8), () {
       if (mounted) {
         _ctrl.forward();

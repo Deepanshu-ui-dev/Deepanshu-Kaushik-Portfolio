@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,10 +9,11 @@ import '../../../../config/portfolio_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/widgets/scroll_fade_in.dart';
+import '../../../../core/widgets/magnet.dart';
 
-// ─────────────────────────────────────────────
-// HERO SECTION — spring-driven entry
-// ─────────────────────────────────────────────
+
+
+
 
 class HeroSection extends StatefulWidget {
   const HeroSection({super.key});
@@ -26,7 +29,7 @@ class _HeroSectionState extends State<HeroSection>
   @override
   void initState() {
     super.initState();
-    // Unbounded for spring — prevents clamp eating overshoot
+    
     _ctrl = AnimationController.unbounded(vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
@@ -66,9 +69,9 @@ class _HeroSectionState extends State<HeroSection>
   }
 }
 
-// ─────────────────────────────────────────────
-// IDENTITY BLOCK
-// ─────────────────────────────────────────────
+
+
+
 
 class _IdentityBlock extends StatelessWidget {
   const _IdentityBlock();
@@ -82,7 +85,7 @@ class _IdentityBlock extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Version / date badge row ──────────────────────────
+        
         Row(
           children: [
             Text(
@@ -226,7 +229,6 @@ class _AvatarWidgetState extends State<_AvatarWidget> {
     );
   }
 }
-
 
 class _DetailRow extends StatelessWidget {
   final String index;
@@ -382,9 +384,9 @@ class _LazyProfileImageState extends State<_LazyProfileImage>
   }
 }
 
-// ─────────────────────────────────────────────
-// ABOUT BLOCK
-// ─────────────────────────────────────────────
+
+
+
 
 class _AboutBlock extends StatelessWidget {
   const _AboutBlock();
@@ -404,7 +406,7 @@ class _AboutBlock extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Headline row ──────────────────────────────────
+            
             if (isMobile) ...[
               const _HeroHeadline(),
               const SizedBox(height: 10),
@@ -421,7 +423,7 @@ class _AboutBlock extends StatelessWidget {
 
             const SizedBox(height: 14),
 
-            // ── Bio ───────────────────────────────────────────
+            
             Text(
               'I design interfaces and build them with Flutter. '
               'Bridging pixel-perfect UI/UX design with high-performance mobile engineering. '
@@ -438,7 +440,7 @@ class _AboutBlock extends StatelessWidget {
             const DashedDivider(),
             const SizedBox(height: 22),
 
-            // ── Quick Reach Out ───────────────────────────────
+            
             Row(
               children: [
                 Text(
@@ -467,9 +469,9 @@ class _AboutBlock extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// HERO HEADLINE — Outfit ExtraBold with accent badge
-// ─────────────────────────────────────────────
+
+
+
 
 class _HeroHeadline extends StatelessWidget {
   const _HeroHeadline();
@@ -501,9 +503,9 @@ class _HeroHeadline extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// REACH OUT GRID — 2×2 premium layout
-// ─────────────────────────────────────────────
+
+
+
 
 class _ReachOutGrid extends StatelessWidget {
   const _ReachOutGrid();
@@ -544,7 +546,7 @@ class _ReachOutGrid extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       final isWide = constraints.maxWidth >= 380;
       if (isWide) {
-        // 2×2 grid
+        
         return Column(
           children: [
             Row(
@@ -577,7 +579,7 @@ class _ReachOutGrid extends StatelessWidget {
           ],
         );
       }
-      // Narrow: single column
+      
       return Column(
         children: [
           for (int i = 0; i < _links.length; i++) ...[
@@ -697,7 +699,7 @@ class _ReachOutCardState extends State<_ReachOutCard>
             ),
             child: Row(
               children: [
-                // Icon container
+                
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
                   width: 28,
@@ -725,7 +727,7 @@ class _ReachOutCardState extends State<_ReachOutCard>
                 ),
                 const SizedBox(width: 10),
 
-                // Label + handle + sublabel
+                
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -779,7 +781,7 @@ class _ReachOutCardState extends State<_ReachOutCard>
                   ),
                 ),
 
-                // Arrow — fades in on hover
+                
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 140),
                   opacity: _hovered ? 1.0 : 0.0,
@@ -795,9 +797,9 @@ class _ReachOutCardState extends State<_ReachOutCard>
   }
 }
 
-// ─────────────────────────────────────────────
-// RESUME PULSING BUTTON
-// ─────────────────────────────────────────────
+
+
+
 
 class _ResumePulsingButton extends StatefulWidget {
   const _ResumePulsingButton();
@@ -885,5 +887,90 @@ class _ResumePulsingButtonState extends State<_ResumePulsingButton>
         ),
       ),
     );
+  }
+}
+
+
+
+
+
+class _ScrambleText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+  const _ScrambleText({super.key, required this.text, required this.style});
+
+  @override
+  State<_ScrambleText> createState() => _ScrambleTextState();
+}
+
+class _ScrambleTextState extends State<_ScrambleText>
+    with SingleTickerProviderStateMixin {
+  late String _displayText;
+  late String _oldText;
+  late String _targetText;
+  late AnimationController _ctrl;
+  final math.Random _random = math.Random();
+  final String _chars = r'ABCDEFGHIJKLMNOPQRSTUVWXYZ!<>-_\\/[]{}—=+*^?#_';
+
+  @override
+  void initState() {
+    super.initState();
+    _displayText = widget.text;
+    _oldText = widget.text;
+    _targetText = widget.text;
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 600));
+    _ctrl.addListener(_updateText);
+  }
+
+  @override
+  void didUpdateWidget(_ScrambleText old) {
+    super.didUpdateWidget(old);
+    if (old.text != widget.text) {
+      _oldText = _targetText;
+      _targetText = widget.text;
+      _ctrl.forward(from: 0);
+    }
+  }
+
+  void _updateText() {
+    if (_ctrl.value == 1.0) {
+      setState(() => _displayText = _targetText);
+      return;
+    }
+
+    final double progress = _ctrl.value;
+    final double currentLen =
+        _oldText.length + (_targetText.length - _oldText.length) * progress;
+    final int len = currentLen.round();
+
+    final buffer = StringBuffer();
+    for (int i = 0; i < len; i++) {
+      final settleTime = 0.2 + (i / math.max(1, _targetText.length)) * 0.5;
+
+      if (progress >= settleTime && i < _targetText.length) {
+        buffer.write(_targetText[i]);
+      } else {
+        if (i < _targetText.length &&
+            _targetText[i] == ' ' &&
+            _random.nextDouble() > 0.5) {
+          buffer.write(' ');
+        } else {
+          buffer.write(_chars[_random.nextInt(_chars.length)]);
+        }
+      }
+    }
+    setState(() => _displayText = buffer.toString());
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(_displayText, style: widget.style);
   }
 }

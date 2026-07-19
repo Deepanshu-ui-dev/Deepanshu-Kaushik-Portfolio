@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Subtly pulls a widget toward the cursor while hovering.
-/// Uses TweenAnimationBuilder so the translation actually interpolates —
-/// AnimatedContainer does not animate Matrix4 transforms.
+
+
+
 class Magnet extends StatefulWidget {
   final Widget child;
 
-  /// Max translation as a fraction of the widget's own size (0.0–1.0).
-  /// 0.15 is subtle; 0.35 is dramatic.
+  
+  
   final double displacement;
 
   final Duration duration;
@@ -31,7 +31,7 @@ class _MagnetState extends State<Magnet> {
   void _onHover(PointerEvent event) {
     final box  = context.findRenderObject() as RenderBox;
     final size = box.size;
-    // Normalize to –0.5 … +0.5 relative to widget center
+    
     final dx = (event.localPosition.dx / size.width)  - 0.5;
     final dy = (event.localPosition.dy / size.height) - 0.5;
     setState(() {
@@ -51,7 +51,7 @@ class _MagnetState extends State<Magnet> {
     return MouseRegion(
       onHover: _onHover,
       onExit:  _onExit,
-      // TweenAnimationBuilder interpolates _target changes with the curve/duration
+      
       child: TweenAnimationBuilder<Offset>(
         tween:    Tween(begin: Offset.zero, end: _target),
         duration: widget.duration,
@@ -62,7 +62,7 @@ class _MagnetState extends State<Magnet> {
             child:  child,
           );
         },
-        child: widget.child, // passed as child so it isn't rebuilt each frame
+        child: widget.child, 
       ),
     );
   }

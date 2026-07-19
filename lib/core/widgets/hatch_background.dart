@@ -2,45 +2,45 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HATCH BACKGROUND
-//
-// Hairline diagonal texture — matches the editorial depth of abdulrehmanwaseem.me.
-//
-// Defaults (tuned to be imperceptible but present):
-//   • 45° angle
-//   • 16px spacing between lines
-//   • 0.5px stroke
-//   • 0.025 opacity (dark) / 0.03 opacity (light) — barely visible
-//
-// All parameters are configurable for denser/lighter variants.
-// Uses RepaintBoundary + shouldRepaint guard — zero repaints on scroll.
-//
-// Usage:
-//   HatchBackground(child: Scaffold(...))
-//
-// Denser variant (e.g. hero section):
-//   HatchBackground(
-//     spacing: 10,
-//     opacity: 0.04,
-//     child: HeroContent(),
-//   )
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class HatchBackground extends StatelessWidget {
   final Widget child;
 
-  /// Pixels between parallel hatch lines. Default: 16.
+  
   final double spacing;
 
-  /// Stroke width of each line. Default: 0.5.
+  
   final double strokeWidth;
 
-  /// Line opacity. Default: uses theme-appropriate value (0.025 dark / 0.03 light).
-  /// Pass a value to override both light and dark.
+  
+  
   final double? opacity;
 
-  /// Angle in degrees. Default: 45.
+  
   final double angleDeg;
 
   const HatchBackground({
@@ -97,7 +97,7 @@ class _HatchPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // ── 1. Background fill ──────────────────────────────────────────────────
+    
     canvas.drawRect(
       Offset.zero & size,
       Paint()
@@ -105,7 +105,7 @@ class _HatchPainter extends CustomPainter {
         ..style = PaintingStyle.fill,
     );
 
-    // ── 2. Hatch lines ──────────────────────────────────────────────────────
+    
     final lineColor = (isDark ? Colors.white : Colors.black)
         .withValues(alpha: opacity);
 
@@ -117,13 +117,13 @@ class _HatchPainter extends CustomPainter {
 
     final rad = angleDeg * math.pi / 180.0;
 
-    // To support arbitrary angles, we use canvas transforms.
-    // 1. Translate to center
-    // 2. Rotate by angle
-    // 3. Draw horizontal lines across an enlarged canvas to cover all corners
-    // 4. Restore
+    
+    
+    
+    
+    
 
-    // Diagonal extent needed to cover the full widget at any rotation
+    
     final diagonal = math.sqrt(size.width * size.width + size.height * size.height);
 
     canvas.save();
@@ -151,12 +151,12 @@ class _HatchPainter extends CustomPainter {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DOT GRID BACKGROUND (alternative texture)
-//
-// Small dot grid — more geometric feel for section backgrounds.
-// Same zero-repaint design as HatchBackground.
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
 
 class DotGridBackground extends StatelessWidget {
   final Widget child;
@@ -164,6 +164,7 @@ class DotGridBackground extends StatelessWidget {
   final double dotRadius;
   final double? opacity;
   final bool drawBackground;
+  final bool enableVignette;
 
   const DotGridBackground({
     super.key,
@@ -172,6 +173,7 @@ class DotGridBackground extends StatelessWidget {
     this.dotRadius = 0.75,
     this.opacity,
     this.drawBackground = true,
+    this.enableVignette = true,
   });
 
   @override
@@ -179,52 +181,58 @@ class DotGridBackground extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final resolvedOpacity = opacity ?? (isDark ? 0.09 : 0.12);
 
+    Widget dotLayer = CustomPaint(
+      painter: _DotGridPainter(
+        isDark: isDark,
+        spacing: spacing,
+        dotRadius: dotRadius,
+        opacity: resolvedOpacity,
+        drawBackground: drawBackground,
+      ),
+      isComplex: true,
+      willChange: false,
+    );
+
+    if (enableVignette) {
+      dotLayer = ShaderMask(
+        shaderCallback: (Rect bounds) {
+          
+          return LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.black.withValues(alpha: 0.0),
+              Colors.black.withValues(alpha: 1.0),
+              Colors.black.withValues(alpha: 1.0),
+              Colors.black.withValues(alpha: 0.0),
+            ],
+            stops: const [0.0, 0.18, 0.82, 1.0],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return RadialGradient(
+              center: Alignment.center,
+              radius: 0.90,
+              colors: [
+                Colors.black.withValues(alpha: 1.0),
+                Colors.black.withValues(alpha: 0.0),
+              ],
+              stops: const [0.45, 1.0],
+            ).createShader(bounds);
+          },
+          blendMode: BlendMode.dstIn,
+          child: dotLayer,
+        ),
+      );
+    }
+
     return Stack(
       children: [
         Positioned.fill(
           child: RepaintBoundary(
-            child: ShaderMask(
-              shaderCallback: (Rect bounds) {
-                // Layered fade: radial center-bloom + linear top/bottom fade
-                return LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.0),
-                    Colors.black.withValues(alpha: 1.0),
-                    Colors.black.withValues(alpha: 1.0),
-                    Colors.black.withValues(alpha: 0.0),
-                  ],
-                  stops: const [0.0, 0.18, 0.82, 1.0],
-                ).createShader(bounds);
-              },
-              blendMode: BlendMode.dstIn,
-              child: ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return RadialGradient(
-                    center: Alignment.center,
-                    radius: 0.90,
-                    colors: [
-                      Colors.black.withValues(alpha: 1.0),
-                      Colors.black.withValues(alpha: 0.0),
-                    ],
-                    stops: const [0.45, 1.0],
-                  ).createShader(bounds);
-                },
-                blendMode: BlendMode.dstIn,
-                child: CustomPaint(
-                  painter: _DotGridPainter(
-                    isDark: isDark,
-                    spacing: spacing,
-                    dotRadius: dotRadius,
-                    opacity: resolvedOpacity,
-                    drawBackground: drawBackground,
-                  ),
-                  isComplex: true,
-                  willChange: false,
-                ),
-              ),
-            ),
+            child: dotLayer,
           ),
         ),
         child,
@@ -259,11 +267,11 @@ class _DotGridPainter extends CustomPainter {
       );
     }
 
-    // In dark mode: bright zinc-100 dots. In light mode: zinc-500 dots.
-    // This gives proper contrast without being stark on either theme.
+    
+    
     final dotColor = isDark
         ? Colors.white.withValues(alpha: opacity)
-        : const Color(0xFF71717A).withValues(alpha: opacity); // zinc-500
+        : const Color(0xFF71717A).withValues(alpha: opacity); 
 
     final paint = Paint()
       ..color = dotColor
@@ -286,26 +294,26 @@ class _DotGridPainter extends CustomPainter {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SECTION DIVIDER
-//
-// Editorial full-bleed section break matching abdulrehmanwaseem.me.
-// Structure:
-//   ─────────────────── (top hairline, 0.75px)
-//   ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ (diagonal stripe band, 18px, 315°)
-//   ─────────────────── (bottom hairline, 0.75px)
-//
-// Zero repaints on scroll — uses RepaintBoundary + shouldRepaint guard.
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
 
 class SectionDivider extends StatelessWidget {
-  /// Height of the diagonal stripe band. Default: 20.
+  
   final double bandHeight;
 
-  /// Override stripe opacity (default: 0.06 dark / 0.07 light).
+  
   final double? stripeOpacity;
 
-  /// Include top/bottom hairlines. Default: true.
+  
   final bool showLines;
 
   const SectionDivider({
@@ -318,7 +326,7 @@ class SectionDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    // Hairline border color — stronger in light mode for visibility
+    
     final lineColor = isDark ? AppColors.border2Dark : AppColors.border2Light;
     final opacity = stripeOpacity ?? (isDark ? 0.06 : 0.08);
     final stripeColor = (isDark ? Colors.white : Colors.black).withValues(alpha: opacity);
@@ -372,14 +380,14 @@ class _HatchBandPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..isAntiAlias = true;
 
-    // Draw diagonal lines at 315° (same as reference: repeating-linear-gradient(315deg,...))
-    // 315° = upper-right to lower-left direction
-    // We draw lines from top-right to bottom-left across the band
+    
+    
+    
     final step = spacing;
     final h = size.height;
     final w = size.width;
 
-    // For 315°, lines go from (x+h, 0) to (x, h) — that's upper-right to lower-left
+    
     for (double x = -h; x < w + h; x += step) {
       canvas.drawLine(
         Offset(x + h, 0),
@@ -397,13 +405,13 @@ class _HatchBandPainter extends CustomPainter {
       old.lineWidth != lineWidth;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SCREEN LINE DIVIDER
-//
-// A full-bleed hairline that extends beyond the content width —
-// matches the `screen-line-before / screen-line-after` pattern from
-// abdulrehmanwaseem.me. Used before/after major content panels.
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
 
 class ScreenLineDivider extends StatelessWidget {
   final double thickness;

@@ -3,9 +3,9 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
 
-// ─────────────────────────────────────────────
-// BLOG SCREEN
-// ─────────────────────────────────────────────
+
+
+
 
 class BlogScreen extends StatelessWidget {
   const BlogScreen({super.key});
@@ -31,7 +31,7 @@ class BlogScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: padding, vertical: AppSpacing.xl),
           sliver: SliverList.list(
             children: [
-              // Page title
+              
               Text(
                 'Articles',
                 style: Theme.of(context).textTheme.displayLarge?.copyWith(
@@ -41,7 +41,7 @@ class BlogScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Disclaimer
+              
               RichText(
                 text: TextSpan(
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -77,12 +77,12 @@ class BlogScreen extends StatelessWidget {
 
               const SizedBox(height: AppSpacing.xxl),
 
-              // Article list
+              
               ..._articles.map((a) => _ArticleRow(data: a)),
 
               const SizedBox(height: AppSpacing.xxxl),
 
-              // Footer
+              
               const RepaintBoundary(child: _FooterWidget()),
               const SizedBox(height: AppSpacing.xl),
             ],
@@ -93,9 +93,9 @@ class BlogScreen extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// ARTICLE ROW
-// ─────────────────────────────────────────────
+
+
+
 
 class _ArticleData {
   final String date;
@@ -148,7 +148,7 @@ class _ArticleRowState extends State<_ArticleRow> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Date
+                
                 Text(
                   widget.data.date,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -159,7 +159,7 @@ class _ArticleRowState extends State<_ArticleRow> {
 
                 const SizedBox(height: 6),
 
-                // Title
+                
                 Text(
                   widget.data.title,
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
@@ -169,7 +169,7 @@ class _ArticleRowState extends State<_ArticleRow> {
 
                 const SizedBox(height: 8),
 
-                // Excerpt
+                
                 Text(
                   widget.data.excerpt,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -187,9 +187,9 @@ class _ArticleRowState extends State<_ArticleRow> {
   }
 }
 
-// ─────────────────────────────────────────────
-// INLINE LINK
-// ─────────────────────────────────────────────
+
+
+
 
 class _InlineLink extends StatefulWidget {
   final String label;
@@ -227,9 +227,9 @@ class _InlineLinkState extends State<_InlineLink> {
   }
 }
 
-// ─────────────────────────────────────────────
-// FOOTER
-// ─────────────────────────────────────────────
+
+
+
 
 class _FooterWidget extends StatelessWidget {
   const _FooterWidget();

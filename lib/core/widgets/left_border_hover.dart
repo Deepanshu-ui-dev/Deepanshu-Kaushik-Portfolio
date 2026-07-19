@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LEFT BORDER HOVER
-//
-// The abdulrehmanwaseem.me interaction pattern:
-//   Rest:  0.5px full border in borderColor, transparent bg
-//   Hover: 2px left border in accentColor, surfaceElev bg
-//   Press: slight opacity dip (0.85) for tactile feedback
-//   Transition: 150ms easeOutCubic
-//
-// Keyboard accessible — responds to focus via FocusNode.
-// Supports custom border-radius for rounded card variants.
-//
-// Use for: project cards, blog rows, experience items, award rows,
-//          certification chips, any tappable list item.
-//
-// Usage:
-//   LeftBorderHover(
-//     onTap: () => launch(url),
-//     padding: const EdgeInsets.all(16),
-//     child: ProjectRow(...),
-//   )
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class LeftBorderHover extends StatefulWidget {
   final Widget child;
@@ -31,13 +31,13 @@ class LeftBorderHover extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final bool enabled;
 
-  /// Override accent border color. Defaults to AppColors.accent[Dark|Light].
+  
   final Color? accentColor;
 
-  /// Border radius for rounded variants. Default: zero (sharp edges, per site aesthetic).
+  
   final BorderRadius borderRadius;
 
-  /// Width of left accent border when hovered. Default: 2.
+  
   final double accentBorderWidth;
 
   const LeftBorderHover({
@@ -87,7 +87,7 @@ class _LeftBorderHoverState extends State<LeftBorderHover> {
     final accent = widget.accentColor ??
         (isDark ? AppColors.accentDark : AppColors.accentLight);
 
-    // Hairline borders on non-left sides — rest state
+    
     const hairline = 0.5;
 
     return MouseRegion(
@@ -134,13 +134,13 @@ class _LeftBorderHoverState extends State<LeftBorderHover> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// BORDER HOVER (all-sides variant)
-//
-// Same interaction as LeftBorderHover but brightens the full border on hover
-// instead of accenting only the left edge.
-// Use for: grid cells, chips, tag badges — items without inherent directionality.
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
 
 class BorderHover extends StatefulWidget {
   final Widget child;

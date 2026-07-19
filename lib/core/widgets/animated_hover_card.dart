@@ -48,7 +48,7 @@ class _AnimatedHoverCardState extends State<AnimatedHoverCard> {
               color: _isHovered ? border2 : border,
               width: 0.5,
             ),
-            borderRadius: AppRadius.card, // Flat editorial cards
+            borderRadius: AppRadius.card, 
           ),
           child: widget.child,
         ),

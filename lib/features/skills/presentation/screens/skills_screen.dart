@@ -4,9 +4,9 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/scroll_fade_in.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 
-// ─────────────────────────────────────────────────────────────
-// SKILLS SCREEN
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class SkillsScreen extends StatefulWidget {
   final ScrollController? scrollController;
@@ -36,7 +36,7 @@ class _SkillsScreenState extends State<SkillsScreen>
     super.dispose();
   }
 
-  // ── All skill sections ────────────────────────────────────
+  
   static const _sections = [
     _SkillSectionData(
       index: '01',
@@ -117,11 +117,11 @@ class _SkillsScreenState extends State<SkillsScreen>
               padding: EdgeInsets.only(
                   left: padding,
                   right: padding,
-                  top: AppSpacing.xl,
+                  top: AppSpacing.base,
                   bottom: bottomClear),
               sliver: SliverList.list(
                 children: [
-                  // ── HERO ──────────────────────────────────────────
+                  
                   const ScrollFadeIn(
                     child: RepaintBoundary(child: _SkillsHero()),
                   ),
@@ -130,7 +130,7 @@ class _SkillsScreenState extends State<SkillsScreen>
                   const DashedDivider(),
                   const SizedBox(height: AppSpacing.xxl),
 
-                  // ── SKILL SECTIONS ────────────────────────────────
+                  
                   for (int i = 0; i < _sections.length; i++) ...[
                     ScrollFadeIn(
                       delay: Duration(milliseconds: 100 + i * 80),
@@ -147,7 +147,7 @@ class _SkillsScreenState extends State<SkillsScreen>
                   const DashedDivider(),
                   const SizedBox(height: 64),
 
-                  // ── CALLOUT ROW ───────────────────────────────────
+                  
                   ScrollFadeIn(
                     delay: Duration(milliseconds: 100 + _sections.length * 80),
                     child: const RepaintBoundary(child: _PhilosophyCallout()),
@@ -164,9 +164,9 @@ class _SkillsScreenState extends State<SkillsScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// DATA MODELS
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _SkillSectionData {
   final String index;
@@ -198,10 +198,10 @@ class _Skill {
   });
 }
 
-// ─────────────────────────────────────────────────────────────
-// HERO HEADER  — same [XX] eyebrow + large headline pattern
-// used across ContactScreen, ProjectsScreen
-// ─────────────────────────────────────────────────────────────
+
+
+
+
 
 class _SkillsHero extends StatelessWidget {
   const _SkillsHero();
@@ -214,7 +214,7 @@ class _SkillsHero extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Eyebrow — ContactScreen / ProjectsScreen pattern ──
+        
         Row(children: [
           Text(
             '[ 03 ]',
@@ -250,7 +250,7 @@ class _SkillsHero extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // ── Tagline with leading dash — HomeScreen sub-row ──
+        
         Row(children: [
           Expanded(
             child: Text(
@@ -267,16 +267,16 @@ class _SkillsHero extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// INFO BLOCK  — left-border quote block, same as AboutScreen bio
-// ─────────────────────────────────────────────────────────────
 
 
-// ─────────────────────────────────────────────────────────────
-// SKILL SECTION
-// Uses SectionHeader (same widget as Experience, Education, etc.)
-// plus an indexed subtitle in the same [ XX ] pattern as ContactScreen
-// ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
 
 class _SkillSection extends StatelessWidget {
   final _SkillSectionData data;
@@ -290,7 +290,7 @@ class _SkillSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Section label row — same pattern as ContactScreen sections ──
+        
         Row(children: [
           Text(
             '[ ${data.index} ]',
@@ -310,7 +310,7 @@ class _SkillSection extends StatelessWidget {
         ]),
         const SizedBox(height: 10),
 
-        // ── Subtitle ──
+        
         Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: Text(
@@ -322,7 +322,7 @@ class _SkillSection extends StatelessWidget {
           ),
         ),
 
-        // ── Skill card grid ──
+        
         LayoutBuilder(builder: (context, constraints) {
           final cols = (constraints.maxWidth / (constraints.maxWidth < 400 ? 110 : 130))
               .floor()
@@ -344,11 +344,11 @@ class _SkillSection extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// SKILL CARD
-// AnimatedOpacity-only (no AnimationController) to avoid
-// late/null init issues. Corner brackets animate with border.
-// ─────────────────────────────────────────────────────────────
+
+
+
+
+
 
 class _SkillCard extends StatefulWidget {
   final _Skill skill;
@@ -382,8 +382,8 @@ class _SkillCardState extends State<_SkillCard> {
 
     final greySlug = isDark ? '666666' : '888888';
     
-    // Force ALL icons to use the exact same pack layout natively from Iconify
-    // This perfectly matches the "use same icon pack not a different one for all" requirement.
+    
+    
     final String greyUrl = 'https://api.iconify.design/simple-icons/${widget.skill.icon}.svg?color=%23$greySlug';
     final String colorUrl = 'https://api.iconify.design/simple-icons/${widget.skill.icon}.svg?color=%23${widget.skill.hex}';
     
@@ -423,19 +423,19 @@ class _SkillCardState extends State<_SkillCard> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-              // Corner brackets
+              
               _Bracket(top: true, left: true, color: bracketColor),
               _Bracket(top: true, left: false, color: bracketColor),
               _Bracket(top: false, left: true, color: bracketColor),
               _Bracket(top: false, left: false, color: bracketColor),
 
-              // Content
+              
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 24, 12, 20),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Icon crossfade greyscale → color
+                    
                     SizedBox(
                       width: 44,
                       height: 44,
@@ -472,7 +472,7 @@ class _SkillCardState extends State<_SkillCard> {
 
                     const SizedBox(height: 14),
 
-                    // Label
+                    
                     AnimatedDefaultTextStyle(
                       duration: const Duration(milliseconds: 160),
                       style:
@@ -514,9 +514,9 @@ class _SkillCardState extends State<_SkillCard> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// L-SHAPED CORNER BRACKET
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _Bracket extends StatelessWidget {
   final bool top;
@@ -556,9 +556,9 @@ class _Bracket extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// FALLBACK INITIALS ICON
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _Fallback extends StatelessWidget {
   final String label;
@@ -585,10 +585,10 @@ class _Fallback extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// PHILOSOPHY CALLOUT  — numbered rows, same as _AchievementsSection
-// in HomeScreen and _OpenSourceSection in ProjectsScreen
-// ─────────────────────────────────────────────────────────────
+
+
+
+
 
 class _PhilosophyCallout extends StatelessWidget {
   const _PhilosophyCallout();

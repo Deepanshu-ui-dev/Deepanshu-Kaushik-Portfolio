@@ -13,7 +13,7 @@ export 'tech_chip.dart';
 export 'left_border_hover.dart';
 export 'stagger_reveal.dart';
 
-/// ── Dashed Divider ──────────────────────────────────────────
+
 class DashedDivider extends StatelessWidget {
   final double height;
   final double thickness;
@@ -106,8 +106,8 @@ class _DashedLinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Replaced expensive dashed stroke with a simple solid line for massive performance gains
-    // and a cleaner aesthetic.
+    
+    
     final paint = Paint()
       ..color = color
       ..strokeWidth = thickness
@@ -127,8 +127,8 @@ class _DashedLinePainter extends CustomPainter {
       oldDelegate.isHorizontal != isHorizontal;
 }
 
-/// ── Simple Section Divider ──────────────────────────────────
-// ─── Dashed Border Container ──────────────────────────
+
+
 class DashedBorderContainer extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -157,7 +157,7 @@ class _DashedBorderPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Replaced expensive dash drawing with standard border rect
+    
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1
@@ -169,7 +169,7 @@ class _DashedBorderPainter extends CustomPainter {
   bool shouldRepaint(covariant _DashedBorderPainter old) => old.color != color;
 }
 
-// ─── Corners & Boxes ──────────────────────────────────
+
 class MonofolioCorner extends StatelessWidget {
   final bool isTop;
   final bool isLeft;
@@ -200,9 +200,9 @@ class MonofolioCorner extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// MONOFOLIO CORNERS BOX
-// ─────────────────────────────────────────────
+
+
+
 
 class MonofolioCornersBox extends StatelessWidget {
   final Widget child;
@@ -230,9 +230,9 @@ class MonofolioCornersBox extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// STRIPE BAND  (diagonal hatching separator)
-// ─────────────────────────────────────────────
+
+
+
 
 class StripeBand extends StatelessWidget {
   final double height;
@@ -258,7 +258,7 @@ class _StripePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Significantly lighter simple border gradient instead of 100s of diagonal lines
+    
     final paint = Paint()
       ..color = color
       ..strokeWidth = 1
@@ -270,13 +270,13 @@ class _StripePainter extends CustomPainter {
   bool shouldRepaint(covariant _StripePainter old) => old.color != color;
 }
 
-// ─────────────────────────────────────────────
-// SECTION HEADER
-// ─────────────────────────────────────────────
+
+
+
 
 class SectionHeader extends StatefulWidget {
   final String title;
-  final String? index; // e.g. '01' → renders [ 01 ] eyebrow style
+  final String? index; 
   const SectionHeader(this.title, {super.key, this.index});
 
   @override
@@ -291,7 +291,7 @@ class _SectionHeaderState extends State<SectionHeader> {
     final accent = AppColors.accent;
     final textSec = AppColors.textSecondary;
 
-    // ── Numbered eyebrow style [ 01 ] TITLE ─────────────────────────────
+    
     if (widget.index != null) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 20, top: 8),
@@ -311,7 +311,7 @@ class _SectionHeaderState extends State<SectionHeader> {
       );
     }
 
-    // ── Bar style (original, for sections that don't have an index) ──────
+    
     const kCurve = Cubic(0.33, 1.0, 0.68, 1.0);
 
     return MouseRegion(
@@ -355,7 +355,7 @@ class _SectionHeaderState extends State<SectionHeader> {
   }
 }
 
-// ─── Collapsible Card ─────────────────────────────────
+
 class CollapsibleCard extends StatefulWidget {
   final Widget leading;
   final String title;
@@ -387,7 +387,7 @@ class _CollapsibleCardState extends State<CollapsibleCard>
   late Animation<double> _heightAnim;
   bool _hovered = false;
 
-  // easeOutQuint approximation — smooth, premium expand feel
+  
   static const _kExpandCurve = Cubic(0.22, 1.0, 0.36, 1.0);
 
   @override
@@ -396,7 +396,7 @@ class _CollapsibleCardState extends State<CollapsibleCard>
     _expanded = widget.initiallyExpanded;
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 160), // Snappier
+      duration: const Duration(milliseconds: 160), 
       value: _expanded ? 1.0 : 0.0,
     );
     _heightAnim = CurvedAnimation(parent: _ctrl, curve: _kExpandCurve);
@@ -431,7 +431,7 @@ class _CollapsibleCardState extends State<CollapsibleCard>
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeOutCubic,
         margin: const EdgeInsets.only(bottom: 2),
-        // NO translation/lift — left-border accent is the only hover signal
+        
         decoration: BoxDecoration(
           color: _hovered ? surfaceEl : surface,
           borderRadius: BorderRadius.zero,
@@ -444,7 +444,7 @@ class _CollapsibleCardState extends State<CollapsibleCard>
             bottom: BorderSide(color: border, width: 0.5),
             right: BorderSide(color: border, width: 0.5),
           ),
-          // No box shadow — flat editorial aesthetic
+          
         ),
         child: Column(
           children: [
@@ -577,7 +577,7 @@ class _CollapsibleCardState extends State<CollapsibleCard>
   }
 }
 
-// ─── Typewriter Line ──────────────────────────────────
+
 class TypewriterLine extends StatefulWidget {
   final List<String> phrases;
   final TextStyle? style;
@@ -694,7 +694,7 @@ class _CursorState extends State<_Cursor> with SingleTickerProviderStateMixin {
   }
 }
 
-// ─── Portfolio Footer ─────────────────────────────────
+
 class PortfolioFooter extends StatefulWidget {
   final VoidCallback onToggleTheme;
   final bool isTransitioning;
@@ -753,99 +753,80 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
   @override
   Widget build(BuildContext context) {
     final isDark      = Theme.of(context).brightness == Brightness.dark;
-    final bgColor     = isDark ? AppColors.bgDark     : AppColors.bgLight;
-    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
     final textTer     = isDark ? AppColors.textTerDark : AppColors.textTerLight;
+    final borderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
     final accent      = isDark ? AppColors.accentDark  : AppColors.accentLight;
     final creditColor = _creditHovered ? accent : textTer;
     final isMobile    = AppSpacing.isMobile(context);
 
-    return Container(
-      color: bgColor,
-      width: double.infinity,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // ── Gradient fade rule (not a plain container) ──────────
-          _FadeRuleDivider(borderColor: borderColor),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        
+        _FadeRuleDivider(borderColor: borderColor),
 
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSpacing.horizontalPadding(context),
-              vertical: isMobile ? 16 : 14,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // ── Visitor badge (live count) ───────────────────
-                if (_visitCount > 0)
-                  _VisitorBadge(
-                    count: _visitCount,
-                    accent: accent,
-                    textTer: textTer,
-                  ),
-
-                const Spacer(),
-
-                // ── Copyright + stack line ───────────────────────
-                MouseRegion(
-                  onEnter: (_) => setState(() => _creditHovered = true),
-                  onExit:  (_) => setState(() => _creditHovered = false),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Credit line with underline slide-in
-                      Stack(
-                        children: [
-                          AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 180),
-                            curve: Curves.easeOut,
-                            style: TextStyle(
-                              color: creditColor,
-                              fontFamily: 'JetBrainsMono',
-                              fontSize: 9,
-                              letterSpacing: 0.4,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            child: const Text('© 2026 Deepanshu · Built with 🤍'),
-                          ),
-                          // Underline slides in from left on hover
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: TweenAnimationBuilder<double>(
-                              tween: Tween(end: _creditHovered ? 1.0 : 0.0),
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeOut,
-                              builder: (_, t, __) => FractionallySizedBox(
-                                alignment: Alignment.centerLeft,
-                                widthFactor: t,
-                                child: Container(
-                                  height: 0.5,
-                                  color: accent,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                    ],
-                  ),
-                ),
-              ],
-            ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.horizontalPadding(context),
+            vertical: isMobile ? 16 : 14,
           ),
-        ],
-      ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              
+              if (_visitCount > 0)
+                _VisitorBadge(
+                  count: _visitCount,
+                  accent: accent,
+                  textTer: textTer,
+                ),
+
+              const Spacer(),
+
+              
+              MouseRegion(
+                onEnter: (_) => setState(() => _creditHovered = true),
+                onExit:  (_) => setState(() => _creditHovered = false),
+                child: Stack(
+                  children: [
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 180),
+                      curve: Curves.easeOut,
+                      style: TextStyle(
+                        color: creditColor,
+                        fontFamily: 'JetBrainsMono',
+                        fontSize: 9,
+                        letterSpacing: 0.4,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      child: const Text('© 2026 Deepanshu · Built with 🤍'),
+                    ),
+                    Positioned(
+                      bottom: 0, left: 0, right: 0,
+                      child: TweenAnimationBuilder<double>(
+                        tween: Tween(end: _creditHovered ? 1.0 : 0.0),
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.easeOut,
+                        builder: (_, t, __) => FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: t,
+                          child: Container(height: 0.5, color: accent),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
-// ─── Visitor Badge ────────────────────────────────────────
+
 class _VisitorBadge extends StatelessWidget {
   final int count;
   final Color accent;
@@ -970,9 +951,9 @@ class _FadeRulePainter extends CustomPainter {
 }
 
 
-// ─────────────────────────────────────────────
-// THEME-AWARE REDACTED SKELETON LOADER
-// ─────────────────────────────────────────────
+
+
+
 
 class ThemedSkeletonLoader extends StatelessWidget {
   final Widget child;

@@ -7,9 +7,9 @@ import '../../../../config/portfolio_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/scroll_fade_in.dart';
 
-// ─────────────────────────────────────────────────────────────
-// CONTACT SCREEN — Chat UI, editorial & engaging
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class ContactScreen extends StatefulWidget {
   final ScrollController? scrollController;
@@ -59,12 +59,12 @@ class _ContactScreenState extends State<ContactScreen>
               padding: EdgeInsets.only(
                 left: hPad,
                 right: hPad,
-                top: 24,
+                top: AppSpacing.base,
                 bottom: bottomClear,
               ),
               sliver: SliverList.list(
                 children: [
-                  // ── Section heading — same pattern as home_screen ──
+                  
                   const ScrollFadeIn(
                     delay: Duration(milliseconds: 0),
                     child: _ContactSectionHeader(),
@@ -72,7 +72,7 @@ class _ContactScreenState extends State<ContactScreen>
 
                   const SizedBox(height: 32),
 
-                  // ── Chat container ──────────────────────────────
+                  
                   Center(
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
@@ -82,7 +82,7 @@ class _ContactScreenState extends State<ContactScreen>
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
 
-                          // ── Chat opening ──────────────────────────
+                          
                           _ChatDayDivider('Today'),
 
                           ScrollFadeIn(
@@ -112,7 +112,7 @@ class _ContactScreenState extends State<ContactScreen>
 
                           SizedBox(height: 20),
 
-                          // ── Email block ───────────────────────────
+                          
                           _ChatSectionLabel('quickest way to reach me'),
 
                           ScrollFadeIn(
@@ -134,7 +134,7 @@ class _ContactScreenState extends State<ContactScreen>
 
                           SizedBox(height: 20),
 
-                          // ── Form block ────────────────────────────
+                          
                           _ChatSectionLabel('drop a message'),
 
                           ScrollFadeIn(
@@ -156,7 +156,7 @@ class _ContactScreenState extends State<ContactScreen>
 
                           SizedBox(height: 20),
 
-                          // ── Links block ───────────────────────────
+                          
                           _ChatSectionLabel('find me online'),
 
                           ScrollFadeIn(
@@ -203,9 +203,9 @@ class _ContactScreenState extends State<ContactScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// SECTION LABELS
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _ContactSectionHeader extends StatelessWidget {
   const _ContactSectionHeader();
@@ -336,9 +336,9 @@ class _ChatDayDivider extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// CHAT BUBBLES
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _BotBubble extends StatelessWidget {
   final String text;
@@ -356,14 +356,14 @@ class _BotBubble extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // Avatar
+          
           CircleAvatar(
             radius: 13,
             backgroundColor: isDark ? AppColors.surfaceHoverDark : AppColors.surfaceHoverLight,
             backgroundImage: const AssetImage('assets/images/profile.png'),
           ),
           const SizedBox(width: 10),
-          // Bubble
+          
           Flexible(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
@@ -458,9 +458,9 @@ class _UserBubble extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// COPY EMAIL BUBBLE
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _CopyEmailBubble extends StatefulWidget {
   final String email;
@@ -561,14 +561,14 @@ class _CopyEmailBubbleState extends State<_CopyEmailBubble> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// CONTACT FORM BUBBLE
-// ─────────────────────────────────────────────────────────────
-// The form opens your default email client (mailto:) pre-filled
-// with the user's name, email and message. Data goes to:
-//   → imdeepanshu4work@gmail.com
-// Nothing is stored — no database, no backend.
-// ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
 
 class _ChatForm extends StatefulWidget {
   const _ChatForm();
@@ -754,9 +754,9 @@ class _ChatFormState extends State<_ChatForm> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// CHAT LINKS
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _ChatLinks extends StatelessWidget {
   const _ChatLinks();

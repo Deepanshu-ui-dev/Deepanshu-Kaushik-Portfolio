@@ -14,11 +14,11 @@ import '../../../github/data/github_repository.dart';
 import '../../../photography/presentation/screens/gallery_screen.dart';
 import '../widgets/contribution_graph.dart';
 import '../widgets/hero_section.dart';
-import '../widgets/opportunities_banner.dart';
 
-// ─────────────────────────────────────────────
-// HOME SCREEN
-// ─────────────────────────────────────────────
+
+
+
+
 
 class HomeScreen extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
@@ -51,9 +51,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final hPad = AppSpacing.horizontalPadding(context);
-    // Bottom clearance = nav bar height (~76px) + bottom safe area inset
+    
+    
+    
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    final bottomClear = bottomInset + 96.0;
+    final bottomClear = bottomInset + 32.0;
+    final isMobile = AppSpacing.isMobile(context);
 
     return FadeTransition(
       opacity: _fadeAnim,
@@ -67,17 +70,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               padding: EdgeInsets.only(
                 left: hPad,
                 right: hPad,
-                top: AppSpacing.xl,
+                
+                top: AppSpacing.base,
                 bottom: bottomClear,
               ),
               sliver: SliverList.list(
                 children: [
-                  // ── Profile / Identity ──────────────────────────────
+                  
                   const RepaintBoundary(child: _LeftPanel()),
 
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
                   const SectionDivider(),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
 
                   ..._buildRightContent(),
                 ],
@@ -92,7 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   List<Widget> _buildRightContent() {
     final isMobile = AppSpacing.isMobile(context);
     return [
-      // ── 01 Heatmap ────────────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 0),
         child: RepaintBoundary(child: _HomeHeatmapSection()),
@@ -102,14 +106,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       const SectionDivider(),
       const SizedBox(height: 32),
 
-      // ── 02 Experience ─────────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 60),
         child: RepaintBoundary(child: _ExperienceSection()),
       ),
       SizedBox(height: isMobile ? 28 : 40),
 
-      // ── 03 Education ──────────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 120),
         child: RepaintBoundary(child: _EducationSection()),
@@ -119,14 +123,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       const SectionDivider(),
       const SizedBox(height: 32),
 
-      // ── 04 Projects ───────────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 180),
         child: RepaintBoundary(child: _ProjectsSection()),
       ),
       SizedBox(height: isMobile ? 28 : 40),
 
-      // ── 05 Achievements ───────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 240),
         child: RepaintBoundary(child: _AchievementsSection()),
@@ -136,14 +140,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       const SectionDivider(),
       const SizedBox(height: 32),
 
-      // ── 06 Leadership ─────────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 300),
         child: RepaintBoundary(child: _LeadershipSection()),
       ),
       SizedBox(height: isMobile ? 28 : 40),
 
-      // ── 07 Photography ────────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 420),
         child: RepaintBoundary(child: _PhotographySection()),
@@ -153,12 +157,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       const SectionDivider(),
       const SizedBox(height: 32),
 
-      // ── 08 Hobbies ────────────────────────────────────
+      
       const ScrollFadeIn(
         delay: Duration(milliseconds: 480),
         child: RepaintBoundary(child: _HobbiesSection()),
       ),
-      SizedBox(height: isMobile ? 90 : 120),
+      
+      
+      SizedBox(height: isMobile ? 40 : 56),
     ];
   }
 }
@@ -172,17 +178,15 @@ class _LeftPanel extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        RepaintBoundary(child: OpportunitiesBanner()),
-        SizedBox(height: 20),
         RepaintBoundary(child: HeroSection()),
       ],
     );
   }
 }
 
-// ─────────────────────────────────────────────
-// HEATMAP SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _HomeHeatmapSection extends ConsumerWidget {
   const _HomeHeatmapSection();
@@ -234,7 +238,7 @@ class _HeatmapShell extends StatelessWidget {
   }
 }
 
-// ONE shared shimmer controller for ALL skeleton cells — not one per cell.
+
 class _HeatmapSkeleton extends StatefulWidget {
   const _HeatmapSkeleton();
 
@@ -268,11 +272,11 @@ class _HeatmapSkeletonState extends State<_HeatmapSkeleton>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cell = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
 
-    // AnimatedBuilder wraps the ENTIRE skeleton — one rebuild per frame for all cells
+    
     return AnimatedBuilder(
       animation: _shimmer,
       builder: (context, _) {
-        final pulse = _shimmer.value; // 0.0 → 1.0 → 0.0
+        final pulse = _shimmer.value; 
 
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -326,7 +330,7 @@ class _HeatmapSkeletonState extends State<_HeatmapSkeleton>
   }
 }
 
-// Pure StatelessWidget — no controller, no ticker. Receives computed color from parent.
+
 class _PulseSkeleton extends StatelessWidget {
   final double width;
   final double height;
@@ -442,9 +446,9 @@ class _HeatmapMeta extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// EXPERIENCE SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _ExperienceSection extends StatelessWidget {
   const _ExperienceSection();
@@ -480,7 +484,7 @@ class _ExperienceSection extends StatelessWidget {
           ],
           tags: const ['Figma', 'Framer', 'Design Systems', 'Prototyping'],
         ),
-        const SizedBox(height: 12), 
+        const SizedBox(height: 12),
         CollapsibleCard(
           leading: iconBox(LucideIcons.box),
           title: 'Freelance UI/UX Designer',
@@ -503,9 +507,9 @@ class _ExperienceSection extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// EDUCATION SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _EducationSection extends StatelessWidget {
   const _EducationSection();
@@ -545,9 +549,9 @@ class _EducationSection extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// PROJECTS SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _ProjectsSection extends StatelessWidget {
   const _ProjectsSection();
@@ -755,7 +759,7 @@ class _BrowserMock extends StatelessWidget {
             border: Border(bottom: BorderSide(color: border, width: 1)),
           ),
           child: Row(children: [
-              // macOS-style traffic-light dots
+              
               Container(width: 7, height: 7,
                   decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFF5F57))),
               const SizedBox(width: 5),
@@ -878,9 +882,9 @@ class _LinkBtnState extends State<_LinkBtn> {
   }
 }
 
-// ─────────────────────────────────────────────
-// ACHIEVEMENTS SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _AchievementsSection extends StatelessWidget {
   const _AchievementsSection();
@@ -1003,9 +1007,9 @@ class _AchievementRowState extends State<_AchievementRow> {
   }
 }
 
-// ─────────────────────────────────────────────
-// LEADERSHIP SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _LeadershipSection extends StatelessWidget {
   const _LeadershipSection();
@@ -1051,9 +1055,9 @@ class _LeadershipSection extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// PHOTOGRAPHY SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _PhotoCategory {
   final String label;
@@ -1122,7 +1126,7 @@ class _PhotographySection extends StatelessWidget {
       children: [
         const SectionHeader('Visual Journey', index: '07'),
 
-        // Intro text
+        
         Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: Text(
@@ -1135,7 +1139,7 @@ class _PhotographySection extends StatelessWidget {
           ),
         ),
 
-        // Horizontal scrollable row
+        
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
@@ -1162,7 +1166,7 @@ class _PhotographySection extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // Footer row
+        
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1246,7 +1250,7 @@ class _PhotoCardState extends State<_PhotoCard> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // Base colored image with scale transition on hover
+                
                 ClipRect(
                   child: AnimatedScale(
                     scale: _hovered ? 1.08 : 1.0,
@@ -1263,7 +1267,7 @@ class _PhotoCardState extends State<_PhotoCard> {
                     ),
                   ),
                 ),
-                // Clean bottom-heavy gradient overlay protecting text readability
+                
                 Positioned.fill(
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 250),
@@ -1279,7 +1283,7 @@ class _PhotoCardState extends State<_PhotoCard> {
                     ),
                   ),
                 ),
-                // Text details overlay always visible at the bottom
+                
                 Positioned(
                   left: 12,
                   right: 12,
@@ -1472,9 +1476,9 @@ class _ViewAllButtonState extends State<_ViewAllButton> {
 }
 
 
-// ─────────────────────────────────────────────
-// HOBBIES & INTERESTS
-// ─────────────────────────────────────────────
+
+
+
 
 class _HobbiesSection extends StatelessWidget {
   const _HobbiesSection();

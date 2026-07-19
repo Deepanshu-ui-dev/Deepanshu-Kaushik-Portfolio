@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-// ─────────────────────────────────────────────
-// MONOFOLIO CORNER & BOX
-// ─────────────────────────────────────────────
+
+
+
 
 class MonofolioCorner extends StatelessWidget {
   final bool isTop;
@@ -64,10 +64,10 @@ class MonofolioCornersBox extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// MONOFOLIO COLLAPSIBLE CARD
-// Matches the new experience/education card style from screenshots
-// ─────────────────────────────────────────────
+
+
+
+
 
 class MonofolioCollapsibleCard extends StatefulWidget {
   final IconData icon;
@@ -112,14 +112,14 @@ class _MonofolioCollapsibleCardState extends State<MonofolioCollapsibleCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header (Clickable) ──
+          
           InkWell(
             onTap: () => setState(() => _isExpanded = !_isExpanded),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(
                 children: [
-                  // Icon in a bordered box
+                  
                   Container(
                     width: 28,
                     height: 28,
@@ -159,7 +159,7 @@ class _MonofolioCollapsibleCardState extends State<MonofolioCollapsibleCard> {
             ),
           ),
 
-          // ── Expanded Content ──
+          
           AnimatedCrossFade(
             firstChild: const SizedBox(width: double.infinity, height: 0),
             secondChild: Padding(
@@ -167,7 +167,7 @@ class _MonofolioCollapsibleCardState extends State<MonofolioCollapsibleCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Bullet points
+                  
                   ...widget.bullets.map((bullet) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Row(
@@ -200,7 +200,7 @@ class _MonofolioCollapsibleCardState extends State<MonofolioCollapsibleCard> {
 
                   if (widget.tags.isNotEmpty) ...[
                     const SizedBox(height: 10),
-                    // Tags
+                    
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -240,9 +240,9 @@ class _MonofolioCollapsibleCardState extends State<MonofolioCollapsibleCard> {
   }
 }
 
-// ─────────────────────────────────────────────
-// MONOFOLIO SECTION HEADER  (■ Title)
-// ─────────────────────────────────────────────
+
+
+
 
 class MonofolioSectionHeader extends StatelessWidget {
   final String title;
@@ -280,9 +280,9 @@ class MonofolioSectionHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// STRIPE BAND  (diagonal lines separator)
-// ─────────────────────────────────────────────
+
+
+
 
 class MonofolioStripeBand extends StatelessWidget {
   final double height;
@@ -332,9 +332,9 @@ class _DiagonalStripePainter extends CustomPainter {
       old.color != color;
 }
 
-// ─────────────────────────────────────────────
-// SHARED FOOTER WIDGET
-// ─────────────────────────────────────────────
+
+
+
 
 class MonofolioFooter extends StatelessWidget {
   const MonofolioFooter({super.key});

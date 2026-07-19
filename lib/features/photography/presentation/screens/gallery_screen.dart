@@ -60,7 +60,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
               controller: _scrollController,
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             slivers: [
-              // Header Section
+              
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: padding, vertical: AppSpacing.xl),
                 sliver: SliverToBoxAdapter(
@@ -93,7 +93,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                               ],
                             ),
                           ),
-                          // Back Button
+                          
                           MouseRegion(
                             cursor: SystemMouseCursors.click,
                             child: GestureDetector(
@@ -137,7 +137,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 ),
               ),
               
-              // Grid Section
+              
               SliverPadding(
                 padding: EdgeInsets.fromLTRB(
                     padding, 0, padding,
@@ -269,7 +269,7 @@ class _SkeletonAssetImageState extends State<_SkeletonAssetImage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Force the skeleton to display for 0.5s minimum when showcasing
+      
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) setState(() => _showContent = true);
       });

@@ -52,7 +52,7 @@ class MonofolioProfile extends StatelessWidget {
           ),
         ),
 
-        // ─── Profile Heading ──────────────────────────────────
+        
         Container(
           padding: const EdgeInsets.only(top: 16),
           child: LayoutBuilder(builder: (context, constraints) {

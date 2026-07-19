@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import '../theme/app_theme.dart';
 
-/// CatCursorFollower
-///
-/// Desktop: follows mouse cursor continuously.
-/// Mobile : chases tap/long-press locations, reacts to swipes,
-///          and returns home after inactivity.
+
+
+
+
+
 class CatCursorFollower extends StatefulWidget {
   final Widget child;
 
@@ -28,24 +28,24 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     with SingleTickerProviderStateMixin {
   late final Ticker _ticker;
 
-  // ── Sprite ──────────────────────────────────────────────────────────────────
+  
   List<int> _currentSprite = _spriteSets['sleeping']![0];
   int _frameCount = 0;
 
-  // ── Idle animation ──────────────────────────────────────────────────────────
+  
   String? _idleAnimation = 'sleeping';
   int _idleAnimationFrame = 10;
   int _idleTime = 0;
   int _idleCooldown = 0;
 
-  // ── Alert hold ──────────────────────────────────────────────────────────────
+  
   int _alertFramesLeft = 0;
 
-  // ── Exclamation mark (tap reaction) ─────────────────────────────────────────
+  
   bool _showExclamation = false;
   int _exclamationFrames = 0;
 
-  // ── Speech bubble (welcome message) ─────────────────────────────────────────
+  
   bool _showSpeechBubble = false;
   double _bubbleOpacity = 0.0;
   double _bubbleScale = 0.8;
@@ -82,7 +82,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     });
   }
 
-  // ── Position ─────────────────────────────────────────────────────────────────
+  
   double _nekoPosX = 0;
   double _nekoPosY = 0;
   double _homeX = 0;
@@ -90,7 +90,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   double _targetX = 0;
   double _targetY = 0;
 
-  // ── Mode & timing ────────────────────────────────────────────────────────────
+  
   _CatMode _mode = _CatMode.idle;
   static const double _returnIdleSeconds = 5 * 60.0;
   static const double _baseSpeed = 9.0;
@@ -101,11 +101,11 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   Duration _lastInteract  = Duration.zero;
   bool _initialized = false;
 
-  // ── Mobile: swipe tracking ───────────────────────────────────────────────────
+  
   Offset? _swipeStart;
   Offset? _lastTouchPos;
 
-  // ── Sprite sheet ─────────────────────────────────────────────────────────────
+  
   static const Map<String, List<List<int>>> _spriteSets = {
     'idle'        : [[-3, -3]],
     'alert'       : [[-7, -3]],
@@ -126,7 +126,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     'NW': [[-1, 0], [-1, -1]],
   };
 
-  // ── Lifecycle ────────────────────────────────────────────────────────────────
+  
   @override
   void initState() {
     super.initState();
@@ -140,8 +140,8 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.sizeOf(context);
-    _homeX = size.width  - 80.0;  // well away from right edge
-    _homeY = size.height - 100.0; // above the footer + nav bar
+    _homeX = size.width  - 80.0;  
+    _homeY = size.height - 100.0; 
     if (!_initialized) {
       _initialized = true;
       _nekoPosX = _homeX;
@@ -164,7 +164,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     super.dispose();
   }
 
-  // ── Tick ─────────────────────────────────────────────────────────────────────
+  
   void _onTick(Duration elapsed) {
     if ((elapsed - _lastTickTime).inMilliseconds < 100) return;
     _lastTickTime = elapsed;
@@ -193,7 +193,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _showBubble('going for sleep... 💤', duration: const Duration(seconds: 3));
   }
 
-  // ── Per-frame logic ──────────────────────────────────────────────────────────
+  
   void _step(Duration elapsed) {
     final diffX = _nekoPosX - _targetX;
     final diffY = _nekoPosY - _targetY;
@@ -240,7 +240,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     });
   }
 
-  // ── Idle ─────────────────────────────────────────────────────────────────────
+  
   void _runIdle() {
     _idleTime++;
     if (_idleCooldown > 0) _idleCooldown--;
@@ -292,7 +292,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _idleAnimationFrame = 0;
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────────
+  
   String _directionSprite(double dx, double dy, double dist) {
     String d = '';
     if (dy / dist >  0.5) d += 'N';
@@ -311,7 +311,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     }
   }
 
-  // ── Shared wake-up ───────────────────────────────────────────────────────────
+  
   void _wakeUp(Offset position) {
     _targetX = position.dx;
     _targetY = position.dy;
@@ -326,19 +326,12 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     }
   }
 
-  // ── Desktop: pointer hover/move ──────────────────────────────────────────────
+  
   void _onPointerEvent(PointerEvent e) {
-    final dx = (_targetX - e.position.dx).abs();
-    final dy = (_targetY - e.position.dy).abs();
-    if (dx < 1 && dy < 1) return;
-    final wasIdle = (_mode == _CatMode.idle);
-    _wakeUp(e.position);
-    if (wasIdle) {
-      _showBubble('play time! 🐾', duration: const Duration(seconds: 2));
-    }
+    
   }
 
-  // ── Mobile: tap ──────────────────────────────────────────────────────────────
+  
   void _onTap(TapUpDetails details) {
     setState(() => _showExclamation = true);
     _exclamationFrames = 5;
@@ -346,9 +339,9 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _showBubble('huh? 😳', duration: const Duration(seconds: 2));
   }
 
-  // ── Mobile: double-tap (cat spins/dances at current pos briefly) ─────────────
+  
   void _onDoubleTap() {
-    // Jitter the target a tiny bit so the cat does a quick turn-in-place.
+    
     final rand = Random();
     setState(() {
       _targetX = _nekoPosX + (rand.nextDouble() - 0.5) * 60;
@@ -364,7 +357,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _showBubble('wheee! 🌀', duration: const Duration(seconds: 2));
   }
 
-  // ── Mobile: long-press (cat comes directly to your finger) ───────────────────
+  
   void _onLongPressStart(LongPressStartDetails details) {
     setState(() => _showExclamation = true);
     _exclamationFrames = 6;
@@ -376,7 +369,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _wakeUp(details.globalPosition);
   }
 
-  // ── Mobile: swipe (cat chases the swipe endpoint) ────────────────────────────
+  
   void _onPanStart(DragStartDetails details) {
     _swipeStart = details.globalPosition;
     _lastTouchPos = details.globalPosition;
@@ -385,13 +378,13 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
 
   void _onPanUpdate(DragUpdateDetails details) {
     _lastTouchPos = details.globalPosition;
-    // While dragging, update target continuously so cat chases the finger.
+    
     _wakeUp(details.globalPosition);
   }
 
   void _onPanEnd(DragEndDetails details) {
     if (_swipeStart != null && _lastTouchPos != null) {
-      // Project the cat toward the swipe direction beyond the finger lift point.
+      
       final dx = _lastTouchPos!.dx - _swipeStart!.dx;
       final dy = _lastTouchPos!.dy - _swipeStart!.dy;
       final len = sqrt(dx * dx + dy * dy);
@@ -408,7 +401,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _lastTouchPos = null;
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
+  
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -421,19 +414,17 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
       onPanUpdate:            _onPanUpdate,
       onPanEnd:               _onPanEnd,
       child: Listener(
-        onPointerHover: _onPointerEvent,
-        onPointerMove:  _onPointerEvent,
         behavior: HitTestBehavior.translucent,
         child: Stack(
           children: [
-            // ── Static child — never rebuilt by cat setState ────────────────
+            
             RepaintBoundary(child: widget.child),
 
-            // ── Cat overlay — only this layer repaints on each tick ─────────
+            
             RepaintBoundary(
               child: Stack(
                 children: [
-                  // ── Speech bubble ─────────────────────────────────────────
+                  
                   if (_showSpeechBubble)
                     Positioned(
                       left: _nekoPosX - 100,
@@ -489,7 +480,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
                       ),
                     ),
 
-                  // ── Exclamation ───────────────────────────────────────────
+                  
                   if (_showExclamation && !_showSpeechBubble)
                     Positioned(
                       left: _nekoPosX + 10,
@@ -507,7 +498,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
                       ),
                     ),
 
-                  // ── Cat sprite ────────────────────────────────────────────
+                  
                   Positioned(
                     left: _nekoPosX - 16,
                     top:  _nekoPosY - 16,
@@ -545,7 +536,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   }
 }
 
-/// A CustomPainter that draws a soft speech bubble with a curved, organic tail.
+
 class SpeechBubblePainter extends CustomPainter {
   final Color backgroundColor;
   final Color borderColor;
@@ -582,7 +573,7 @@ class SpeechBubblePainter extends CustomPainter {
     path.lineTo(w, h - borderRadius);
     path.quadraticBezierTo(w, h, w - borderRadius, h);
 
-    // Smooth organic tail
+    
     path.lineTo(w / 2 + 10, h);
     path.quadraticBezierTo(w / 2 + 6, h + 4, w / 2 - 2, h + arrowHeight);
     path.quadraticBezierTo(w / 2 + 1, h + 3, w / 2 - 6, h);

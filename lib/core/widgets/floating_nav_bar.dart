@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import 'magnet.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FLOATING NAV BAR  (Obsidian × Zinc design language)
-//
-// Design:
-//   • Pill-shaped glass container, 20px radius, BackdropFilter blur.
-//   • Monochromatic: accent = zinc-100 on dark / zinc-900 on light.
-//   • Active indicator: scanning hairline glow at top of pill.
-//   • Subtle dot-grid texture illuminated under the active tab.
-//   • Icon + JetBrainsMono label; opacity hierarchy for depth.
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
 
 class FloatingNavBar extends StatefulWidget {
   final int currentIndex;
@@ -112,7 +112,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
     final idleTxt   = isDark ? AppColors.textTerDark      : AppColors.textTerLight;
     final activeTxt = isDark ? AppColors.textPrimaryDark  : AppColors.textPrimaryLight;
 
-    // Clamp bar to 88% of screen, between 280–360px
+    
     final screenW = MediaQuery.sizeOf(context).width;
     final totalW  = (screenW * 0.88).clamp(280.0, 360.0);
 
@@ -186,7 +186,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
                             ),
                             child: Stack(
                               children: [
-                                // Dot-grid texture
+                                
                                 Positioned.fill(
                                   child: IgnorePointer(
                                     child: CustomPaint(
@@ -206,7 +206,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
                                   ),
                                 ),
 
-                                // Nav items row — Expanded items fill space evenly
+                                
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: padH),
                                   child: Row(
@@ -230,7 +230,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
-                                                    // Icon
+                                                    
                                                     AnimatedSwitcher(
                                                       duration: const Duration(milliseconds: 180),
                                                       switchInCurve:  Curves.easeOutBack,
@@ -253,7 +253,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
 
                                                     const SizedBox(height: 4),
 
-                                                    // Label
+                                                    
                                                     AnimatedDefaultTextStyle(
                                                       duration: const Duration(milliseconds: 180),
                                                       style: TextStyle(
@@ -297,9 +297,9 @@ class _FloatingNavBarState extends State<FloatingNavBar>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DOT GRID PAINTER
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
 
 class _DotGridPainter extends CustomPainter {
   final double activePos;
@@ -343,9 +343,9 @@ class _DotGridPainter extends CustomPainter {
       old.activePos != activePos || old.dotColor != dotColor || old.glowColor != glowColor;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GLOW TOP BORDER PAINTER  (ported from termos_ui, adapted to Zinc theme)
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
 
 class _GlowTopBorderPainter extends CustomPainter {
   const _GlowTopBorderPainter({
@@ -385,7 +385,7 @@ class _GlowTopBorderPainter extends CustomPainter {
       ..lineTo(size.width - radius, 0)
       ..arcToPoint(Offset(size.width, radius), radius: Radius.circular(radius));
 
-    // ── Blurred halo pass ──────────────────────────────────────────────────
+    
     canvas.drawPath(
       path,
       Paint()
@@ -408,7 +408,7 @@ class _GlowTopBorderPainter extends CustomPainter {
         ).createShader(rect),
     );
 
-    // ── Sharp border pass ──────────────────────────────────────────────────
+    
     canvas.drawPath(
       path,
       Paint()
@@ -434,9 +434,9 @@ class _GlowTopBorderPainter extends CustomPainter {
       haloAlpha  != old.haloAlpha;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TAB MODEL
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
 
 class _Tab {
   final IconData icon;

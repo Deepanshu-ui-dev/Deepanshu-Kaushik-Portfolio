@@ -8,9 +8,9 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/scroll_fade_in.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 
-// ─────────────────────────────────────────────────────────────
-// PROJECTS SCREEN
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class ProjectsScreen extends StatefulWidget {
   final ScrollController? scrollController;
@@ -70,16 +70,16 @@ class _ProjectsScreenState extends State<ProjectsScreen>
               padding: EdgeInsets.only(
                   left: pad,
                   right: pad,
-                  top: AppSpacing.xl,
+                  top: AppSpacing.base,
                   bottom: bottomClear),
               sliver: SliverList.list(
                 children: [
-                  // ── HERO ─────────────────────────────────────────
+                  
                   ScrollFadeIn(
                     child: _ProjectsHero(count: filtered.length),
                   ),
 
-                   // Filter section with simple spacing
+                   
                   ScrollFadeIn(
                     delay: const Duration(milliseconds: 100),
                     child: _FilterSection(
@@ -92,7 +92,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
                   const SizedBox(height: 48),
 
-                  // ── GRID / EMPTY ──────────────────────────────────
+                  
                   if (filtered.isEmpty)
                     const _EmptyState()
                   else
@@ -100,7 +100,7 @@ class _ProjectsScreenState extends State<ProjectsScreen>
 
                   const SizedBox(height: 64),
                   
-                  // ── OPEN SOURCE CALLOUT ───────────────────────────
+                  
                   const ScrollFadeIn(
                     delay: Duration(milliseconds: 200),
                     child: _OpenSourceSection(),
@@ -117,11 +117,11 @@ class _ProjectsScreenState extends State<ProjectsScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// HERO HEADER
-// Matches ContactScreen eyebrow pattern [XX] LABEL,
-// then uses the same large headline + ghost count as HomeScreen.
-// ─────────────────────────────────────────────────────────────
+
+
+
+
+
 
 class _ProjectsHero extends StatelessWidget {
   final int count;
@@ -135,7 +135,7 @@ class _ProjectsHero extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Eyebrow — ContactScreen pattern
+        
         Row(children: [
           Text(
             '[ 02 ]',
@@ -171,7 +171,7 @@ class _ProjectsHero extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // Tagline — HomeScreen sub-row with dash
+        
         Row(children: [
           Expanded(
             child: Text(
@@ -188,9 +188,9 @@ class _ProjectsHero extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// FILTER SECTION
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _FilterSection extends StatelessWidget {
   final List<String> tags;
@@ -305,9 +305,9 @@ class _FilterChipState extends State<_FilterChip> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// PROJECT GRID  — responsive Wrap, overflow-safe widths
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _ProjectGrid extends StatelessWidget {
   final List<ProjectItem> projects;
@@ -362,7 +362,7 @@ class _ProjectGrid extends StatelessWidget {
                 ),
               ),
             );
-            i++; // Skip next element because it is handled
+            i++; 
           } else {
             children.add(
               Row(
@@ -389,9 +389,9 @@ class _ProjectGrid extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// PROJECT CARD
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _ProjectCard extends StatefulWidget {
   final ProjectItem project;
@@ -513,9 +513,9 @@ class _ProjectCardState extends State<_ProjectCard> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// BROWSER MOCK
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _BrowserMock extends StatelessWidget {
   const _BrowserMock();
@@ -553,7 +553,7 @@ class _BrowserMock extends StatelessWidget {
           decoration: BoxDecoration(
               border: Border(bottom: BorderSide(color: border, width: 1))),
           child: Row(children: [
-            // macOS traffic-light dots
+            
             Container(width: 7, height: 7,
                 decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFF5F57))),
             const SizedBox(width: 5),
@@ -588,9 +588,9 @@ class _BrowserMock extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// PROJECT LINK ROW
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _ProjectLinkRow extends StatelessWidget {
   final String? githubUrl;
@@ -676,9 +676,9 @@ class _LinkBtnState extends State<_LinkBtn> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// OPEN SOURCE SECTION  — numbered rows, same as Achievements
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _OpenSourceSection extends StatelessWidget {
   const _OpenSourceSection();
@@ -774,9 +774,9 @@ class _OSRowState extends State<_OSRow> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// EMPTY STATE
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _EmptyState extends StatelessWidget {
   const _EmptyState();

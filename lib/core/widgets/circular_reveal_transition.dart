@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// ─── State & Providers ────────────────────────────────
+
 final transitionProvider =
     StateNotifierProvider<TransitionNotifier, TransitionState>((ref) {
   return TransitionNotifier();
@@ -18,7 +18,7 @@ class TransitionState {
 
   const TransitionState({this.center, this.isAnimating = false});
 
-  /// Create a copy with optional field updates
+  
   TransitionState copyWith({Offset? center, bool? isAnimating}) {
     return TransitionState(
       center: center ?? this.center,
@@ -28,7 +28,7 @@ class TransitionState {
 }
 
 class TransitionNotifier extends StateNotifier<TransitionState> {
-  /// Initialize with idle state
+  
   TransitionNotifier() : super(const TransitionState());
 
   void start(Offset center) {
@@ -40,7 +40,7 @@ class TransitionNotifier extends StateNotifier<TransitionState> {
   }
 }
 
-// ─── Widget Transition ──────────────────────────────────
+
 class CircularRevealTransition extends ConsumerStatefulWidget {
   final Widget child;
 
@@ -102,10 +102,10 @@ class _CircularRevealTransitionState
         setState(() {
           _snapshot = image;
         });
-        // Start animation immediately after snapshot ready
+        
         _controller.forward();
       } else {
-        // Clean up if widget unmounted
+        
         image.dispose();
       }
     } catch (e) {
@@ -132,7 +132,7 @@ class _CircularRevealTransitionState
 
     final screenSize = MediaQuery.of(context).size;
     
-    // Calculate max radius only once per transition
+    
     if (_snapshot != null && _cachedMaxRadius == 0.0) {
       _cachedMaxRadius = math.sqrt(
             math.pow(math.max(_center.dx, screenSize.width - _center.dx), 2) +
@@ -158,7 +158,7 @@ class _CircularRevealTransitionState
                     width: screenSize.width,
                     height: screenSize.height,
                     fit: BoxFit.fill,
-                    // No filtering = maximum performance during animation
+                    
                     filterQuality: FilterQuality.none,
                   ),
                 );
@@ -170,7 +170,7 @@ class _CircularRevealTransitionState
   }
 }
 
-// ─── Clipper ──────────────────────────────────────────
+
 class _CircleClipper extends CustomClipper<Path> {
   final Offset center;
   final double radius;
@@ -183,9 +183,9 @@ class _CircleClipper extends CustomClipper<Path> {
       ..addOval(Rect.fromCircle(center: center, radius: math.max(0.0, radius)));
   }
 
-  /// Optimize repainting by checking if clip has changed
-  ///
-  /// Only repaint if radius or center changes
+  
+  
+  
   @override
   bool shouldReclip(covariant _CircleClipper old) =>
       old.radius != radius || old.center != center;

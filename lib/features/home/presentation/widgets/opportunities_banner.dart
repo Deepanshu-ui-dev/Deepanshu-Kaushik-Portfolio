@@ -68,24 +68,24 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
 
     return Stack(
       children: [
-        // ── Corner brackets ──────────────────────
+        
         Positioned(top: 0,    left: 0,  child: _CornerBracket(corner: Corner.topLeft,     color: borderColor)),
         Positioned(top: 0,    right: 0, child: _CornerBracket(corner: Corner.topRight,    color: borderColor)),
         Positioned(bottom: 0, left: 0,  child: _CornerBracket(corner: Corner.bottomLeft,  color: borderColor)),
         Positioned(bottom: 0, right: 0, child: _CornerBracket(corner: Corner.bottomRight, color: borderColor)),
 
-        // ── Content ──────────────────────────────
+        
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Left: dot + labels
+              
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Pulsing dot
+                    
                     SizedBox(
                       width: 18,
                       height: 18,
@@ -122,7 +122,7 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
                     ),
                     const SizedBox(width: 10),
 
-                    // Text column
+                    
                     Flexible(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -155,7 +155,7 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
                 ),
               ),
 
-              // Right: version label
+              
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -183,7 +183,7 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
           ),
         ),
 
-        // ── Top & bottom dashed lines ─────────────
+        
         Positioned(top: 0,    left: 0, right: 0, child: _DashedLine(color: borderColor)),
         Positioned(bottom: 0, left: 0, right: 0, child: _DashedLine(color: borderColor)),
       ],
@@ -191,7 +191,7 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
   }
 }
 
-// ── Helpers ──────────────────────────────────────
+
 
 class _DashedLine extends StatelessWidget {
   final Color color;

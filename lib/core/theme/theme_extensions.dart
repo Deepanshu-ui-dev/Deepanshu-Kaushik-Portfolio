@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'app_theme.dart';
 
-/// High-performance theme transition utilities
+
 class ThemeTransitionUtils {
-  /// Pre-compute and cache theme color map for instant access
+  
   static final Map<String, Color> _colorCache = {};
   
-  /// Initialize color cache on app start for instant theme switch
+  
   static void initializeColorCache() {
-    // Dark theme colors
+    
     _colorCache['bg_dark'] = AppColors.bgDark;
     _colorCache['surface_dark'] = AppColors.surfaceDark;
     _colorCache['text_primary_dark'] = AppColors.textPrimaryDark;
@@ -16,7 +16,7 @@ class ThemeTransitionUtils {
     _colorCache['border_dark'] = AppColors.borderDark;
     _colorCache['accent_dark'] = AppColors.accentDark;
     
-    // Light theme colors
+    
     _colorCache['bg_light'] = AppColors.bgLight;
     _colorCache['surface_light'] = AppColors.surfaceLight;
     _colorCache['text_primary_light'] = AppColors.textPrimaryLight;
@@ -25,18 +25,18 @@ class ThemeTransitionUtils {
     _colorCache['accent_light'] = AppColors.accentLight;
   }
 
-  /// Get cached color instantly
+  
   static Color getCachedColor(String key, {Color fallback = const Color(0xFF000000)}) {
     return _colorCache[key] ?? fallback;
   }
 
-  /// Smooth color lerp with GPU optimization
+  
   static Color smoothColorLerp(Color a, Color b, double t) {
     return Color.lerp(a, b, t) ?? a;
   }
 }
 
-/// AnimatedColorContainer — Smooth color transitions without rebuilds
+
 class AnimatedColorContainer extends StatefulWidget {
   final Widget child;
   final Color startColor;
@@ -113,7 +113,7 @@ class _AnimatedColorContainerState extends State<AnimatedColorContainer>
   }
 }
 
-/// SmoothThemeScaffold — Scaffold with smooth theme transitions
+
 class SmoothThemeScaffold extends StatelessWidget {
   final Widget body;
   final PreferredSizeWidget? appBar;
@@ -159,9 +159,9 @@ class SmoothThemeScaffold extends StatelessWidget {
   }
 }
 
-/// Extension for smooth Theme data transitions
+
 extension ThemeTransitionExtension on ThemeData {
-  /// Create a smoothly transitioned theme
+  
   static ThemeData createTransitioned({
     required bool isDark,
     required Duration duration,

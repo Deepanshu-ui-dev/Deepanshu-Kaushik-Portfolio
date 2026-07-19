@@ -54,11 +54,11 @@ class _AboutScreenState extends State<AboutScreen>
               padding: EdgeInsets.only(
                   left: padding,
                   right: padding,
-                  top: AppSpacing.xl,
+                  top: AppSpacing.base,
                   bottom: bottomClear),
               sliver: SliverList.list(
                 children: [
-                  // ── 01 / Header ──
+                  
                   ScrollFadeIn(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +95,7 @@ class _AboutScreenState extends State<AboutScreen>
                   const DashedDivider(),
                   const SizedBox(height: AppSpacing.xxl),
 
-                  // ── 02 / Bucket List ──
+                  
                   const ScrollFadeIn(
                     delay: Duration(milliseconds: 100),
                     child: Column(
@@ -112,7 +112,7 @@ class _AboutScreenState extends State<AboutScreen>
                   const DashedDivider(),
                   const SizedBox(height: AppSpacing.xxl),
 
-                  // ── 04 / Volunteer Experience ──
+                  
                   ScrollFadeIn(
                     delay: const Duration(milliseconds: 200),
                     child: Column(
@@ -137,7 +137,7 @@ class _AboutScreenState extends State<AboutScreen>
                   const DashedDivider(),
                   const SizedBox(height: AppSpacing.xxl),
 
-                  // ── 05 / Brain Dumps ──
+                  
                   const ScrollFadeIn(
                     delay: Duration(milliseconds: 300),
                     child: Column(
@@ -161,9 +161,9 @@ class _AboutScreenState extends State<AboutScreen>
   }
 }
 
-// ─────────────────────────────────────────────
-// SHARED SECTION LABEL
-// ─────────────────────────────────────────────
+
+
+
 
 class _SectionLabel extends StatelessWidget {
   final String index;
@@ -193,9 +193,9 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// BUCKET LIST SECTION
-// ─────────────────────────────────────────────
+
+
+
 
 class _BucketListSection extends StatelessWidget {
   const _BucketListSection();
@@ -318,9 +318,9 @@ class _BucketItemState extends State<_BucketItem> {
   }
 }
 
-// ─────────────────────────────────────────────
-// VOLUNTEER EXPERIENCE FEED
-// ─────────────────────────────────────────────
+
+
+
 
 class _VolunteerExperienceFeed extends StatelessWidget {
   const _VolunteerExperienceFeed();
@@ -411,7 +411,7 @@ class _VolunteerExperienceFeed extends StatelessWidget {
   }
 }
 
-// Stats data class
+
 class _VolunteerStat {
   final String value;
   final String label;
@@ -494,7 +494,7 @@ class _MomentCardState extends State<_MomentCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // ── Cover image (Colorful) ──
+                
                 AspectRatio(
                   aspectRatio: widget.isSecondary ? 4 / 3 : 16 / 9,
                   child: ClipRect(
@@ -517,13 +517,13 @@ class _MomentCardState extends State<_MomentCard> {
                   ),
                 ),
 
-                // ── Card body ──
+                
                 Padding(
                   padding: const EdgeInsets.all(18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Role pill
+                      
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3),
@@ -545,7 +545,7 @@ class _MomentCardState extends State<_MomentCard> {
                       ),
                       const SizedBox(height: 10),
 
-                      // Title
+                      
                       Text(
                         widget.title,
                         style: Theme.of(context)
@@ -559,7 +559,7 @@ class _MomentCardState extends State<_MomentCard> {
                       ),
                       const SizedBox(height: 4),
 
-                      // Period
+                      
                       Text(
                         widget.period,
                         style: Theme.of(context)
@@ -571,7 +571,7 @@ class _MomentCardState extends State<_MomentCard> {
                       ),
                       const SizedBox(height: 10),
 
-                      // Tagline
+                      
                       Text(
                         widget.tagline,
                         style: Theme.of(context)
@@ -581,7 +581,7 @@ class _MomentCardState extends State<_MomentCard> {
                                 color: textSec, fontSize: 13, height: 1.5),
                       ),
 
-                      // Stats row
+                      
                       if (widget.stats.isNotEmpty) ...[
                         const SizedBox(height: 16),
                         Row(
@@ -598,7 +598,7 @@ class _MomentCardState extends State<_MomentCard> {
 
                       const SizedBox(height: 14),
 
-                      // Read more
+                      
                       Row(
                         children: [
                           Text(
@@ -674,9 +674,9 @@ class _StatCell extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-// JOURNAL FEED (THOUGHTS & BLOGS)
-// ─────────────────────────────────────────────
+
+
+
 
 class _JournalFeed extends StatelessWidget {
   const _JournalFeed();

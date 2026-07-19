@@ -4,21 +4,21 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../features/github/data/github_repository.dart';
 import 'heatmap_wave_reveal.dart';
 
-// ─────────────────────────────────────────────────────────────
-// CONTRIBUTION GRAPH
-//
-// A clean, fully responsive GitHub-style contribution heatmap.
-//
-// Key design decisions:
-//   • Cell size is computed dynamically to FILL available width
-//     — no horizontal scroll needed, no wasted space
-//   • On narrow screens (<380px), we show fewer weeks (last 26
-//     weeks instead of full year) to keep cells readable
-//   • Day-of-week labels hidden on very narrow screens
-//   • Month labels are spaced relative to cell size
-//   • 2px rounded corners on cells, subtle border on empty cells
-//   • Hover → inverts to white (dark) / black (light) for clarity
-// ─────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ContributionGraph extends StatefulWidget {
   final List<ContributionDay> contributions;
@@ -49,14 +49,14 @@ class _ContributionGraphState extends State<ContributionGraph> {
     }
   }
 
-  // ─── Group contributions into weeks ──────────────────────
+  
 
   List<List<ContributionDay?>> _buildWeeks() {
     final days = widget.contributions;
     if (days.isEmpty) return [];
 
     final weeks = <List<ContributionDay?>>[];
-    final firstWeekday = days.first.date.weekday % 7; // Sun=0
+    final firstWeekday = days.first.date.weekday % 7; 
 
     var current = List<ContributionDay?>.filled(7, null);
     int wIdx = firstWeekday;
@@ -74,7 +74,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
     return weeks;
   }
 
-  // ─── Month labels ────────────────────────────────────────
+  
 
   Map<int, String> _buildMonthLabels(List<List<ContributionDay?>> weeks) {
     final labels = <int, String>{};
@@ -91,7 +91,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
     return labels;
   }
 
-  // ─── Colour ──────────────────────────────────────────────
+  
 
   Color _colorForLevel(int level) {
     switch (level) {
@@ -113,7 +113,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
   String _formatDate(DateTime d) =>
       '${_monthAbbr(d.month)} ${d.day}, ${d.year}';
 
-  // ─── Build ───────────────────────────────────────────────
+  
 
   @override
   Widget build(BuildContext context) {
@@ -124,24 +124,24 @@ class _ContributionGraphState extends State<ContributionGraph> {
     return LayoutBuilder(builder: (context, constraints) {
       final width = constraints.maxWidth;
 
-      // ── Responsive: show fewer weeks on narrow screens ──
+      
       final showDayLabels = width >= 300;
       final dayLabelWidth = showDayLabels ? 18.0 : 0.0;
       final gridWidth = width - dayLabelWidth;
 
-      // Calculate how many weeks we can fit at a minimum cell size of 7px
+      
       final maxWeeks = ((gridWidth + _cellGap) / (7.0 + _cellGap)).floor();
       final weeksToShow = maxWeeks.clamp(20, _weeks.length).toInt();
 
-      // Use the most recent weeks
+      
       final weeks = _weeks.length > weeksToShow
           ? _weeks.sublist(_weeks.length - weeksToShow)
           : _weeks;
 
       final weekCount = weeks.length;
 
-      // ── Compute cell size to perfectly fill the grid width ──
-      // gridWidth = weekCount * (cellSize + gap) - gap
+      
+      
       double cellSize = (gridWidth + _cellGap) / weekCount - _cellGap;
       cellSize = cellSize.clamp(5.0, 15.0);
 
@@ -149,10 +149,10 @@ class _ContributionGraphState extends State<ContributionGraph> {
       final rowStep  = cellSize + _cellGap;
       final gridHeight = _rows * rowStep - _cellGap;
 
-      // Month labels need to be re-filtered based on 'weeks' sublist
+      
       final monthLabels = _buildMonthLabels(weeks);
 
-      // Month label row
+      
       const labelRowHeight = 14.0;
       const labelGap = 4.0;
 
@@ -160,7 +160,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ── Month labels ──────────────────────────────────
+          
           SizedBox(
             height: labelRowHeight,
             child: Padding(
@@ -188,11 +188,11 @@ class _ContributionGraphState extends State<ContributionGraph> {
 
           const SizedBox(height: labelGap),
 
-          // ── Grid with optional day labels ─────────────────
+          
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Day-of-week labels
+              
               if (showDayLabels)
                 SizedBox(
                   width: dayLabelWidth,
@@ -220,7 +220,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
                   ),
                 ),
 
-              // Cell grid
+              
               Expanded(
                 child: RepaintBoundary(
                   child: SizedBox(
@@ -243,9 +243,9 @@ class _ContributionGraphState extends State<ContributionGraph> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// HEATMAP GRID — Tooltip-aware cell grid
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _HeatmapGrid extends StatelessWidget {
   final List<List<ContributionDay?>> weeks;
@@ -291,9 +291,9 @@ class _HeatmapGrid extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// HEATMAP CELL
-// ─────────────────────────────────────────────────────────────
+
+
+
 
 class _HeatmapCell extends StatefulWidget {
   final ContributionDay day;
@@ -341,14 +341,14 @@ class _HeatmapCellState extends State<_HeatmapCell> {
           width: widget.size,
           height: widget.size,
           decoration: BoxDecoration(
-            // Square cells — matches reference blockRadius=0
+            
             borderRadius: BorderRadius.zero,
-            // Subtle border on empty cells only, using GitHub's exact color
+            
             border: widget.day.level == 0
                 ? Border.all(
                     color: isDark
-                        ? const Color(0xFF21262D) // GitHub dark empty-cell border
-                        : const Color(0xFFD0D7DE).withValues(alpha: 0.5), // GitHub light
+                        ? const Color(0xFF21262D) 
+                        : const Color(0xFFD0D7DE).withValues(alpha: 0.5), 
                     width: 0.5,
                   )
                 : null,

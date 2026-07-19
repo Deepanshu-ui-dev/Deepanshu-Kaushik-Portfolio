@@ -33,7 +33,7 @@ class GlassContainer extends StatelessWidget {
     final surface = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
     final defaultBorderColor = isDark ? AppColors.borderDark : AppColors.borderLight;
     
-    // Flat editorial card instead of glassmorphism
+    
     final defaultBorderRadius = borderRadius ?? AppRadius.card;
     
     return Container(

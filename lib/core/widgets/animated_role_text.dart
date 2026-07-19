@@ -27,7 +27,7 @@ class _AnimatedRoleTextState extends State<AnimatedRoleText> {
   late Timer _timer;
   bool _isDeleting = false;
   
-  // Timings
+  
   final int _typingSpeed = 80;
   final int _deletingSpeed = 40;
   final int _pauseDuration = 2000;
@@ -55,7 +55,7 @@ class _AnimatedRoleTextState extends State<AnimatedRoleText> {
         }
       } else {
         if (_currentText.length < targetText.length) {
-          // Normal typing effect
+          
           _currentText = targetText.substring(0, _currentText.length + 1);
         }
       }
@@ -64,17 +64,17 @@ class _AnimatedRoleTextState extends State<AnimatedRoleText> {
     int nextTick = _isDeleting ? _deletingSpeed : _typingSpeed;
 
     if (!_isDeleting && _currentText.length == targetText.length) {
-      // Reached the end of typing, pause before deleting
+      
       _isDeleting = true;
       nextTick = _pauseDuration;
     } else if (_isDeleting && _currentText.isEmpty) {
-      // Reached the end of deleting, move to next role
+      
       _isDeleting = false;
       _currentIndex = (_currentIndex + 1) % widget.roles.length;
-      nextTick = 500; // Small pause before typing next
+      nextTick = 500; 
     }
 
-    // Add some randomness to typing for realism
+    
     if (!_isDeleting && nextTick == _typingSpeed) {
       nextTick += _random.nextInt(40) - 20; 
     }

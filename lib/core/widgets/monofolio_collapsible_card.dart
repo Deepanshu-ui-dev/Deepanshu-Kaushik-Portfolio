@@ -1,18 +1,18 @@
-// monofolio_collapsible_card.dart
-//
-// NOTE: The canonical CollapsibleCard is now in shared_widgets.dart.
-// This file re-exports it so existing imports don't break, and keeps
-// the legacy MonofolioCollapsibleCard for any screens that still use it.
+
+
+
+
+
 
 export '../widgets/shared_widgets.dart' show CollapsibleCard;
 
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-// ─────────────────────────────────────────────
-// LEGACY: MonofolioCollapsibleCard
-// Kept for backward-compat. Prefer CollapsibleCard from shared_widgets.
-// ─────────────────────────────────────────────
+
+
+
+
 
 class MonofolioCollapsibleCard extends StatefulWidget {
   final IconData icon;
@@ -90,7 +90,7 @@ class _MonofolioCollapsibleCardState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header ──────────────────────────
+          
           InkWell(
             onTap: _toggle,
             splashColor: Colors.transparent,
@@ -100,7 +100,7 @@ class _MonofolioCollapsibleCardState
                   horizontal: 16, vertical: 14),
               child: Row(
                 children: [
-                  // Icon in bordered box
+                  
                   Container(
                     width: 28,
                     height: 28,
@@ -145,7 +145,7 @@ class _MonofolioCollapsibleCardState
             ),
           ),
 
-          // ── Expandable body ─────────────────
+          
           SizeTransition(
             sizeFactor: _anim,
             child: Padding(
@@ -217,9 +217,9 @@ class _MonofolioCollapsibleCardState
   }
 }
 
-// ─────────────────────────────────────────────
-// MONOFOLIO SECTION HEADER  (legacy alias)
-// ─────────────────────────────────────────────
+
+
+
 
 class MonofolioSectionHeader extends StatelessWidget {
   final String title;

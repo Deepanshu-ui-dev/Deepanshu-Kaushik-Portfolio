@@ -120,7 +120,7 @@ class VolunteerDetailScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.xxl),
                   ],
   
-                  // Dynamic paragraphs
+                  
                   if (paragraphs.isEmpty)
                     _buildSection(context, 'Overview', 'As an active contributor and leader in the $title community, I was heavily involved in organizing events, managing community outreach, and facilitating tech workshops.')
                   else

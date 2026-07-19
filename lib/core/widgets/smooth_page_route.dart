@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// A premium page transition: simultaneous fade + slide-up.
-/// Use instead of MaterialPageRoute for a polished feel.
-///
-/// ```dart
-/// Navigator.push(context, SmoothPageRoute(page: const DetailScreen()));
-/// ```
+
+
+
+
+
+
 class SmoothPageRoute<T> extends PageRouteBuilder<T> {
   final Widget page;
 

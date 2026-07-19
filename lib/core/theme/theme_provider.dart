@@ -10,7 +10,7 @@ final themeModeProvider =
   return ThemeModeNotifier();
 });
 
-// Derived provider: Watch theme mode and compute effective brightness
+
 final effectiveThemeProvider = Provider<Brightness>((ref) {
   final themeMode = ref.watch(themeModeProvider);
   final platformBrightness =
@@ -25,13 +25,13 @@ final effectiveThemeProvider = Provider<Brightness>((ref) {
   }
 });
 
-// Watch for theme changes and sync AppColors globally
+
 final themeSyncProvider = Provider<void>((ref) {
   final brightness = ref.watch(effectiveThemeProvider);
   AppColors.isDarkMode = brightness == Brightness.dark;
 });
 
-// Cache for theme persistence
+
 class _ThemeCache {
   static SharedPreferences? _instance;
   static Future<SharedPreferences> get instance async {

@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-// ─────────────────────────────────────────────
-// MODELS
-// ─────────────────────────────────────────────
+
+
+
 
 class GitHubRepo {
   final String name;
@@ -69,16 +69,16 @@ class GitHubStats {
   });
 }
 
-// ─────────────────────────────────────────────
-// REPOSITORY
-// ─────────────────────────────────────────────
+
+
+
 
 class GitHubRepository {
   static const _base = 'https://api.github.com';
 
-  // Optional: flutter build web --dart-define=GH_TOKEN=ghp_xxx
-  // Not required — contributions use a token-free public proxy.
-  // Adding a token only increases REST rate limit (60 → 5000 req/hr).
+  
+  
+  
   static const _token = String.fromEnvironment('GH_TOKEN', defaultValue: '');
 
   Future<GitHubStats> fetchStats(String username) async {
@@ -87,9 +87,9 @@ class GitHubRepository {
           ? {'Authorization': 'bearer $_token'}
           : <String, String>{};
 
-      // ── Parallel fetch ──────────────────────────────────────────────
+      
       final results = await Future.wait([
-        // 1. User profile (REST — works unauthenticated, CORS-safe)
+        
         http.get(
           Uri.parse('$_base/users/$username'),
           headers: {
@@ -98,7 +98,7 @@ class GitHubRepository {
           },
         ),
 
-        // 2. Public repos (REST — works unauthenticated, CORS-safe)
+        
         http.get(
           Uri.parse(
               '$_base/users/$username/repos?sort=stars&per_page=6&type=owner'),
@@ -108,11 +108,11 @@ class GitHubRepository {
           },
         ),
 
-        // 3. Contributions via jogruber's public proxy
-        //    • No token needed
-        //    • Returns CORS headers — works from Flutter Web
-        //    • Response: { "total": {...}, "contributions": [...] }
-        //    • ?y=last  → last 12 months only
+        
+        
+        
+        
+        
         http.get(
           Uri.parse(
               'https://github-contributions-api.jogruber.de/v4/$username?y=last'),
@@ -124,13 +124,13 @@ class GitHubRepository {
       final reposRes         = results[1];
       final contributionsRes = results[2];
 
-      // ── Parse user ──────────────────────────────────────────────────
+      
       Map<String, dynamic> user = {};
       if (userRes.statusCode == 200) {
         user = jsonDecode(userRes.body) as Map<String, dynamic>;
       }
 
-      // ── Parse repos ─────────────────────────────────────────────────
+      
       List<GitHubRepo> repos = [];
       if (reposRes.statusCode == 200) {
         final list = jsonDecode(reposRes.body) as List<dynamic>;
@@ -141,7 +141,7 @@ class GitHubRepository {
             .toList();
       }
 
-      // ── Parse contributions ──────────────────────────────────────────
+      
       List<ContributionDay> contributions = [];
       int totalContributions = 0;
 
@@ -151,7 +151,7 @@ class GitHubRepository {
         totalContributions = parsed.$2;
       }
 
-      // Fallback to mock data only if proxy failed
+      
       if (contributions.isEmpty) {
         contributions = _generateMockContributions();
         totalContributions =
@@ -180,24 +180,24 @@ class GitHubRepository {
     }
   }
 
-  // ─────────────────────────────────────────────
-  // PARSER — github-contributions-api.jogruber.de
-  //
-  // Response shape:
-  // {
-  //   "total": { "2025": 312, "2024": 198 },
-  //   "contributions": [
-  //     { "date": "2024-04-01", "count": 3, "level": 2 },
-  //     ...
-  //   ]
-  // }
-  // ─────────────────────────────────────────────
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   (List<ContributionDay>, int) _parseContributionsProxy(String body) {
     try {
       final json = jsonDecode(body) as Map<String, dynamic>;
 
-      // Sum total across all years in the response
+      
       int total = 0;
       final totalMap = json['total'] as Map<String, dynamic>?;
       if (totalMap != null) {
@@ -222,10 +222,10 @@ class GitHubRepository {
         days.add(ContributionDay(date: date, count: count, level: level));
       }
 
-      // Sort chronologically just in case
+      
       days.sort((a, b) => a.date.compareTo(b.date));
 
-      // Compute total from days if not present in response
+      
       if (total == 0 && days.isNotEmpty) {
         total = days.fold(0, (sum, d) => sum + d.count);
       }
@@ -236,11 +236,11 @@ class GitHubRepository {
     }
   }
 
-  // ─────────────────────────────────────────────
-  // MOCK DATA — shown when token is missing or
-  // GraphQL call fails (e.g. during local dev
-  // without --dart-define=GH_TOKEN)
-  // ─────────────────────────────────────────────
+  
+  
+  
+  
+  
 
   static List<ContributionDay> _generateMockContributions() {
     final days = <ContributionDay>[];
@@ -265,9 +265,9 @@ class GitHubRepository {
   }
 }
 
-// ─────────────────────────────────────────────
-// PROVIDERS
-// ─────────────────────────────────────────────
+
+
+
 
 final gitHubRepositoryProvider = Provider<GitHubRepository>((ref) {
   return GitHubRepository();

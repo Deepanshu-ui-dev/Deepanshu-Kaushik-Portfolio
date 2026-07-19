@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:redacted/redacted.dart';
 import '../theme/app_theme.dart';
 
-// ─────────────────────────────────────────────
-// REDACTED SKELETON LOADERS FOR PORTFOLIO
-// ─────────────────────────────────────────────
 
-/// Generic theme-aware skeleton loader using redacted package
+
+
+
+
 class RedactedSkeletonLoader extends StatelessWidget {
   final Widget child;
   final bool isLoading;
@@ -33,7 +33,7 @@ class RedactedSkeletonLoader extends StatelessWidget {
   }
 }
 
-/// Skeleton loader for image cards (photography section)
+
 class ImageCardSkeleton extends StatelessWidget {
   final double width;
   final double height;
@@ -72,7 +72,7 @@ class ImageCardSkeleton extends StatelessWidget {
   }
 }
 
-/// Skeleton loader for text lines
+
 class TextLineSkeleton extends StatelessWidget {
   final double width;
   final double height;
@@ -99,7 +99,7 @@ class TextLineSkeleton extends StatelessWidget {
   }
 }
 
-/// Skeleton loader for avatar/profile images
+
 class AvatarSkeleton extends StatelessWidget {
   final double radius;
 
@@ -121,7 +121,7 @@ class AvatarSkeleton extends StatelessWidget {
   }
 }
 
-/// Skeleton loader for button areas
+
 class ButtonSkeleton extends StatelessWidget {
   final double width;
   final double height;
@@ -151,7 +151,7 @@ class ButtonSkeleton extends StatelessWidget {
   }
 }
 
-/// Skeleton loader for card containers
+
 class CardSkeleton extends StatelessWidget {
   final double? width;
   final double? height;
@@ -192,7 +192,7 @@ class CardSkeleton extends StatelessWidget {
   }
 }
 
-/// Animated pulsing skeleton effect
+
 class PulsingSkeletonBox extends StatefulWidget {
   final double width;
   final double height;

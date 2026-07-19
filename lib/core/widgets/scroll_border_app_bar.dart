@@ -2,39 +2,39 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SCROLL BORDER APP BAR
-//
-// Sticky header that reacts to scroll — mirrors abdulrehmanwaseem.me's nav.
-//
-// Behaviour:
-//   Rest:    fully transparent, no border
-//   Scrolled: frosted-glass blur (sigma 12) + 97% opaque bg + 0.5px bottom border
-//   Transition: 200ms easeOutCubic on color/border, instant on blur (ImageFilter
-//               can't animate — we switch it on threshold)
-//
-// Improvements over original:
-//   • Backdrop blur (ImageFilter.blur) for the frosted glass effect
-//   • ScrollController-based detection instead of NotificationListener —
-//     avoids false positives from nested scrollables
-//   • Exposes scrollController so callers can share one instance
-//   • Slim 48px height, 16px horizontal padding — matches the site's nav
-//   • No Scaffold wrapper — renders as a plain widget for composability
-//
-// Usage (simple):
-//   ScrollBorderAppBar(
-//     title: Text('Abdul Rehman'),
-//     actions: [ThemeToggle(), GitHubIcon()],
-//     child: PageBody(),
-//   )
-//
-// Usage (shared controller):
-//   final _ctrl = ScrollController();
-//   ScrollBorderAppBar(
-//     scrollController: _ctrl,
-//     child: ListView(controller: _ctrl, ...),
-//   )
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ScrollBorderAppBar extends StatefulWidget {
   final Widget child;
@@ -42,17 +42,17 @@ class ScrollBorderAppBar extends StatefulWidget {
   final List<Widget>? actions;
   final Widget? leading;
 
-  /// Provide an external ScrollController to share with the body.
-  /// If null, an internal one is created and injected via [ScrollBorderAppBar.builder].
+  
+  
   final ScrollController? scrollController;
 
-  /// Height of the app bar. Default: 48.
+  
   final double height;
 
-  /// Horizontal padding inside the bar. Default: 16.
+  
   final double horizontalPadding;
 
-  /// Scroll offset threshold to trigger the scrolled state. Default: 1.
+  
   final double scrollThreshold;
 
   const ScrollBorderAppBar({
@@ -111,7 +111,7 @@ class _ScrollBorderAppBarState extends State<ScrollBorderAppBar> {
 
     return Stack(
       children: [
-        // ── Body — passes internal scroll controller if we own it ─────────
+        
         Padding(
           padding: EdgeInsets.only(top: widget.height + MediaQuery.of(context).padding.top),
           child: _ownsController
@@ -122,7 +122,7 @@ class _ScrollBorderAppBarState extends State<ScrollBorderAppBar> {
               : widget.child,
         ),
 
-        // ── App bar — pinned at top ────────────────────────────────────────
+        
         Positioned(
           top: 0,
           left: 0,
@@ -143,7 +143,7 @@ class _ScrollBorderAppBarState extends State<ScrollBorderAppBar> {
   }
 }
 
-// ── Surface widget — isolates rebuilds to just the bar ───────────────────────
+
 
 class _AppBarSurface extends StatelessWidget {
   final bool isScrolled;
@@ -170,7 +170,7 @@ class _AppBarSurface extends StatelessWidget {
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
 
-    // Blur is switched on/off (can't animate ImageFilter)
+    
     Widget surface = AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOutCubic,
@@ -202,7 +202,7 @@ class _AppBarSurface extends StatelessWidget {
       ),
     );
 
-    // Wrap in blur only when scrolled — avoids permanent compositing layer cost
+    
     if (isScrolled) {
       surface = ClipRect(
         child: BackdropFilter(
@@ -216,7 +216,7 @@ class _AppBarSurface extends StatelessWidget {
   }
 }
 
-// ── Injects a ScrollController into a subtree via PrimaryScrollController ────
+
 
 class _InjectScrollController extends StatelessWidget {
   final ScrollController controller;
@@ -236,19 +236,19 @@ class _InjectScrollController extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SCROLL DIRECTION HIDE APP BAR
-//
-// Extension of the above — hides the bar when scrolling down, reveals on
-// scroll up. Common on content-heavy pages where the nav should stay out
-// of the way while reading.
-//
-// Usage:
-//   ScrollDirectionHideAppBar(
-//     title: Text('Blog'),
-//     child: PostList(),
-//   )
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class ScrollDirectionHideAppBar extends StatefulWidget {
   final Widget child;
@@ -301,7 +301,7 @@ class _ScrollDirectionHideAppBarState
     if (scrolled != _isScrolled || scrollingDown != _isHidden) {
       setState(() {
         _isScrolled = scrolled;
-        // Only hide if scrolling down AND already past the bar height
+        
         _isHidden = scrollingDown && offset > widget.height;
       });
     }

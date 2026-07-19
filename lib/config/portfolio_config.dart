@@ -1,4 +1,5 @@
 class PortfolioConfig {
+  static const String initials = 'DK';
   static const String name = 'Deepanshu Kaushik';
   static const String firstName = 'Deepanshu';
   static const int age = 20;
@@ -15,7 +16,7 @@ class PortfolioConfig {
   static const String websiteUrl = 'https://deepanshui.framer.website/';
   static const String visitorApiUrl = 'https://api.counterapi.dev/v1/deepanshux.tech/visits';
 
-  // Supabase credentials - can be overridden via --dart-define
+  
   static const String supabaseUrl = String.fromEnvironment(
     'SUPABASE_URL',
     defaultValue: 'https://jqddkjhxjsuskpebqgfr.supabase.co',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// A subtle grain/noise overlay that gives the UI an editorial, tactile feel.
-/// Uses [RepaintBoundary] and [ImageFiltered] to ensure zero impact on scroll performance.
+
+
 class GrainOverlay extends StatelessWidget {
   final Widget child;
   final double opacity;
@@ -9,7 +9,7 @@ class GrainOverlay extends StatelessWidget {
   const GrainOverlay({
     super.key,
     required this.child,
-    this.opacity = 0.012, // extremely subtle
+    this.opacity = 0.012, 
   });
 
   @override
@@ -36,8 +36,8 @@ class _NoiseTexture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use a custom painter to draw a dense noise pattern.
-    // By keeping it in a separate RepaintBoundary, we only draw it once.
+    
+    
     return CustomPaint(
       painter: _NoisePainter(),
     );
@@ -51,12 +51,12 @@ class _NoisePainter extends CustomPainter {
       ..color = Colors.black
       ..style = PaintingStyle.fill;
 
-    // Use a fixed seed for consistent grain across frames
+    
     final random = _SeededRandom(42);
     
-    // Draw tiny 1x1 noise dots
-    // For performance, we don't draw every pixel. We draw a pseudo-random pattern.
-    // This is much faster than true per-pixel noise.
+    
+    
+    
     const step = 2.0;
     for (double x = 0; x < size.width; x += step) {
       for (double y = 0; y < size.height; y += step) {
