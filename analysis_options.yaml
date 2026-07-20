@@ -1,15 +1,18 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-	exclude:
-		- build/**
-		- .dart_tool/**
-		- flutter/**
-		- flutter/packages/**
-		- **/flutter/**
-		- **/flutter/packages/**
-		- **/flutter/packages/**/**
-		- build/**
-		- .venv/**
-		- **/gen/**
-		- **/generated/**
+  exclude:
+    - build/**
+    - .dart_tool/**
+    - flutter/**
+    - flutter/dev/**
+    - flutter/examples/**
+    - flutter/packages/**
+    - flutter/bin/**
+    - flutter/engine/**
+    - flutter/third_party/**
+    - flutter/docs/**
+    - "flutter/**"
+    - .venv/**
+    - "**/gen/**"
+    - "**/generated/**"

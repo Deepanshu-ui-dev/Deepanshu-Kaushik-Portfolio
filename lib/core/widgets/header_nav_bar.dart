@@ -712,10 +712,10 @@ class _PanelFooter extends StatelessWidget {
     final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
 
     final links = <_SocialLink>[
-      _SocialLink(Icons.code_rounded, 'Open GitHub profile', PortfolioConfig.githubUrl),
-      _SocialLink(Icons.business_center_outlined, 'Open LinkedIn profile', PortfolioConfig.linkedinUrl),
-      _SocialLink(Icons.alternate_email_rounded, 'Open X profile', PortfolioConfig.twitterUrl),
-      _SocialLink(Icons.mail_outline_rounded, 'Email ${PortfolioConfig.email}', 'mailto:${PortfolioConfig.email}'),
+      const _SocialLink(Icons.code_rounded, 'Open GitHub profile', PortfolioConfig.githubUrl),
+      const _SocialLink(Icons.business_center_outlined, 'Open LinkedIn profile', PortfolioConfig.linkedinUrl),
+      const _SocialLink(Icons.alternate_email_rounded, 'Open X profile', PortfolioConfig.twitterUrl),
+      const _SocialLink(Icons.mail_outline_rounded, 'Email ${PortfolioConfig.email}', 'mailto:${PortfolioConfig.email}'),
     ];
 
     return Container(

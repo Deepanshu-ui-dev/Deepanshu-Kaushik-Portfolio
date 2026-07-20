@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-
 import '../../../../core/widgets/scroll_fade_in.dart';
 import '../../../../core/widgets/smooth_page_route.dart';
 
@@ -56,7 +55,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final bottomClear = bottomInset + 32.0;
-    final isMobile = AppSpacing.isMobile(context);
 
     return FadeTransition(
       opacity: _fadeAnim,
