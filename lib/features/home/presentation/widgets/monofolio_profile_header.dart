@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../config/portfolio_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/animated_role_text.dart';
 import '../../../../core/widgets/shared_widgets.dart';
+import '../../../../core/widgets/tap_scale.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MonofolioProfile extends StatelessWidget {
@@ -52,7 +54,6 @@ class MonofolioProfile extends StatelessWidget {
           ),
         ),
 
-        
         Container(
           padding: const EdgeInsets.only(top: 16),
           child: LayoutBuilder(builder: (context, constraints) {
@@ -91,36 +92,43 @@ class MonofolioProfile extends StatelessWidget {
               ],
             );
 
+            final bool isDark = Theme.of(context).brightness == Brightness.dark;
             final socials = Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (PortfolioConfig.githubUrl.isNotEmpty) ...[
-                  IconButton(
-                    icon: const Icon(Icons.code, size: 20),
-                    onPressed: () => launchUrl(Uri.parse(PortfolioConfig.githubUrl)),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    color: AppColors.textPrimary,
+                  TapScale(
+                    onTap: () => launchUrl(Uri.parse(PortfolioConfig.githubUrl)),
+                    child: SizedBox(
+                      width: 20, height: 20,
+                      child: SvgPicture.network(
+                        'https://api.iconify.design/simple-icons/github.svg?color=%23${isDark ? 'FFFFFF' : '181717'}',
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 16),
                 ],
                 if (PortfolioConfig.linkedinUrl.isNotEmpty) ...[
-                  IconButton(
-                    icon: const Icon(Icons.link, size: 20),
-                    onPressed: () => launchUrl(Uri.parse(PortfolioConfig.linkedinUrl)),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    color: AppColors.textPrimary,
+                  TapScale(
+                    onTap: () => launchUrl(Uri.parse(PortfolioConfig.linkedinUrl)),
+                    child: SizedBox(
+                      width: 20, height: 20,
+                      child: SvgPicture.network(
+                        'https://api.iconify.design/simple-icons/linkedin.svg?color=%23${isDark ? 'FFFFFF' : '0A66C2'}',
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 16),
                 ],
                 if (PortfolioConfig.twitterUrl.isNotEmpty) ...[
-                  IconButton(
-                    icon: const Icon(Icons.alternate_email, size: 20),
-                    onPressed: () => launchUrl(Uri.parse(PortfolioConfig.twitterUrl)),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    color: AppColors.textPrimary,
+                  TapScale(
+                    onTap: () => launchUrl(Uri.parse(PortfolioConfig.twitterUrl)),
+                    child: SizedBox(
+                      width: 20, height: 20,
+                      child: SvgPicture.network(
+                        'https://api.iconify.design/simple-icons/x.svg?color=%23${isDark ? 'FFFFFF' : '000000'}',
+                      ),
+                    ),
                   ),
                 ],
               ],

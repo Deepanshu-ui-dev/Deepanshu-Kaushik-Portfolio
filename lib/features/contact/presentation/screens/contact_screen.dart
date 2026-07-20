@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,8 +47,12 @@ class _ContactScreenState extends State<ContactScreen>
     final hPad = AppSpacing.horizontalPadding(context);
     final bottomClear = MediaQuery.of(context).padding.bottom + 96.0;
 
-    return FadeTransition(
-      opacity: _fade,
+    return AnimatedBuilder(
+      animation: _fade,
+      builder: (context, child) => Opacity(
+        opacity: _fade.value,
+        child: child,
+      ),
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -783,21 +788,24 @@ class _ChatLinks extends StatelessWidget {
         child: Column(
           children: [
             const _LinkTile(
-              icon: LucideIcons.linkedin,
+              iconSlug: 'linkedin',
+              iconHex: '0A66C2',
               title: 'LinkedIn',
               subtitle: 'Connect professionally',
               url: PortfolioConfig.linkedinUrl,
             ),
             Divider(color: border, thickness: 0.5, height: 1),
             const _LinkTile(
-              icon: LucideIcons.twitter,
+              iconSlug: 'x',
+              iconHex: 'FFFFFF',
               title: 'X / Twitter',
               subtitle: 'Follow the chaos',
               url: PortfolioConfig.twitterUrl,
             ),
             Divider(color: border, thickness: 0.5, height: 1),
             const _LinkTile(
-              icon: LucideIcons.github,
+              iconSlug: 'github',
+              iconHex: 'FFFFFF',
               title: 'GitHub',
               subtitle: 'Explore the code',
               url: PortfolioConfig.githubUrl,
@@ -810,13 +818,15 @@ class _ChatLinks extends StatelessWidget {
 }
 
 class _LinkTile extends StatefulWidget {
-  final IconData icon;
+  final String iconSlug;
+  final String iconHex;
   final String title;
   final String subtitle;
   final String url;
 
   const _LinkTile({
-    required this.icon,
+    required this.iconSlug,
+    required this.iconHex,
     required this.title,
     required this.subtitle,
     required this.url,
@@ -847,10 +857,15 @@ class _LinkTileState extends State<_LinkTile> {
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             children: [
-              Icon(
-                widget.icon,
-                size: 16,
-                color: _hovered ? accent : textSec,
+              SizedBox(
+                width: 18,
+                height: 18,
+                child: SvgPicture.network(
+                  'https://api.iconify.design/simple-icons/${widget.iconSlug}.svg?color=%23${isDark ? 'FFFFFF' : widget.iconHex}',
+                  colorFilter: _hovered
+                      ? ColorFilter.mode(accent, BlendMode.srcIn)
+                      : null,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(

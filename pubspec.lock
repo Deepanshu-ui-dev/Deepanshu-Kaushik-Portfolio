@@ -717,6 +717,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.2"
+  termos_ui:
+    dependency: "direct main"
+    description:
+      name: termos_ui
+      sha256: ff025bbacbf7fcdbf78ae43cb5ceb2ec944bf3e0d7ec6f904fef7b9fb8d5bc0f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   test_api:
     dependency: transitive
     description:

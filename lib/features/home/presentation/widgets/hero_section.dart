@@ -9,7 +9,6 @@ import '../../../../config/portfolio_config.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/shared_widgets.dart';
 import '../../../../core/widgets/scroll_fade_in.dart';
-import '../../../../core/widgets/magnet.dart';
 
 
 
@@ -353,8 +352,12 @@ class _LazyProfileImageState extends State<_LazyProfileImage>
       fit: StackFit.expand,
       children: [
         if (!_loaded)
-          FadeTransition(
-            opacity: _shimmer,
+          AnimatedBuilder(
+            animation: _shimmer,
+            builder: (context, child) => Opacity(
+              opacity: _shimmer.value,
+              child: child,
+            ),
             child: Container(color: widget.skeletonColor),
           ),
         AnimatedOpacity(
@@ -512,28 +515,28 @@ class _ReachOutGrid extends StatelessWidget {
 
   static const _links = [
     _SocialData(
-      svgAsset: 'assets/icons/github.svg',
+      simpleIconSlug: 'github',
       label: 'GitHub',
       handle: '@Deepanshu-ui-dev',
       sublabel: 'Source Code',
       url: PortfolioConfig.githubUrl,
     ),
     _SocialData(
-      svgAsset: 'assets/icons/linkedin.svg',
+      simpleIconSlug: 'linkedin',
       label: 'LinkedIn',
       handle: 'imdeepanshukaushik',
       sublabel: 'Professional',
       url: PortfolioConfig.linkedinUrl,
     ),
     _SocialData(
-      svgAsset: 'assets/icons/x.svg',
+      simpleIconSlug: 'x',
       label: 'X / Twitter',
       handle: '@Deepanshu25u',
       sublabel: 'Micro thoughts',
       url: PortfolioConfig.twitterUrl,
     ),
     _SocialData(
-      icon: Icons.mail_outline_rounded,
+      simpleIconSlug: 'gmail',
       label: 'Email',
       handle: 'imdeepanshu4work',
       sublabel: 'Direct line',
@@ -596,16 +599,14 @@ class _ReachOutGrid extends StatelessWidget {
 }
 
 class _SocialData {
-  final String? svgAsset;
-  final IconData? icon;
+  final String? simpleIconSlug;
   final String label;
   final String handle;
   final String sublabel;
   final String url;
 
   const _SocialData({
-    this.svgAsset,
-    this.icon,
+    this.simpleIconSlug,
     required this.label,
     required this.handle,
     required this.sublabel,
@@ -711,18 +712,19 @@ class _ReachOutCardState extends State<_ReachOutCard>
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Center(
-                    child: widget.data.svgAsset != null
-                        ? SvgPicture.asset(
-                            widget.data.svgAsset!,
+                    child: widget.data.simpleIconSlug != null
+                        ? SvgPicture.network(
+                            'https://api.iconify.design/simple-icons/${widget.data.simpleIconSlug}.svg?color=%23${
+                              widget.data.simpleIconSlug == 'github' ? (isDark ? 'FFFFFF' : '181717')
+                              : widget.data.simpleIconSlug == 'linkedin' ? '0A66C2'
+                              : widget.data.simpleIconSlug == 'x' ? (isDark ? 'FFFFFF' : '000000')
+                              : widget.data.simpleIconSlug == 'gmail' ? 'EA4335'
+                              : (isDark ? 'FFFFFF' : '181717')
+                            }',
                             width: 14,
                             height: 14,
-                            colorFilter: ColorFilter.mode(
-                              _hovered ? accent : textSec,
-                              BlendMode.srcIn,
-                            ),
                           )
-                        : Icon(widget.data.icon,
-                            size: 14, color: _hovered ? accent : textSec),
+                        : Icon(Icons.link, size: 14, color: _hovered ? accent : textSec),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -897,7 +899,7 @@ class _ResumePulsingButtonState extends State<_ResumePulsingButton>
 class _ScrambleText extends StatefulWidget {
   final String text;
   final TextStyle style;
-  const _ScrambleText({super.key, required this.text, required this.style});
+  const _ScrambleText({required this.text, required this.style});
 
   @override
   State<_ScrambleText> createState() => _ScrambleTextState();

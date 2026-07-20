@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/scroll_fade_in.dart';
 import '../../../../core/widgets/shared_widgets.dart';
+import '../../../../core/widgets/tap_scale.dart';
 
 
 
@@ -43,12 +44,12 @@ class _SkillsScreenState extends State<SkillsScreen>
       title: 'Design & UI/UX',
       subtitle: 'Tools I use to craft beautiful, intuitive interfaces.',
       skills: [
-        _Skill(label: 'Figma',     icon: 'figma',                 hex: 'F24E1E', highlight: true),
-        _Skill(label: 'Framer',    icon: 'framer',                hex: '0055FF'),
-        _Skill(label: 'Sketch',    icon: 'sketch',                hex: 'F7B500'),
-        _Skill(label: 'Adobe XD',  icon: 'adobexd',               hex: 'FF61F6'),
-        _Skill(label: 'Photoshop', icon: 'adobephotoshop',        hex: '31A8FF'),
-        _Skill(label: 'Canva',     icon: 'canva',                 hex: '00C4CC'),
+        _Skill(label: 'Figma',     icon: 'figma',          hex: 'F24E1E', highlight: true, proficiency: 0.95),
+        _Skill(label: 'Framer',    icon: 'framer',         hex: '0055FF', proficiency: 0.82),
+        _Skill(label: 'Sketch',    icon: 'sketch',         hex: 'F7B500', proficiency: 0.70),
+        _Skill(label: 'Adobe XD',  icon: 'adobexd',        hex: 'FF61F6', proficiency: 0.75),
+        _Skill(label: 'Photoshop', icon: 'adobephotoshop', hex: '31A8FF', proficiency: 0.65),
+        _Skill(label: 'Canva',     icon: 'canva',          hex: '00C4CC', proficiency: 0.80),
       ],
     ),
     _SkillSectionData(
@@ -56,12 +57,12 @@ class _SkillsScreenState extends State<SkillsScreen>
       title: 'Languages',
       subtitle: 'The foundation of my engineering.',
       skills: [
-        _Skill(label: 'Dart',       icon: 'dart',          hex: '0175C2', highlight: true),
-        _Skill(label: 'C++',        icon: 'cplusplus',     hex: '00599C'),
-        _Skill(label: 'C',          icon: 'c',             hex: 'A8B9CC'),
-        _Skill(label: 'HTML5',      icon: 'html5',         hex: 'E34F26'),
-        _Skill(label: 'CSS3',       icon: 'css3',          hex: '1572B6'),
-        _Skill(label: 'JavaScript', icon: 'javascript',    hex: 'F7DF1E'),
+        _Skill(label: 'Dart',       icon: 'dart',          hex: '0175C2', highlight: true, proficiency: 0.92),
+        _Skill(label: 'C++',        icon: 'cplusplus',     hex: '00599C', proficiency: 0.78),
+        _Skill(label: 'C',          icon: 'c',             hex: 'A8B9CC', proficiency: 0.72),
+        _Skill(label: 'HTML5',      icon: 'html5',         hex: 'E34F26', proficiency: 0.88),
+        _Skill(label: 'CSS3',       icon: 'css3',          hex: '1572B6', proficiency: 0.85),
+        _Skill(label: 'JavaScript', icon: 'javascript',    hex: 'F7DF1E', proficiency: 0.75),
       ],
     ),
     _SkillSectionData(
@@ -69,10 +70,10 @@ class _SkillsScreenState extends State<SkillsScreen>
       title: 'Frameworks',
       subtitle: 'Core libraries and state management.',
       skills: [
-        _Skill(label: 'Flutter',    icon: 'flutter',       hex: '02569B', highlight: true),
-        _Skill(label: 'Riverpod',   icon: 'dart',          hex: '5B63FE', sublabel: 'State Mgmt'),
-        _Skill(label: 'Provider',   icon: 'dart',          hex: '0175C2', sublabel: 'State Mgmt'),
-        _Skill(label: 'Tailwind',   icon: 'tailwindcss',   hex: '06B6D4'),
+        _Skill(label: 'Flutter',    icon: 'flutter',       hex: '02569B', highlight: true, proficiency: 0.93),
+        _Skill(label: 'Riverpod',   icon: 'dart',          hex: '5B63FE', sublabel: 'State Mgmt', proficiency: 0.88),
+        _Skill(label: 'Provider',   icon: 'dart',          hex: '0175C2', sublabel: 'State Mgmt', proficiency: 0.80),
+        _Skill(label: 'Tailwind',   icon: 'tailwindcss',   hex: '06B6D4', proficiency: 0.78),
       ],
     ),
     _SkillSectionData(
@@ -80,13 +81,13 @@ class _SkillsScreenState extends State<SkillsScreen>
       title: 'Database & Backend',
       subtitle: 'Server runtimes, databases, and cloud infrastructure.',
       skills: [
-        _Skill(label: 'Node.js',    icon: 'nodedotjs',    hex: '5FA04E', highlight: true),
-        _Skill(label: 'Express',    icon: 'express',       hex: '808080', sublabel: 'REST API'),
-        _Skill(label: 'Firebase',   icon: 'firebase',      hex: 'FFCA28'),
-        _Skill(label: 'Supabase',   icon: 'supabase',      hex: '3ECF8E'),
-        _Skill(label: 'MySQL',      icon: 'mysql',         hex: '4479A1'),
-        _Skill(label: 'GCP',        icon: 'googlecloud',   hex: '4285F4'),
-        _Skill(label: 'AWS',        icon: 'amazonaws',     hex: 'FF9900'),
+        _Skill(label: 'Node.js',    icon: 'nodedotjs',    hex: '5FA04E', highlight: true, proficiency: 0.82),
+        _Skill(label: 'Express',    icon: 'express',       hex: '808080', sublabel: 'REST API', proficiency: 0.78),
+        _Skill(label: 'Firebase',   icon: 'firebase',      hex: 'FFCA28', proficiency: 0.75),
+        _Skill(label: 'Supabase',   icon: 'supabase',      hex: '3ECF8E', proficiency: 0.85),
+        _Skill(label: 'MySQL',      icon: 'mysql',         hex: '4479A1', proficiency: 0.70),
+        _Skill(label: 'GCP',        icon: 'googlecloud',   hex: '4285F4', proficiency: 0.60),
+        _Skill(label: 'AWS',        icon: 'amazonaws',     hex: 'FF9900', proficiency: 0.58),
       ],
     ),
     _SkillSectionData(
@@ -105,8 +106,12 @@ class _SkillsScreenState extends State<SkillsScreen>
     final padding = AppSpacing.horizontalPadding(context);
     final bottomClear = MediaQuery.of(context).padding.bottom + 96.0;
 
-    return FadeTransition(
-      opacity: _fade,
+    return AnimatedBuilder(
+      animation: _fade,
+      builder: (context, child) => Opacity(
+        opacity: _fade.value,
+        child: child,
+      ),
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -188,6 +193,8 @@ class _Skill {
   final String hex;
   final String? sublabel;
   final bool highlight;
+  /// 0.0–1.0 mastery level shown as a progress bar
+  final double proficiency;
 
   const _Skill({
     required this.label,
@@ -195,6 +202,7 @@ class _Skill {
     required this.hex,
     this.sublabel,
     this.highlight = false,
+    this.proficiency = 0.8,
   });
 }
 
@@ -389,8 +397,11 @@ class _SkillCardState extends State<_SkillCard> {
     
     final bracketColor = _hovered ? border2 : border;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
+    return TapScale(
+      scale: 0.95,
+      onTap: () {}, // visual-only; no action for skill cards
+      child: MouseRegion(
+      cursor: SystemMouseCursors.basic,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
@@ -509,6 +520,7 @@ class _SkillCardState extends State<_SkillCard> {
             ]),
           ),
         ),
+      ),
       ),
     );
   }

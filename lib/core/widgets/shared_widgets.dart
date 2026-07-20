@@ -9,9 +9,6 @@ export 'magnet.dart';
 export 'hatch_background.dart';
 export 'scroll_border_app_bar.dart';
 export 'floating_nav_bar.dart';
-export 'tech_chip.dart';
-export 'left_border_hover.dart';
-export 'stagger_reveal.dart';
 
 
 class DashedDivider extends StatelessWidget {
@@ -502,73 +499,84 @@ class _CollapsibleCardState extends State<CollapsibleCard>
                 ),
               ),
             ),
-            SizeTransition(
-              sizeFactor: _heightAnim,
-              child: (widget.bullets.isNotEmpty || widget.tags.isNotEmpty)
-                   ? Padding(
-                      padding: EdgeInsets.only(
-                        left: AppSpacing.isMobile(context) ? 20 : 64,
-                        right: 16,
-                        bottom: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ...widget.bullets.map((b) => Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5, right: 12),
-                                      child: Container(
-                                        width: 4, 
-                                        height: 4, 
-                                        decoration: BoxDecoration(
-                                          color: (_hovered || _expanded) ? accent : textSec,
-                                          borderRadius: BorderRadius.circular(1),
+            // ClipRect + Align(heightFactor) is the safe alternative to
+            // SizeTransition: it never triggers a layout pass during semantics,
+            // preventing '!_debugDoingThisLayout' and
+            // '!childSemantics.renderObject._needsLayout' assertion failures.
+            ClipRect(
+              child: AnimatedBuilder(
+                animation: _heightAnim,
+                builder: (context, child) => Align(
+                  alignment: Alignment.topCenter,
+                  heightFactor: _heightAnim.value,
+                  child: child,
+                ),
+                child: (widget.bullets.isNotEmpty || widget.tags.isNotEmpty)
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                          left: AppSpacing.isMobile(context) ? 20 : 64,
+                          right: 16,
+                          bottom: 16,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...widget.bullets.map((b) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5, right: 12),
+                                        child: Container(
+                                          width: 4,
+                                          height: 4,
+                                          decoration: BoxDecoration(
+                                            color: (_hovered || _expanded) ? accent : textSec,
+                                            borderRadius: BorderRadius.circular(1),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Text(b,
-                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      Expanded(
+                                        child: Text(b,
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                  color: textSec,
+                                                  height: 1.65,
+                                                )),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            if (widget.tags.isNotEmpty) ...[
+                              const SizedBox(height: 14),
+                              Wrap(
+                                spacing: 5,
+                                runSpacing: 5,
+                                children: widget.tags
+                                    .map((t) => Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                          decoration: BoxDecoration(
+                                            color: Colors.transparent,
+                                            border: Border.all(color: border, width: 0.5),
+                                            borderRadius: AppRadius.chip,
+                                          ),
+                                          child: Text(t,
+                                              style: TextStyle(
+                                                fontFamily: 'JetBrainsMono',
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w400,
                                                 color: textSec,
-                                                height: 1.65,
+                                                letterSpacing: 0,
                                               )),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                          if (widget.tags.isNotEmpty) ...[
-                            const SizedBox(height: 14),
-                            Wrap(
-                              spacing: 5,
-                              runSpacing: 5,
-                              children: widget.tags
-                                  .map((t) => Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          border: Border.all(color: border, width: 0.5),
-                                          borderRadius: AppRadius.chip,
-                                        ),
-                                        child: Text(t,
-                                            style: TextStyle(
-                                              fontFamily: 'JetBrainsMono',
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w400,
-                                              color: textSec,
-                                              letterSpacing: 0,
-                                            )),
-                                      ))
-                                  .toList(),
-                            ),
+                                        ))
+                                    .toList(),
+                              ),
+                            ],
                           ],
-                        ],
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
             ),
           ],
         ),

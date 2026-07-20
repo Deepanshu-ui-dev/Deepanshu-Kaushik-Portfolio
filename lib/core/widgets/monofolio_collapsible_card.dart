@@ -145,69 +145,77 @@ class _MonofolioCollapsibleCardState
             ),
           ),
 
-          
-          SizeTransition(
-            sizeFactor: _anim,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 58, right: 16, bottom: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...widget.bullets.map((b) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 5, right: 10),
-                              child: Container(
-                                  width: 4,
-                                  height: 4,
-                                  color: textSec),
-                            ),
-                            Expanded(
-                              child: Text(b,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: textSec,
-                                        height: 1.75,
-                                      )),
-                            ),
-                          ],
-                        ),
-                      )),
-                  if (widget.tags.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: widget.tags
-                          .map((t) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 9, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: tagBg,
-                                  border: Border.all(
-                                      color: border, width: 1),
-                                ),
-                                child: Text(t,
+          // ClipRect + Align(heightFactor) avoids layout-during-semantics
+          // assertions caused by SizeTransition's RenderSizedOverflowBox.
+          ClipRect(
+            child: AnimatedBuilder(
+              animation: _anim,
+              builder: (context, child) => Align(
+                alignment: Alignment.topCenter,
+                heightFactor: _anim.value,
+                child: child,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 58, right: 16, bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...widget.bullets.map((b) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5, right: 10),
+                                child: Container(
+                                    width: 4,
+                                    height: 4,
+                                    color: textSec),
+                              ),
+                              Expanded(
+                                child: Text(b,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .labelSmall
+                                        .bodySmall
                                         ?.copyWith(
-                                          letterSpacing: 0.3,
                                           color: textSec,
+                                          height: 1.75,
                                         )),
-                              ))
-                          .toList(),
-                    ),
+                              ),
+                            ],
+                          ),
+                        )),
+                    if (widget.tags.isNotEmpty) ...[
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: widget.tags
+                            .map((t) => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 9, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: tagBg,
+                                    border: Border.all(
+                                        color: border, width: 1),
+                                  ),
+                                  child: Text(t,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall
+                                          ?.copyWith(
+                                            letterSpacing: 0.3,
+                                            color: textSec,
+                                          )),
+                                ))
+                            .toList(),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),

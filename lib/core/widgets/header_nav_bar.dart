@@ -701,6 +701,7 @@ class _MobileNavOverlayState extends State<_MobileNavOverlay>
 
 
 
+// ignore: unused_element
 class _PanelFooter extends StatelessWidget {
   final Color border;
   const _PanelFooter({required this.border});
@@ -708,7 +709,6 @@ class _PanelFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
     final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
 
     final links = <_SocialLink>[

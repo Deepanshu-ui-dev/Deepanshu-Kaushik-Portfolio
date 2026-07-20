@@ -42,8 +42,12 @@ class _AboutScreenState extends State<AboutScreen>
     final textSec = AppColors.textSecondary;
     final bottomClear = MediaQuery.of(context).padding.bottom + 96.0;
 
-    return FadeTransition(
-      opacity: _fade,
+    return AnimatedBuilder(
+      animation: _fade,
+      builder: (context, child) => Opacity(
+        opacity: _fade.value,
+        child: child,
+      ),
       child: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -387,15 +391,13 @@ class _VolunteerExperienceFeed extends StatelessWidget {
           );
 
           if (isWide) {
-            return const IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(child: gdg),
-                  SizedBox(width: 12),
-                  Expanded(child: codeChef),
-                ],
-              ),
+            return const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: gdg),
+                SizedBox(width: 12),
+                Expanded(child: codeChef),
+              ],
             );
           }
           return const Column(

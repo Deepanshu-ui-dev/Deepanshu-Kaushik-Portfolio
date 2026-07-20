@@ -42,6 +42,7 @@ dependencies:
 
   # Audio
   just_audio: ^0.10.5
+  termos_ui: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -72,10 +73,5 @@ flutter:
 
   assets:
     - assets/fonts/
-    - assets/icons/github.svg
-    - assets/icons/linkedin.svg
-    - assets/icons/x.svg
-    - assets/images/profile.png
-    - assets/images/oneko.gif
-    - assets/images/gdg1.jpeg
-    - assets/images/cc1.jpeg
+    - assets/icons/
+    - assets/images/

@@ -60,13 +60,9 @@ class _StaggerRevealState extends State<StaggerReveal>
     with TickerProviderStateMixin {
   late final List<AnimationController> _controllers;
   late final List<Animation<double>> _fades;
-  late final List<Animation<Offset>> _slides;
-
-  
-  
-  
-  
-  static const double _slideNorm = 0.08;
+  // Use pixel offsets instead of fractional Offset to avoid SlideTransition
+  // which marks parent semantics dirty during animation.
+  late final List<Animation<double>> _slideYs;
 
   bool _triggered = false;
 
@@ -74,8 +70,7 @@ class _StaggerRevealState extends State<StaggerReveal>
   void initState() {
     super.initState();
 
-    
-    const curve = Cubic(0.165, 0.84, 0.44, 1.0); 
+    const curve = Cubic(0.165, 0.84, 0.44, 1.0);
 
     _controllers = List.generate(
       widget.children.length,
@@ -86,10 +81,10 @@ class _StaggerRevealState extends State<StaggerReveal>
         .map((c) => CurvedAnimation(parent: c, curve: curve))
         .toList();
 
-    _slides = _controllers
-        .map((c) => Tween<Offset>(
-              begin: const Offset(0, _slideNorm),
-              end: Offset.zero,
+    _slideYs = _controllers
+        .map((c) => Tween<double>(
+              begin: widget.slideOffset,
+              end: 0.0,
             ).animate(CurvedAnimation(parent: c, curve: curve)))
         .toList();
   }
@@ -121,12 +116,16 @@ class _StaggerRevealState extends State<StaggerReveal>
   List<Widget> _buildAnimated() {
     return List.generate(
       widget.children.length,
-      (i) => FadeTransition(
-        opacity: _fades[i],
-        child: SlideTransition(
-          position: _slides[i],
-          child: widget.children[i],
+      (i) => AnimatedBuilder(
+        animation: _controllers[i],
+        builder: (context, child) => Opacity(
+          opacity: _fades[i].value.clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset(0, _slideYs[i].value),
+            child: child,
+          ),
         ),
+        child: widget.children[i],
       ),
     );
   }
@@ -252,7 +251,14 @@ class _SectionFadeRevealState extends State<SectionFadeReveal>
       onVisibilityChanged: (info) {
         if (info.visibleFraction >= widget.visibilityThreshold) _trigger();
       },
-      child: FadeTransition(opacity: _fade, child: widget.child),
+      child: AnimatedBuilder(
+        animation: _fade,
+        builder: (context, child) => Opacity(
+          opacity: _fade.value.clamp(0.0, 1.0),
+          child: child,
+        ),
+        child: widget.child,
+      ),
     );
   }
 }
@@ -294,10 +300,9 @@ class _FadeSlideRevealState extends State<FadeSlideReveal>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _fade;
-  late final Animation<Offset> _slide;
+  // Pixel-based slide to avoid SlideTransition's semantic dirty propagation.
+  late final Animation<double> _slideY;
   bool _triggered = false;
-
-  static const double _slideNorm = 0.08;
 
   @override
   void initState() {
@@ -306,9 +311,9 @@ class _FadeSlideRevealState extends State<FadeSlideReveal>
 
     _ctrl = AnimationController(vsync: this, duration: widget.duration);
     _fade = CurvedAnimation(parent: _ctrl, curve: curve);
-    _slide = Tween<Offset>(
-      begin: const Offset(0, _slideNorm),
-      end: Offset.zero,
+    _slideY = Tween<double>(
+      begin: widget.slideOffset,
+      end: 0.0,
     ).animate(CurvedAnimation(parent: _ctrl, curve: curve));
   }
 
@@ -340,9 +345,16 @@ class _FadeSlideRevealState extends State<FadeSlideReveal>
       onVisibilityChanged: (info) {
         if (info.visibleFraction >= widget.visibilityThreshold) _trigger();
       },
-      child: FadeTransition(
-        opacity: _fade,
-        child: SlideTransition(position: _slide, child: widget.child),
+      child: AnimatedBuilder(
+        animation: _ctrl,
+        builder: (context, child) => Opacity(
+          opacity: _fade.value.clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset(0, _slideY.value),
+            child: child,
+          ),
+        ),
+        child: widget.child,
       ),
     );
   }

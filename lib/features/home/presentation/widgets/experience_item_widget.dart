@@ -97,51 +97,60 @@ class _ExperienceItemWidgetState extends State<ExperienceItemWidget>
               ),
             ),
           ),
-          SizeTransition(
-            sizeFactor: _expandAnim,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 1,
-                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
-                    margin: const EdgeInsets.only(bottom: AppSpacing.md),
-                  ),
-                  ...widget.item.bullets.map((b) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '▪ ',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                b,
+          // ClipRect + Align(heightFactor) avoids layout-during-semantics
+          // assertions caused by SizeTransition's RenderSizedOverflowBox.
+          ClipRect(
+            child: AnimatedBuilder(
+              animation: _expandAnim,
+              builder: (context, child) => Align(
+                alignment: Alignment.topCenter,
+                heightFactor: _expandAnim.value,
+                child: child,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 1,
+                      color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+                      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+                    ),
+                    ...widget.item.bullets.map((b) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '▪ ',
                                 style: TextStyle(
-                                  fontFamily: 'monospace',
-                                  fontSize: 13,
+                                  fontSize: 12,
                                   color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  height: 1.6,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )),
-                  const SizedBox(height: AppSpacing.sm),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: widget.item.tags.map((t) => TagChip(t)).toList(),
-                  ),
-                ],
+                              Expanded(
+                                child: Text(
+                                  b,
+                                  style: TextStyle(
+                                    fontFamily: 'monospace',
+                                    fontSize: 13,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                    const SizedBox(height: AppSpacing.sm),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: widget.item.tags.map((t) => TagChip(t)).toList(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

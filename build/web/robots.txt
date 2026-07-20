@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-
-# Disallow build artifacts
-Disallow: /flutter_service_worker.js
-Disallow: /version.json
-
-Sitemap: https://www.deepanshux.tech/sitemap.xml

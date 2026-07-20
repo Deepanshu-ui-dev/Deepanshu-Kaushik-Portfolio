@@ -26,7 +26,6 @@ import 'core/widgets/header_nav_bar.dart';
 
 import 'core/widgets/shared_widgets.dart';
 import 'core/widgets/lamp_theme_switcher.dart';
-import 'core/widgets/circular_reveal_transition.dart';
 import 'core/widgets/cat_cursor_follower.dart';
 import 'core/widgets/smooth_scroll.dart';
 import 'core/widgets/portfolio_drawer.dart';
@@ -206,7 +205,7 @@ class _AppShellState extends ConsumerState<_AppShell>
     super.dispose();
   }
 
-  static const double _headerHeight = 40.0;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -277,28 +276,14 @@ class _AppShellState extends ConsumerState<_AppShell>
                                             child: TickerMode(
                                               enabled: _idx == i,
                                               child: RepaintBoundary(
-                                                child: AnimatedScale(
-                                                  scale: _idx == i ? 1.0 : 0.98,
-                                                  duration: const Duration(milliseconds: 300),
+                                                child: AnimatedOpacity(
+                                                  key: _screenKeys[i],
+                                                  opacity: _idx == i ? 1.0 : 0.0,
+                                                  duration: const Duration(milliseconds: 250),
                                                   curve: Curves.easeOutCubic,
-                                                  child: AnimatedOpacity(
-                                                    key: _screenKeys[i],
-                                                    opacity: _idx == i ? 1.0 : 0.0,
-                                                    duration: const Duration(milliseconds: 300),
-                                                    curve: Curves.easeOutCubic,
-                                                    child: AnimatedSlide(
-                                                      offset: _idx == i
-                                                          ? Offset.zero
-                                                          : const Offset(0, 0.02),
-                                                      duration: const Duration(milliseconds: 300),
-                                                      curve: Curves.easeOutCubic,
-                                                      
-                                                      
-                                                      child: Padding(
-                                                        padding: const EdgeInsets.only(top: 80.0),
-                                                        child: _buildScreen(i),
-                                                      ),
-                                                    ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.only(top: 80.0),
+                                                    child: _buildScreen(i),
                                                   ),
                                                 ),
                                               ),

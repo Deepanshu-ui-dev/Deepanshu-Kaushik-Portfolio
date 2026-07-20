@@ -327,10 +327,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   }
 
   
-  void _onPointerEvent(PointerEvent e) {
-    
-  }
-
+  
   
   void _onTap(TapUpDetails details) {
     setState(() => _showExclamation = true);

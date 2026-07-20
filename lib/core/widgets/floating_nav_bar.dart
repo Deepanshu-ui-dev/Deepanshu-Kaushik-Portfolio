@@ -33,7 +33,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
 
   late final AnimationController _entranceCtrl;
   late final Animation<double>   _entranceFade;
-  late final Animation<Offset>   _entranceSlide;
+  late final Animation<double>   _entranceSlide; // pixel Y offset
 
   late final AnimationController _glowCtrl;
   double _fromPos = 0.4;
@@ -66,7 +66,9 @@ class _FloatingNavBarState extends State<FloatingNavBar>
       duration: const Duration(milliseconds: 600),
     );
     _entranceFade = CurvedAnimation(parent: _entranceCtrl, curve: Curves.easeOut);
-    _entranceSlide = Tween<Offset>(begin: const Offset(0, 1.4), end: Offset.zero)
+    // Pixel-based slide (40px up from bottom) — avoids SlideTransition's
+    // FractionalTranslation which marks parent semantics dirty.
+    _entranceSlide = Tween<double>(begin: 40.0, end: 0.0)
         .animate(CurvedAnimation(
           parent: _entranceCtrl,
           curve: const Cubic(0.22, 1.0, 0.36, 1.0),
@@ -120,14 +122,19 @@ class _FloatingNavBarState extends State<FloatingNavBar>
     const double radius = 12.0;
     const double padH   = 10.0;
 
-    return FadeTransition(
-      opacity: _entranceFade,
-      child: SlideTransition(
-        position: _entranceSlide,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Center(
+    return AnimatedBuilder(
+      animation: _entranceCtrl,
+      builder: (context, child) => Opacity(
+        opacity: _entranceFade.value.clamp(0.0, 1.0),
+        child: Transform.translate(
+          offset: Offset(0, _entranceSlide.value),
+          child: child,
+        ),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Center(
               child: AnimatedBuilder(
                 animation: _glowCtrl,
                 builder: (context, _) {
@@ -231,12 +238,18 @@ class _FloatingNavBarState extends State<FloatingNavBar>
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     
-                                                    AnimatedSwitcher(
-                                                      duration: const Duration(milliseconds: 180),
-                                                      switchInCurve:  Curves.easeOutBack,
-                                                      switchOutCurve: Curves.easeIn,
-                                                      transitionBuilder: (child, anim) =>
-                                                          ScaleTransition(scale: anim, child: child),
+                                                      AnimatedSwitcher(
+                                                        duration: const Duration(milliseconds: 180),
+                                                        switchInCurve:  Curves.easeOutBack,
+                                                        switchOutCurve: Curves.easeIn,
+                                                        transitionBuilder: (child, anim) => AnimatedBuilder(
+                                                          animation: anim,
+                                                          builder: (context, c) => Transform.scale(
+                                                            scale: anim.value,
+                                                            child: c,
+                                                          ),
+                                                          child: child,
+                                                        ),
                                                       child: AnimatedOpacity(
                                                         duration: const Duration(milliseconds: 180),
                                                         opacity: isActive
@@ -289,7 +302,6 @@ class _FloatingNavBarState extends State<FloatingNavBar>
                   );
                 },
               ),
-            ),
           ),
         ),
       ),

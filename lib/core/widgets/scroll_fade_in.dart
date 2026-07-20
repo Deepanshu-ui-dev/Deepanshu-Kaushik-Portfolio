@@ -10,17 +10,17 @@ import 'package:flutter/physics.dart';
 class ScrollFadeIn extends StatefulWidget {
   final Widget child;
 
-  
+  /// Optional delay before the entrance animation begins.
   final Duration delay;
 
-  
-  final double slideBegin;
+  /// How far (in logical pixels) the widget slides in from below.
+  final double slideBeginPx;
 
   const ScrollFadeIn({
     super.key,
     required this.child,
     this.delay = Duration.zero,
-    this.slideBegin = 0.035,
+    this.slideBeginPx = 12.0,
   });
 
   @override
@@ -29,34 +29,23 @@ class ScrollFadeIn extends StatefulWidget {
 
 class _ScrollFadeInState extends State<ScrollFadeIn>
     with SingleTickerProviderStateMixin {
-  
   late final AnimationController _ctrl;
   late final Animation<double> _opacity;
-  late final Animation<Offset> _slide;
+  late final Animation<double> _slideY;
 
-  
-  
   bool _animated = false;
 
   @override
   void initState() {
     super.initState();
 
-    
     _ctrl = AnimationController.unbounded(vsync: this)..value = 0.0;
 
-    
-    
-    
-    
     _opacity = _ClampedTween(begin: 0.0, end: 1.0).animate(_ctrl);
 
-    
-    _slide = _ctrl.drive(
-      Tween<Offset>(
-        begin: Offset(0, widget.slideBegin),
-        end: Offset.zero,
-      ),
+    // Use pixel-based tween directly so Transform.translate is clean.
+    _slideY = _ctrl.drive(
+      Tween<double>(begin: widget.slideBeginPx, end: 0.0),
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAnimate());
@@ -65,9 +54,6 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
-    
-    
     if (!_animated) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAnimate());
     }
@@ -76,8 +62,6 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
   void _maybeAnimate() {
     if (_animated || !mounted) return;
 
-    
-    
     final tickerEnabled = TickerMode.of(context);
     if (!tickerEnabled) return;
 
@@ -92,9 +76,9 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
             stiffness: 200,
             damping: 18,
           ),
-          0.0, 
-          1.0, 
-          0.0, 
+          0.0,
+          1.0,
+          0.0,
         ),
       );
     }
@@ -114,15 +98,21 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
 
   @override
   Widget build(BuildContext context) {
-    
-    
-    
-    return FadeTransition(
-      opacity: _opacity,
-      child: SlideTransition(
-        position: _slide,
-        child: widget.child,
+    // Use AnimatedBuilder with Opacity + Transform.translate instead of
+    // FadeTransition + SlideTransition. The *Transition widgets propagate
+    // dirty semantics up to their parent RenderObject, which triggers the
+    // '!semantics.parentDataDirty' assertion when multiple animations run
+    // simultaneously inside a CustomScrollView/SliverList.
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) => Opacity(
+        opacity: _opacity.value,
+        child: Transform.translate(
+          offset: Offset(0, _slideY.value),
+          child: child,
+        ),
       ),
+      child: widget.child,
     );
   }
 }

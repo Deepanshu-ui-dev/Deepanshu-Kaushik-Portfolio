@@ -48,12 +48,16 @@ class _HeatmapWaveRevealState extends State<HeatmapWaveReveal>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fade,
-      child: ScaleTransition(
-        scale: _scale,
-        child: widget.child,
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) => Opacity(
+        opacity: _fade.value,
+        child: Transform.scale(
+          scale: _scale.value,
+          child: child,
+        ),
       ),
+      child: widget.child,
     );
   }
 }
