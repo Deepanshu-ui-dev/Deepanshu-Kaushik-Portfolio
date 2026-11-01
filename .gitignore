@@ -30,7 +30,7 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+/build/*
 # Allow the pre-built Flutter web output to be committed for static Vercel hosting
 !/build/web
 /coverage/
