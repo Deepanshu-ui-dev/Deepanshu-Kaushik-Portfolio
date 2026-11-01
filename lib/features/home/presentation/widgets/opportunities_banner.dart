@@ -174,7 +174,7 @@ class _OpportunitiesBannerState extends State<OpportunitiesBanner>
                           fontSize: 9,
                           letterSpacing: 0.14,
                           fontWeight: FontWeight.w600,
-                          fontFamily: 'JetBrainsMono',
+                          fontFamily: 'Inter',
                         ),
                   ),
                 ],

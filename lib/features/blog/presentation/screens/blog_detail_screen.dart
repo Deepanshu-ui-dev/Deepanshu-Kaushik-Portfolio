@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../data/blog_repository.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -49,7 +49,7 @@ class BlogDetailScreen extends StatelessWidget {
               post.date,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: AppColors.textTertiary,
-                    fontFamily: 'monospace',
+                    fontFamily: 'Inter',
                   ),
             ),
             const SizedBox(height: AppSpacing.xxl),
@@ -90,7 +90,7 @@ class BlogDetailScreen extends StatelessWidget {
                       color: AppColors.textTertiary,
                     ),
                 code: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontFamily: 'monospace',
+                      fontFamily: 'Inter',
                       backgroundColor: Colors.transparent,
                       color: AppColors.textPrimary,
                     ),

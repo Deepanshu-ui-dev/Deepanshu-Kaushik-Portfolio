@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:redacted/redacted.dart';
 import '../supabase/supabase_config.dart';
 import '../theme/app_theme.dart';
@@ -562,7 +562,7 @@ class _CollapsibleCardState extends State<CollapsibleCard>
                                           ),
                                           child: Text(t,
                                               style: TextStyle(
-                                                fontFamily: 'JetBrainsMono',
+                                                fontFamily: 'Inter',
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w400,
                                                 color: textSec,
@@ -803,7 +803,7 @@ class _PortfolioFooterState extends State<PortfolioFooter> {
                       curve: Curves.easeOut,
                       style: TextStyle(
                         color: creditColor,
-                        fontFamily: 'JetBrainsMono',
+                        fontFamily: 'Inter',
                         fontSize: 9,
                         letterSpacing: 0.4,
                         fontWeight: FontWeight.w500,
@@ -874,7 +874,7 @@ class _VisitorBadge extends StatelessWidget {
           text: TextSpan(
             style: TextStyle(
               color: textTer,
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Inter',
               fontSize: 8,
               letterSpacing: 1.2,
               fontWeight: FontWeight.w500,
@@ -889,7 +889,7 @@ class _VisitorBadge extends StatelessWidget {
                     suffix.toUpperCase(),
                     style: TextStyle(
                       color: textTer,
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Inter',
                       fontSize: 5,
                       fontWeight: FontWeight.w600,
                     ),

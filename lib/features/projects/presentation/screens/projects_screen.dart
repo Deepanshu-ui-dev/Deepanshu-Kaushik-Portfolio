@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/portfolio_config.dart';
@@ -402,273 +402,274 @@ class _ProjectCard extends StatefulWidget {
 }
 
 class _ProjectCardState extends State<_ProjectCard> {
-  @override
-  Widget build(BuildContext context) {
-    final isDark   = Theme.of(context).brightness == Brightness.dark;
-    final textSec  = isDark ? AppColors.textSecDark  : AppColors.textSecLight;
-    final accent   = isDark ? AppColors.accentDark   : AppColors.accentLight;
-    final surface  = isDark ? AppColors.surfaceElevDark : AppColors.surfaceLight;
-    final border   = isDark ? AppColors.borderDark   : AppColors.borderLight;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: surface,
-        border: Border(
-          top: BorderSide(color: accent, width: 2),
-          left: BorderSide(color: border, width: 0.5),
-          right: BorderSide(color: border, width: 0.5),
-          bottom: BorderSide(color: border, width: 0.5),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const _BrowserMock(),
-          Padding(
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.project.name,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ),
-                    if (widget.project.badge != null) ...[
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: accent),
-                          borderRadius: AppRadius.borderRadiusXs,
-                        ),
-                        child: Text(
-                          widget.project.badge!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(
-                                  color: accent, letterSpacing: 0.4),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  widget.project.description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.7),
-                ),
-                if (widget.project.tags.isNotEmpty) ...[
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 5,
-                    runSpacing: 5,
-                    children: widget.project.tags.map((t) {
-                      final isUiUx = t == 'UI/UX';
-                      return MouseRegion(
-                        cursor: isUiUx ? SystemMouseCursors.click : SystemMouseCursors.basic,
-                        child: GestureDetector(
-                          onTap: isUiUx ? () => launchUrl(Uri.parse('https://deepanshui.framer.website/')) : null,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: AppColors.surfaceElev,
-                              borderRadius: AppRadius.subtle,
-                            ),
-                            child: Text(
-                              t,
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: isUiUx ? accent : textSec,
-                                decoration: isUiUx ? TextDecoration.underline : null,
-                                decorationColor: accent,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-                const SizedBox(height: 14),
-                _ProjectLinkRow(
-                  githubUrl: widget.project.githubUrl,
-                  liveUrl: widget.project.liveUrl,
-                  figmaUrl: widget.project.figmaUrl,
-                  installUrl: widget.project.installUrl,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-
-
-class _BrowserMock extends StatelessWidget {
-  const _BrowserMock();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark   = Theme.of(context).brightness == Brightness.dark;
-    final border   = isDark ? AppColors.borderDark  : AppColors.borderLight;
-    final surface  = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
-    final blockA   = isDark
-        ? AppColors.surfaceElevDark.withValues(alpha: 0.6)
-        : AppColors.surfaceElevLight;
-    final blockB   = isDark
-        ? AppColors.surfaceElevDark.withValues(alpha: 0.35)
-        : AppColors.borderLight;
-
-    return Container(
-      height: 110,
-      decoration: BoxDecoration(
-        color: surface,
-        border: Border(
-          bottom: BorderSide(color: border, width: 0.5),
-          top: BorderSide(
-            color: isDark
-                ? AppColors.border2Dark
-                : AppColors.borderLight,
-            width: 1.5,
-          ),
-        ),
-      ),
-      child: Column(children: [
-        Container(
-          height: 24,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: border, width: 1))),
-          child: Row(children: [
-            
-            Container(width: 7, height: 7,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFF5F57))),
-            const SizedBox(width: 5),
-            Container(width: 7, height: 7,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFFBD2E))),
-            const SizedBox(width: 5),
-            Container(width: 7, height: 7,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF28C840))),
-            const SizedBox(width: 10),
-            Expanded(child: Container(height: 10, color: blockA)),
-          ]),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(height: 7, width: 100, color: blockA),
-                const SizedBox(height: 8),
-                Row(children: [
-                  Expanded(child: Container(height: 42, color: blockB)),
-                  const SizedBox(width: 8),
-                  Expanded(child: Container(height: 42, color: blockB)),
-                ]),
-              ],
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-}
-
-
-
-
-
-class _ProjectLinkRow extends StatelessWidget {
-  final String? githubUrl;
-  final String? liveUrl;
-  final String? figmaUrl;
-  final String? installUrl;
-  const _ProjectLinkRow({this.githubUrl, this.liveUrl, this.figmaUrl, this.installUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    if (githubUrl == null && liveUrl == null && figmaUrl == null && installUrl == null) return const SizedBox.shrink();
-    return Wrap(spacing: 16, runSpacing: 8, children: [
-      if (githubUrl != null)
-        _LinkBtn(icon: LucideIcons.code2, label: 'GitHub', url: githubUrl!),
-      if (liveUrl != null)
-        _LinkBtn(icon: LucideIcons.arrowUpRight, label: 'Live', url: liveUrl!),
-      if (installUrl != null)
-        _LinkBtn(icon: LucideIcons.download, label: 'Install', url: installUrl!),
-      if (figmaUrl != null)
-        _LinkBtn(icon: LucideIcons.palette, label: 'Figma', url: figmaUrl!),
-    ]);
-  }
-}
-
-class _LinkBtn extends StatefulWidget {
-  final IconData icon;
-  final String label;
-  final String url;
-  const _LinkBtn({required this.icon, required this.label, required this.url});
-
-  @override
-  State<_LinkBtn> createState() => _LinkBtnState();
-}
-
-class _LinkBtnState extends State<_LinkBtn> {
   bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    final accent = AppColors.accent;
-    final textPri = AppColors.textPrimary;
+    final isDark  = Theme.of(context).brightness == Brightness.dark;
+    final textPri = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSec = isDark ? AppColors.textSecDark     : AppColors.textSecLight;
+    final surface = isDark ? AppColors.surfaceElevDark : AppColors.surfaceLight;
+    final border  = isDark ? AppColors.borderDark      : AppColors.borderLight;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
+      onExit:  (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        decoration: BoxDecoration(
+          color: surface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: _hovered
+                ? (isDark ? AppColors.border2Dark : AppColors.border2Light)
+                : border,
+            width: _hovered ? 1.0 : 0.5,
+          ),
+          boxShadow: _hovered
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.12),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : [],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Project image header ──
+            _ProjectImageHeader(imageAsset: widget.project.imageAsset),
+
+            // ── Content ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Name + Year
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          widget.project.name,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: textPri,
+                            fontSize: 16,
+                            letterSpacing: -0.3,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (widget.project.year != null) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.project.year!,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: textSec,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // Description
+                  Text(
+                    widget.project.description,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: textSec,
+                      height: 1.65,
+                      fontSize: 12.5,
+                    ),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Tech chips
+                  if (widget.project.tags.isNotEmpty)
+                    Wrap(
+                      spacing: 5,
+                      runSpacing: 5,
+                      children: widget.project.tags.map((t) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: isDark
+                                  ? AppColors.border2Dark
+                                  : AppColors.borderLight,
+                              width: 0.6,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            t,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color: textSec,
+                                  fontSize: 10,
+                                  letterSpacing: 0.1,
+                                ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+
+                  const SizedBox(height: 14),
+
+                  // Link icons — right aligned
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (widget.project.liveUrl != null)
+                        _IconLinkBtn(
+                          icon: LucideIcons.globe,
+                          url: widget.project.liveUrl!,
+                          isDark: isDark,
+                        ),
+                      if (widget.project.figmaUrl != null)
+                        _IconLinkBtn(
+                          icon: LucideIcons.palette,
+                          url: widget.project.figmaUrl!,
+                          isDark: isDark,
+                        ),
+                      if (widget.project.installUrl != null)
+                        _IconLinkBtn(
+                          icon: LucideIcons.download,
+                          url: widget.project.installUrl!,
+                          isDark: isDark,
+                        ),
+                      if (widget.project.githubUrl != null)
+                        _IconLinkBtn(
+                          icon: LucideIcons.gitFork,
+                          url: widget.project.githubUrl!,
+                          isDark: isDark,
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+/// Full-width project image header with a subtle dark scrim
+class _ProjectImageHeader extends StatelessWidget {
+  final String? imageAsset;
+  const _ProjectImageHeader({this.imageAsset});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fallbackColor = isDark
+        ? AppColors.surfaceDark
+        : AppColors.surfaceElevLight;
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+      child: SizedBox(
+        height: 165,
+        width: double.infinity,
+        child: imageAsset != null
+            ? Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    imageAsset!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(color: fallbackColor),
+                  ),
+                ],
+              )
+            : Container(color: fallbackColor),
+      ),
+    );
+  }
+}
+
+
+
+
+
+/// Small circular icon button for live / github links
+class _IconLinkBtn extends StatefulWidget {
+  final IconData icon;
+  final String url;
+  final bool isDark;
+
+  const _IconLinkBtn({
+    required this.icon,
+    required this.url,
+    required this.isDark,
+  });
+
+  @override
+  State<_IconLinkBtn> createState() => _IconLinkBtnState();
+}
+
+class _IconLinkBtnState extends State<_IconLinkBtn> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final border = widget.isDark ? AppColors.borderDark : AppColors.borderLight;
+    final iconColor = widget.isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final hoverBg = widget.isDark
+        ? AppColors.surfaceElevDark
+        : AppColors.surfaceElevLight;
+
+    return MouseRegion(
       cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _hovered = true),
-        onTapUp: (_) => setState(() => _hovered = false),
-        onTapCancel: () => setState(() => _hovered = false),
         onTap: () async {
           final uri = Uri.parse(widget.url);
           if (await canLaunchUrl(uri)) await launchUrl(uri);
         },
-        child: AnimatedScale(
-          scale: _hovered ? 0.96 : 1.0,
-          duration: const Duration(milliseconds: 120),
-          curve: Curves.easeOutCubic,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              border: Border.all(color: accent),
-              borderRadius: AppRadius.subtle,
-              color: _hovered ? accent.withValues(alpha: 0.12) : Colors.transparent,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          width: 30,
+          height: 30,
+          margin: const EdgeInsets.only(left: 6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _hovered ? hoverBg : Colors.transparent,
+            border: Border.all(
+              color: _hovered
+                  ? (widget.isDark ? AppColors.border2Dark : AppColors.borderLight)
+                  : border,
+              width: 0.6,
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(widget.icon, size: 14, color: _hovered ? accent : textPri),
-                const SizedBox(width: 8),
-                Text(
-                  widget.label.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: _hovered ? accent : textPri, letterSpacing: 1.2, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
+          ),
+          child: Icon(
+            widget.icon,
+            size: 14,
+            color: _hovered
+                ? (widget.isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight)
+                : iconColor,
           ),
         ),
       ),

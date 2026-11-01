@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/portfolio_config.dart';
@@ -293,7 +293,7 @@ class _ChatSectionLabel extends StatelessWidget {
           Text(
             text.toUpperCase(),
             style: TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Inter',
               fontSize: 8,
               letterSpacing: 2.0,
               fontWeight: FontWeight.w500,
@@ -329,7 +329,7 @@ class _ChatDayDivider extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Inter',
               fontSize: 9,
               letterSpacing: 1.0,
               color: textTer,
@@ -384,7 +384,7 @@ class _BotBubble extends StatelessWidget {
               child: Text(
                 text,
                 style: TextStyle(
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Inter',
                   fontSize: 14,
                   height: 1.5,
                   color: textColor,
@@ -396,7 +396,7 @@ class _BotBubble extends StatelessWidget {
           Text(
             'now',
             style: TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Inter',
               fontSize: 9,
               color: timeColor,
             ),
@@ -427,7 +427,7 @@ class _UserBubble extends StatelessWidget {
           Text(
             'now',
             style: TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Inter',
               fontSize: 9,
               color: timeColor,
             ),
@@ -448,7 +448,7 @@ class _UserBubble extends StatelessWidget {
               child: Text(
                 text,
                 style: TextStyle(
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Inter',
                   fontSize: 14,
                   height: 1.5,
                   color: textColor,
@@ -514,7 +514,7 @@ class _CopyEmailBubbleState extends State<_CopyEmailBubble> {
             Text(
               widget.email,
               style: TextStyle(
-                fontFamily: 'JetBrainsMono',
+                fontFamily: 'Inter',
                 fontSize: 12,
                 color: textColor,
                 letterSpacing: 0.3,
@@ -548,7 +548,7 @@ class _CopyEmailBubbleState extends State<_CopyEmailBubble> {
                       Text(
                         _copied ? 'Copied!' : 'Copy email',
                         style: TextStyle(
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Inter',
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: _copied ? accentInk : textColor,
@@ -640,7 +640,7 @@ class _ChatFormState extends State<_ChatForm> {
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'JetBrainsMono',
+              fontFamily: 'Inter',
               fontSize: 9,
               letterSpacing: 1.5,
               color: hintColor,
@@ -659,14 +659,14 @@ class _ChatFormState extends State<_ChatForm> {
               controller: ctrl,
               maxLines: lines,
               style: TextStyle(
-                fontFamily: 'Outfit',
+                fontFamily: 'Inter',
                 fontSize: 14,
                 color: textColor,
               ),
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: TextStyle(
-                  fontFamily: 'Outfit',
+                  fontFamily: 'Inter',
                   fontSize: 14,
                   color: hintColor,
                 ),
@@ -728,7 +728,7 @@ class _ChatFormState extends State<_ChatForm> {
                         Text(
                           _sent ? 'Email client opened!' : 'Send message',
                           style: TextStyle(
-                            fontFamily: 'Outfit',
+                            fontFamily: 'Inter',
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: accentInk,
@@ -745,7 +745,7 @@ class _ChatFormState extends State<_ChatForm> {
               child: Text(
                 '🔒 opens your email client · nothing stored',
                 style: TextStyle(
-                  fontFamily: 'JetBrainsMono',
+                  fontFamily: 'Inter',
                   fontSize: 9,
                   color: hintColor,
                   letterSpacing: 0.3,
@@ -875,7 +875,7 @@ class _LinkTileState extends State<_LinkTile> {
                     Text(
                       widget.title,
                       style: TextStyle(
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Inter',
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: _hovered ? accent : textColor,
@@ -884,7 +884,7 @@ class _LinkTileState extends State<_LinkTile> {
                     Text(
                       widget.subtitle,
                       style: TextStyle(
-                        fontFamily: 'Outfit',
+                        fontFamily: 'Inter',
                         fontSize: 11,
                         color: textSec,
                       ),

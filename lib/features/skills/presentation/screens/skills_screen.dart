@@ -590,7 +590,7 @@ class _Fallback extends StatelessWidget {
           fontSize: 14,
           fontWeight: FontWeight.w700,
           color: color,
-          fontFamily: 'Courier',
+          fontFamily: 'Inter',
         ),
       ),
     );

@@ -278,3 +278,22 @@ final gitHubStatsProvider =
   final repo = ref.watch(gitHubRepositoryProvider);
   return repo.fetchStats(username);
 });
+
+/// Contributions for a single calendar year (used by the year switcher on
+/// the home page). Unlike [gitHubStatsProvider] this never falls back to mock
+/// data — a failed fetch surfaces as an error so the UI can say so honestly.
+final gitHubYearProvider =
+    FutureProvider.family<(List<ContributionDay>, int), (String, int)>(
+        (ref, args) async {
+  final (username, year) = args;
+  final res = await http.get(
+    Uri.parse('https://github-contributions-api.jogruber.de/v4/$username?y=$year'),
+    headers: {'Accept': 'application/json'},
+  );
+  if (res.statusCode != 200) {
+    throw Exception('GitHub contributions request failed (${res.statusCode})');
+  }
+  final parsed = GitHubRepository()._parseContributionsProxy(res.body);
+  if (parsed.$1.isEmpty) throw Exception('No contribution data for $year');
+  return parsed;
+});

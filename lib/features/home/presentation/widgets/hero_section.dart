@@ -285,7 +285,7 @@ class _DetailRow extends StatelessWidget {
                   child: Text(
                     value,
                     style: TextStyle(
-                      fontFamily: 'Outfit',
+                      fontFamily: 'Inter',
                       fontSize: 13.5,
                       height: 1.65,
                       color: textPri,
@@ -432,7 +432,7 @@ class _AboutBlock extends StatelessWidget {
               'Bridging pixel-perfect UI/UX design with high-performance mobile engineering. '
               'I turn complex logic into smooth, tactile experiences that feel solid, responsive, and alive.',
               style: TextStyle(
-                fontFamily: 'Outfit',
+                fontFamily: 'Inter',
                 fontSize: 13.5,
                 color: textSec,
                 height: 1.7,
@@ -449,7 +449,7 @@ class _AboutBlock extends StatelessWidget {
                 Text(
                   'QUICK REACH OUT',
                   style: TextStyle(
-                    fontFamily: 'JetBrainsMono',
+                    fontFamily: 'Inter',
                     fontSize: 9,
                     letterSpacing: 2.0,
                     fontWeight: FontWeight.w600,
@@ -492,7 +492,7 @@ class _HeroHeadline extends StatelessWidget {
         Text(
           'Building interfaces that feel better ',
           style: TextStyle(
-            fontFamily: 'Outfit',
+            fontFamily: 'Inter',
             fontSize: AppSpacing.headlineSize(context,
                 mobile: 24, tablet: 26, laptop: 28),
             fontWeight: FontWeight.w800,
@@ -738,7 +738,7 @@ class _ReachOutCardState extends State<_ReachOutCard>
                       AnimatedDefaultTextStyle(
                         duration: const Duration(milliseconds: 160),
                         style: TextStyle(
-                          fontFamily: 'Outfit',
+                          fontFamily: 'Inter',
                           fontSize: 12.5,
                           fontWeight: FontWeight.w600,
                           color: _hovered ? textPri : textSec,
@@ -755,7 +755,7 @@ class _ReachOutCardState extends State<_ReachOutCard>
                           Text(
                             widget.data.handle,
                             style: TextStyle(
-                              fontFamily: 'JetBrainsMono',
+                              fontFamily: 'Inter',
                               fontSize: 9,
                               fontWeight: FontWeight.w500,
                               color: _hovered ? accent : textSec,
@@ -764,7 +764,7 @@ class _ReachOutCardState extends State<_ReachOutCard>
                           Text(
                             '//',
                             style: TextStyle(
-                              fontFamily: 'JetBrainsMono',
+                              fontFamily: 'Inter',
                               fontSize: 9,
                               color: textTer.withValues(alpha: 0.4),
                             ),
@@ -772,7 +772,7 @@ class _ReachOutCardState extends State<_ReachOutCard>
                           Text(
                             widget.data.sublabel,
                             style: TextStyle(
-                              fontFamily: 'JetBrainsMono',
+                              fontFamily: 'Inter',
                               fontSize: 8,
                               color: textTer,
                             ),
@@ -877,7 +877,7 @@ class _ResumePulsingButtonState extends State<_ResumePulsingButton>
               Text(
                 'RESUME',
                 style: TextStyle(
-                  fontFamily: 'JetBrainsMono',
+                  fontFamily: 'Inter',
                   fontSize: 10,
                   letterSpacing: 2.0,
                   fontWeight: FontWeight.w600,

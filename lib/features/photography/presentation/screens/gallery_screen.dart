@@ -1,31 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/shared_widgets.dart';
-import '../../../../core/widgets/smooth_scroll.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-class GalleryScreen extends StatefulWidget {
+import '../../../home/presentation/editorial/ed_primitives.dart';
+import '../../../home/presentation/editorial/ed_projects.dart';
+import '../../../home/presentation/editorial/ed_theme.dart';
+
+class GalleryScreen extends StatelessWidget {
   const GalleryScreen({super.key});
-
-  @override
-  State<GalleryScreen> createState() => _GalleryScreenState();
-}
-
-class _GalleryScreenState extends State<GalleryScreen> {
-  late final ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   static const _images = [
     'assets/images/aabes.jpeg',
@@ -41,256 +22,204 @@ class _GalleryScreenState extends State<GalleryScreen> {
     'assets/images/abessss.jpg',
     'assets/images/flower.jpg',
     'assets/images/sunshine.jpg',
-    'assets/images/fire.jpg', 
+    'assets/images/fire.jpg',
   ];
 
   @override
   Widget build(BuildContext context) {
-    final padding = AppSpacing.horizontalPadding(context);
-    final textSec = AppColors.textSecondary;
-    final accent = AppColors.accent;
+    final ed = Ed.of(context);
 
-    return HatchBackground(
-      child: Scaffold(
-        body: SafeArea(
-          bottom: false,
-          child: SmoothScroll(
-            controller: _scrollController,
-            child: CustomScrollView(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            slivers: [
-              
-              SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: padding, vertical: AppSpacing.xl),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Text(
-                                  '[ 05 ]',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(color: accent, letterSpacing: 1.5),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(
-                                    'SHORTS & GALLERY',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(color: textSec, letterSpacing: 2),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          
-                          MouseRegion(
-                            cursor: SystemMouseCursors.click,
-                            child: GestureDetector(
-                              onTap: () => Navigator.of(context).pop(),
-                              child: Icon(
-                                LucideIcons.x,
-                                color: textSec,
-                                size: 24,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      Text(
-                        "Bits of life.",
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                              fontSize: AppSpacing.headlineSize(
-                                context,
-                                mobile: 30,
-                                tablet: 38,
-                                laptop: 44,
-                              ),
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -2,
-                              height: 1.0,
-                            ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Moments captured through the lens, random shots, and videos.',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: textSec, height: 1.65),
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
-                      const DashedDivider(),
-                    ],
-                  ),
-                ),
-              ),
-              
-              
-              SliverPadding(
-                padding: EdgeInsets.fromLTRB(
-                    padding, 0, padding,
-                    MediaQuery.of(context).padding.bottom + AppSpacing.xl),
-                sliver: SliverLayoutBuilder(
-                  builder: (context, constraints) {
-                    final isMobile = constraints.crossAxisExtent < AppSpacing.mobileMax;
-                    final isTablet =
-                        constraints.crossAxisExtent >= AppSpacing.mobileMax &&
-                            constraints.crossAxisExtent < AppSpacing.tabletMax;
-  
-                    return SliverGrid(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: isMobile
-                            ? 220
-                            : isTablet
-                                ? 250
-                                : 300,
-                        mainAxisSpacing: isMobile ? 12 : 16,
-                        crossAxisSpacing: isMobile ? 12 : 16,
-                        childAspectRatio: isMobile ? 0.74 : 0.8,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return _GalleryImageCard(imagePath: _images[index])
-                              .animate()
-                              .fade(
-                                duration: 400.ms,
-                                delay: Duration(milliseconds: 50 * index),
-                              )
-                              .slideY(
-                                begin: 0.05,
-                                end: 0,
-                                duration: 400.ms,
-                                delay: Duration(milliseconds: 50 * index),
-                                curve: Curves.easeOutCubic,
-                              );
-                        },
-                        childCount: _images.length,
-                      ),
-                    );
-                  },
-                ),
-              ),
+    return EdSubScaffold(
+      trail: '/ photography',
+      activeIndex: 0,
+      builder: (context, scroll) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Hero band — full-bleed with hatched gutters
+          PageHeroBand(
+            title: 'Photography',
+            badge: '[ 14 CAPTURES ]',
+            description:
+                'A visual diary of everyday moments, travel frames, light studies, and architectural textures captured through digital and analog glass.',
+            highlights: [
+              (label: '✦ Digital & 35mm', color: ed.live),
+              (label: '📍 Travel & Architecture', color: ed.ink2),
+              (label: '📷 Nikon & iPhone', color: ed.ink2),
             ],
+            onBack: () => Navigator.of(context).pop(),
           ),
-        ),
+
+          // ── Section 01: Gallery Grid ────────────────────────────────
+          SectionBand('[ 01 ] SELECTED SHOTS & FRAMES', trailing: const MonoTag('14 PHOTOS')),
+          ColumnBox(
+            padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 36),
+            child: LayoutBuilder(builder: (context, c) {
+              final cols = c.maxWidth >= 760 ? 3 : (c.maxWidth >= 480 ? 2 : 1);
+              final spacing = 12.0;
+              final w = (c.maxWidth - spacing * (cols - 1)) / cols;
+
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                children: [
+                  for (int i = 0; i < _images.length; i++)
+                    SizedBox(
+                      width: w,
+                      child: _GalleryCard(
+                        imagePath: _images[i],
+                        index: i,
+                        onTap: () => _openLightbox(context, _images[i]),
+                      ),
+                    ),
+                ],
+              );
+            }),
+          ),
+
+          const SizedBox(height: 48),
+        ],
+      ),
+    );
+  }
+
+  void _openLightbox(BuildContext context, String path) {
+    final ed = Ed.of(context);
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.88),
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(20),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            InteractiveViewer(
+              minScale: 0.8,
+              maxScale: 3.5,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: ed.line2),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Image.asset(path, fit: BoxFit.contain),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Hover(
+                onTap: () => Navigator.of(ctx).pop(),
+                semanticLabel: 'Close',
+                builder: (_, h) => Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(LucideIcons.x, color: Colors.white, size: 20),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _GalleryImageCard extends StatefulWidget {
+class _GalleryCard extends StatefulWidget {
   final String imagePath;
-  const _GalleryImageCard({required this.imagePath});
+  final int index;
+  final VoidCallback onTap;
+
+  const _GalleryCard({
+    required this.imagePath,
+    required this.index,
+    required this.onTap,
+  });
 
   @override
-  State<_GalleryImageCard> createState() => _GalleryImageCardState();
+  State<_GalleryCard> createState() => _GalleryCardState();
 }
 
-class _GalleryImageCardState extends State<_GalleryImageCard> {
+class _GalleryCardState extends State<_GalleryCard> {
   bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    final border = AppColors.border;
-    final accent = AppColors.accent;
+    final ed = Ed.of(context);
+    final fileName = widget.imagePath.split('/').last;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _hovered = true),
-        onTapUp: (_) => setState(() => _hovered = false),
-        onTapCancel: () => setState(() => _hovered = false),
-        child: AnimatedScale(
-          scale: _hovered ? 1.04 : 1.0,
+        onTap: widget.onTap,
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: _hovered ? accent : border,
-                width: _hovered ? 1.5 : 1.0,
+          decoration: BoxDecoration(
+            color: ed.card,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: _hovered ? ed.ink : ed.line),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Photo box
+              AspectRatio(
+                aspectRatio: 1.25,
+                child: AnimatedScale(
+                  scale: _hovered ? 1.05 : 1.0,
+                  duration: const Duration(milliseconds: 320),
+                  curve: Curves.easeOutCubic,
+                  child: Image.asset(
+                    widget.imagePath,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: ed.raised,
+                      alignment: Alignment.center,
+                      child: Icon(LucideIcons.imageOff, color: ed.ink3),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            child: ClipRect(
-              child: _SkeletonAssetImage(
-                assetPath: widget.imagePath,
-                fit: BoxFit.cover,
-                cacheWidth: 450,
-                skeletonColor: AppColors.surfaceElev,
-                errorWidget: const Center(child: Icon(LucideIcons.imageOff)),
+              // Footer metadata
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: ed.card,
+                  border: Border(top: BorderSide(color: ed.line)),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      '#${(widget.index + 1).toString().padLeft(2, '0')}',
+                      style: ed.mono(10, color: ed.ink3),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        fileName,
+                        style: ed.mono(10.5, color: _hovered ? ed.ink : ed.ink2),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Icon(
+                      LucideIcons.maximize2,
+                      size: 11,
+                      color: _hovered ? ed.ink : ed.ink3,
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _SkeletonAssetImage extends StatefulWidget {
-  final String assetPath;
-  final BoxFit fit;
-  final Color skeletonColor;
-  final Widget errorWidget;
-  final int? cacheWidth;
-
-  const _SkeletonAssetImage({
-    required this.assetPath,
-    required this.fit,
-    required this.skeletonColor,
-    required this.errorWidget,
-    this.cacheWidth,
-  });
-
-  @override
-  State<_SkeletonAssetImage> createState() => _SkeletonAssetImageState();
-}
-
-class _SkeletonAssetImageState extends State<_SkeletonAssetImage> {
-  bool _showContent = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) setState(() => _showContent = true);
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      widget.assetPath,
-      fit: widget.fit,
-      cacheWidth: widget.cacheWidth,
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (_showContent && (wasSynchronouslyLoaded || frame != null)) {
-          return child.animate().fadeIn(duration: 400.ms, curve: Curves.easeOut);
-        }
-        return Container(color: widget.skeletonColor)
-            .animate(onPlay: (controller) => controller.repeat())
-            .shimmer(duration: 1200.ms, color: Colors.white24, angle: 1.0);
-      },
-      errorBuilder: (_, __, ___) => widget.errorWidget,
     );
   }
 }

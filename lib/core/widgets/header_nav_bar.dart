@@ -373,7 +373,7 @@ class _BrandMark extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontFamily: 'JetBrainsMono',
+            fontFamily: 'Inter',
             fontSize: fontSize,
             letterSpacing: 1.6,
             fontWeight: FontWeight.w500,
@@ -418,7 +418,7 @@ class _SectionChip extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                fontFamily: 'JetBrainsMono',
+                fontFamily: 'Inter',
                 fontSize: 10.5,
                 letterSpacing: 0.8,
                 fontWeight: FontWeight.w600,
@@ -486,7 +486,7 @@ class _NavLinkState extends State<_NavLink> {
               AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 160),
                 style: TextStyle(
-                  fontFamily: 'JetBrainsMono',
+                  fontFamily: 'Inter',
                   fontSize: widget.fontSize,
                   letterSpacing: 0.8,
                   fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
@@ -736,7 +736,7 @@ class _PanelFooter extends StatelessWidget {
                 Text(
                   'OPEN TO WORK',
                   style: TextStyle(
-                    fontFamily: 'JetBrainsMono',
+                    fontFamily: 'Inter',
                     fontSize: 9,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.w600,
@@ -941,7 +941,7 @@ class _MobileTabRowState extends State<_MobileTabRow> {
                   child: Text(
                     '0${widget.index}',
                     style: TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Inter',
                       fontSize: 52,
                       fontWeight: FontWeight.w700,
                       height: 1,
@@ -967,7 +967,7 @@ class _MobileTabRowState extends State<_MobileTabRow> {
                         child: Text(
                           '0${widget.index}',
                           style: TextStyle(
-                            fontFamily: 'JetBrainsMono',
+                            fontFamily: 'Inter',
                             fontSize: 10,
                             color: textSec,
                           ),
@@ -980,7 +980,7 @@ class _MobileTabRowState extends State<_MobileTabRow> {
                         child: Text(
                           '/${widget.tab.label}',
                           style: TextStyle(
-                            fontFamily: 'JetBrainsMono',
+                            fontFamily: 'Inter',
                             fontSize: widget.active ? 16 : 14,
                             letterSpacing: 0.6,
                             fontWeight: widget.active ? FontWeight.w700 : FontWeight.w400,

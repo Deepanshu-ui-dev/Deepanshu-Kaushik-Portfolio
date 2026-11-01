@@ -28,7 +28,7 @@ class GitHubScreen extends ConsumerWidget {
             child: Text(
               'Failed to load GitHub data',
               style: TextStyle(
-                fontFamily: 'monospace',
+                fontFamily: 'Inter',
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
@@ -48,7 +48,7 @@ class GitHubScreen extends ConsumerWidget {
                     Text(
                       'Contribution Graph',
                       style: TextStyle(
-                        fontFamily: 'monospace',
+                        fontFamily: 'Inter',
                         fontSize: 12,
                         letterSpacing: 0.5,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -60,7 +60,7 @@ class GitHubScreen extends ConsumerWidget {
                     Text(
                       '${data.totalContributions} contributions in ${DateTime.now().year}',
                       style: TextStyle(
-                        fontFamily: 'monospace',
+                        fontFamily: 'Inter',
                         fontSize: 12,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
@@ -78,7 +78,7 @@ class GitHubScreen extends ConsumerWidget {
                   child: Text(
                     'No public repositories found.',
                     style: TextStyle(
-                      fontFamily: 'monospace',
+                      fontFamily: 'Inter',
                       fontSize: 13,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -138,7 +138,7 @@ class _StatBox extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontFamily: 'monospace',
+              fontFamily: 'Inter',
               fontSize: 22,
               fontWeight: FontWeight.w700,
               color: Theme.of(context).colorScheme.onSurface,
@@ -149,7 +149,7 @@ class _StatBox extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'monospace',
+              fontFamily: 'Inter',
               fontSize: 11,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -211,7 +211,7 @@ class _RepoCardState extends State<_RepoCard> {
                         Text(
                           widget.repo.name,
                           style: TextStyle(
-                            fontFamily: 'monospace',
+                            fontFamily: 'Inter',
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).colorScheme.onSurface,
@@ -224,7 +224,7 @@ class _RepoCardState extends State<_RepoCard> {
                       Text(
                         widget.repo.description!,
                         style: TextStyle(
-                          fontFamily: 'monospace',
+                          fontFamily: 'Inter',
                           fontSize: 12,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                           height: 1.5,
@@ -248,7 +248,7 @@ class _RepoCardState extends State<_RepoCard> {
                         Text(
                           widget.repo.stars.toString(),
                           style: TextStyle(
-                            fontFamily: 'monospace',
+                            fontFamily: 'Inter',
                             fontSize: 11,
                             color:
                                 Theme.of(context).colorScheme.onSurfaceVariant,
@@ -263,7 +263,7 @@ class _RepoCardState extends State<_RepoCard> {
                         Text(
                           widget.repo.forks.toString(),
                           style: TextStyle(
-                            fontFamily: 'monospace',
+                            fontFamily: 'Inter',
                             fontSize: 11,
                             color:
                                 Theme.of(context).colorScheme.onSurfaceVariant,
@@ -317,7 +317,7 @@ class _LangDot extends StatelessWidget {
         Text(
           lang,
           style: TextStyle(
-            fontFamily: 'monospace',
+            fontFamily: 'Inter',
             fontSize: 11,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -349,7 +349,7 @@ class MonoLoader extends StatelessWidget {
           Text(
             'LOADING...',
             style: TextStyle(
-              fontFamily: 'monospace',
+              fontFamily: 'Inter',
               fontSize: 12,
               letterSpacing: 2,
               color: Theme.of(context).colorScheme.onSurfaceVariant,

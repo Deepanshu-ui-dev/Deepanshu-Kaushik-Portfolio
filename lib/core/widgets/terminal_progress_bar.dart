@@ -71,7 +71,7 @@ class _TerminalProgressBarState extends State<TerminalProgressBar>
                 Text(
                   widget.label!,
                   style: TextStyle(
-                    fontFamily: 'JetBrainsMono',
+                    fontFamily: 'Inter',
                     fontSize: 10,
                     letterSpacing: 0.5,
                     color: isDark
@@ -83,7 +83,7 @@ class _TerminalProgressBarState extends State<TerminalProgressBar>
                 Text(
                   '${(pct * 100).round()}%',
                   style: TextStyle(
-                    fontFamily: 'JetBrainsMono',
+                    fontFamily: 'Inter',
                     fontSize: 10,
                     letterSpacing: 0.5,
                     color: accent,

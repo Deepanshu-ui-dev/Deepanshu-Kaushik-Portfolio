@@ -2,13 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import '../theme/app_theme.dart';
-
-
-
-
-
 
 class CatCursorFollower extends StatefulWidget {
   final Widget child;
@@ -24,28 +18,23 @@ class CatCursorFollower extends StatefulWidget {
 
 enum _CatMode { idle, alerting, following, returningHome }
 
-class _CatCursorFollowerState extends State<CatCursorFollower>
-    with SingleTickerProviderStateMixin {
-  late final Ticker _ticker;
+class _CatCursorFollowerState extends State<CatCursorFollower> {
+  Timer? _clock;
+  final Stopwatch _watch = Stopwatch();
 
-  
   List<int> _currentSprite = _spriteSets['sleeping']![0];
   int _frameCount = 0;
 
-  
   String? _idleAnimation = 'sleeping';
   int _idleAnimationFrame = 10;
   int _idleTime = 0;
   int _idleCooldown = 0;
 
-  
   int _alertFramesLeft = 0;
 
-  
   bool _showExclamation = false;
   int _exclamationFrames = 0;
 
-  
   bool _showSpeechBubble = false;
   double _bubbleOpacity = 0.0;
   double _bubbleScale = 0.8;
@@ -53,7 +42,8 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   Timer? _bubbleTimer;
   Timer? _bubbleHideTimer;
 
-  void _showBubble(String text, {Duration duration = const Duration(seconds: 3)}) {
+  void _showBubble(String text,
+      {Duration duration = const Duration(seconds: 3)}) {
     _bubbleTimer?.cancel();
     _bubbleHideTimer?.cancel();
 
@@ -82,7 +72,6 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     });
   }
 
-  
   double _nekoPosX = 0;
   double _nekoPosY = 0;
   double _homeX = 0;
@@ -90,47 +79,95 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   double _targetX = 0;
   double _targetY = 0;
 
-  
   _CatMode _mode = _CatMode.idle;
   static const double _returnIdleSeconds = 5 * 60.0;
   static const double _baseSpeed = 9.0;
-  static const double _topSpeed  = 18.0;
+  static const double _topSpeed = 18.0;
   static const double _arriveRadius = 40.0;
 
-  Duration _lastTickTime  = Duration.zero;
-  Duration _lastInteract  = Duration.zero;
+  Duration _lastTickTime = Duration.zero;
+  Duration _lastInteract = Duration.zero;
   bool _initialized = false;
 
-  
   Offset? _swipeStart;
   Offset? _lastTouchPos;
 
-  
   static const Map<String, List<List<int>>> _spriteSets = {
-    'idle'        : [[-3, -3]],
-    'alert'       : [[-7, -3]],
-    'scratchSelf' : [[-5, 0], [-6, 0], [-7, 0]],
-    'scratchWallN': [[0, 0], [0, -1]],
-    'scratchWallS': [[-7, -1], [-6, -2]],
-    'scratchWallE': [[-2, -2], [-2, -3]],
-    'scratchWallW': [[-4, 0], [-4, -1]],
-    'tired'       : [[-3, -2]],
-    'sleeping'    : [[-2, 0], [-2, -1]],
-    'N' : [[-1, -2], [-1, -3]],
-    'NE': [[0, -2], [0, -3]],
-    'E' : [[-3, 0], [-3, -1]],
-    'SE': [[-5, -1], [-5, -2]],
-    'S' : [[-6, -3], [-7, -2]],
-    'SW': [[-5, -3], [-6, -1]],
-    'W' : [[-4, -2], [-4, -3]],
-    'NW': [[-1, 0], [-1, -1]],
+    'idle': [
+      [-3, -3]
+    ],
+    'alert': [
+      [-7, -3]
+    ],
+    'scratchSelf': [
+      [-5, 0],
+      [-6, 0],
+      [-7, 0]
+    ],
+    'scratchWallN': [
+      [0, 0],
+      [0, -1]
+    ],
+    'scratchWallS': [
+      [-7, -1],
+      [-6, -2]
+    ],
+    'scratchWallE': [
+      [-2, -2],
+      [-2, -3]
+    ],
+    'scratchWallW': [
+      [-4, 0],
+      [-4, -1]
+    ],
+    'tired': [
+      [-3, -2]
+    ],
+    'sleeping': [
+      [-2, 0],
+      [-2, -1]
+    ],
+    'N': [
+      [-1, -2],
+      [-1, -3]
+    ],
+    'NE': [
+      [0, -2],
+      [0, -3]
+    ],
+    'E': [
+      [-3, 0],
+      [-3, -1]
+    ],
+    'SE': [
+      [-5, -1],
+      [-5, -2]
+    ],
+    'S': [
+      [-6, -3],
+      [-7, -2]
+    ],
+    'SW': [
+      [-5, -3],
+      [-6, -1]
+    ],
+    'W': [
+      [-4, -2],
+      [-4, -3]
+    ],
+    'NW': [
+      [-1, 0],
+      [-1, -1]
+    ],
   };
 
-  
   @override
   void initState() {
     super.initState();
-    _ticker = createTicker(_onTick)..start();
+    _watch.start();
+    _clock = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      if (mounted) _onTick(_watch.elapsed);
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showBubble('hi! 👋', duration: const Duration(seconds: 4));
     });
@@ -140,19 +177,19 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.sizeOf(context);
-    _homeX = size.width  - 80.0;  
-    _homeY = size.height - 100.0; 
+    _homeX = size.width - 80.0;
+    _homeY = size.height - 100.0;
     if (!_initialized) {
       _initialized = true;
       _nekoPosX = _homeX;
       _nekoPosY = _homeY;
-      _targetX  = _homeX;
-      _targetY  = _homeY;
+      _targetX = _homeX;
+      _targetY = _homeY;
     } else {
       _nekoPosX = _nekoPosX.clamp(24.0, size.width - 24.0);
       _nekoPosY = _nekoPosY.clamp(24.0, size.height - 24.0);
-      _targetX  = _targetX.clamp(24.0, size.width - 24.0);
-      _targetY  = _targetY.clamp(24.0, size.height - 24.0);
+      _targetX = _targetX.clamp(24.0, size.width - 24.0);
+      _targetY = _targetY.clamp(24.0, size.height - 24.0);
     }
   }
 
@@ -160,13 +197,12 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
   void dispose() {
     _bubbleTimer?.cancel();
     _bubbleHideTimer?.cancel();
-    _ticker.dispose();
+    _clock?.cancel();
     super.dispose();
   }
 
-  
   void _onTick(Duration elapsed) {
-    if ((elapsed - _lastTickTime).inMilliseconds < 100) return;
+    if ((elapsed - _lastTickTime).inMilliseconds < 90) return;
     _lastTickTime = elapsed;
     _frameCount++;
 
@@ -193,11 +229,10 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _showBubble('going for sleep... 💤', duration: const Duration(seconds: 3));
   }
 
-  
   void _step(Duration elapsed) {
     final diffX = _nekoPosX - _targetX;
     final diffY = _nekoPosY - _targetY;
-    final dist  = sqrt(diffX * diffX + diffY * diffY);
+    final dist = sqrt(diffX * diffX + diffY * diffY);
 
     if (dist < _arriveRadius) {
       if (_mode == _CatMode.returningHome) {
@@ -226,7 +261,7 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _idleTime = 0;
     if (_idleCooldown > 0) _idleCooldown--;
 
-    final t     = (dist / 200.0).clamp(0.0, 1.0);
+    final t = (dist / 200.0).clamp(0.0, 1.0);
     final speed = _baseSpeed + (_topSpeed - _baseSpeed) * t;
 
     _setSprite(_directionSprite(diffX, diffY, dist), _frameCount);
@@ -235,12 +270,11 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
       _nekoPosX -= (diffX / dist) * speed;
       _nekoPosY -= (diffY / dist) * speed;
       final size = MediaQuery.sizeOf(context);
-      _nekoPosX = _nekoPosX.clamp(24.0, size.width  - 24.0);
+      _nekoPosX = _nekoPosX.clamp(24.0, size.width - 24.0);
       _nekoPosY = _nekoPosY.clamp(24.0, size.height - 24.0);
     });
   }
 
-  
   void _runIdle() {
     _idleTime++;
     if (_idleCooldown > 0) _idleCooldown--;
@@ -280,9 +314,9 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     final choices = <String>['sleeping', 'scratchSelf'];
     if (!mounted) return 'sleeping';
     final size = MediaQuery.sizeOf(context);
-    if (_nekoPosX < 32)               choices.add('scratchWallW');
-    if (_nekoPosY < 32)               choices.add('scratchWallN');
-    if (_nekoPosX > size.width  - 32) choices.add('scratchWallE');
+    if (_nekoPosX < 32) choices.add('scratchWallW');
+    if (_nekoPosY < 32) choices.add('scratchWallN');
+    if (_nekoPosX > size.width - 32) choices.add('scratchWallE');
     if (_nekoPosY > size.height - 32) choices.add('scratchWallS');
     return choices[Random().nextInt(choices.length)];
   }
@@ -292,12 +326,11 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     _idleAnimationFrame = 0;
   }
 
-  
   String _directionSprite(double dx, double dy, double dist) {
     String d = '';
-    if (dy / dist >  0.5) d += 'N';
+    if (dy / dist > 0.5) d += 'N';
     if (dy / dist < -0.5) d += 'S';
-    if (dx / dist >  0.5) d += 'W';
+    if (dx / dist > 0.5) d += 'W';
     if (dx / dist < -0.5) d += 'E';
     return d.isEmpty ? 'idle' : d;
   }
@@ -311,7 +344,6 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     }
   }
 
-  
   void _wakeUp(Offset position) {
     _targetX = position.dx;
     _targetY = position.dy;
@@ -326,147 +358,119 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
     }
   }
 
-  
-  
-  
-  void _onTap(TapUpDetails details) {
+  void _onTap(Offset position) {
     setState(() => _showExclamation = true);
     _exclamationFrames = 5;
-    _wakeUp(details.globalPosition);
+    _wakeUp(position);
     _showBubble('huh? 😳', duration: const Duration(seconds: 2));
   }
 
-  
-  void _onDoubleTap() {
-    
-    final rand = Random();
-    setState(() {
-      _targetX = _nekoPosX + (rand.nextDouble() - 0.5) * 60;
-      _targetY = _nekoPosY + (rand.nextDouble() - 0.5) * 60;
-      _showExclamation = true;
-    });
-    _exclamationFrames = 8;
-    _lastInteract = _lastTickTime;
-    if (_mode == _CatMode.idle) {
-      _mode = _CatMode.alerting;
-      _alertFramesLeft = 2;
+  static const double _dragSlop = 12;
+  bool _dragging = false;
+
+  void _onPointerDown(PointerDownEvent e) {
+    _swipeStart = e.position;
+    _lastTouchPos = e.position;
+    _dragging = false;
+  }
+
+  void _onPointerMove(PointerMoveEvent e) {
+    if (_swipeStart == null) return;
+    _lastTouchPos = e.position;
+    if (!_dragging && (e.position - _swipeStart!).distance > _dragSlop) {
+      _dragging = true;
+      _showBubble('chase! ⚡', duration: const Duration(seconds: 2));
     }
-    _showBubble('wheee! 🌀', duration: const Duration(seconds: 2));
+    if (_dragging) _wakeUp(e.position);
   }
 
-  
-  void _onLongPressStart(LongPressStartDetails details) {
-    setState(() => _showExclamation = true);
-    _exclamationFrames = 6;
-    _wakeUp(details.globalPosition);
-    _showBubble('come here! 🐾', duration: const Duration(seconds: 2));
-  }
-
-  void _onLongPressMoveUpdate(LongPressMoveUpdateDetails details) {
-    _wakeUp(details.globalPosition);
-  }
-
-  
-  void _onPanStart(DragStartDetails details) {
-    _swipeStart = details.globalPosition;
-    _lastTouchPos = details.globalPosition;
-    _showBubble('chase! ⚡', duration: const Duration(seconds: 2));
-  }
-
-  void _onPanUpdate(DragUpdateDetails details) {
-    _lastTouchPos = details.globalPosition;
-    
-    _wakeUp(details.globalPosition);
-  }
-
-  void _onPanEnd(DragEndDetails details) {
-    if (_swipeStart != null && _lastTouchPos != null) {
-      
-      final dx = _lastTouchPos!.dx - _swipeStart!.dx;
-      final dy = _lastTouchPos!.dy - _swipeStart!.dy;
-      final len = sqrt(dx * dx + dy * dy);
-      if (len > 10) {
-        final size = MediaQuery.sizeOf(context);
-        final overshootX = (_lastTouchPos!.dx + (dx / len) * 80)
-            .clamp(24.0, size.width  - 24.0);
-        final overshootY = (_lastTouchPos!.dy + (dy / len) * 80)
-            .clamp(24.0, size.height - 24.0);
-        _wakeUp(Offset(overshootX, overshootY));
-      }
-    }
+  void _onPointerUp(PointerUpEvent e) {
+    final start = _swipeStart, last = _lastTouchPos;
     _swipeStart = null;
     _lastTouchPos = null;
+    if (start == null || last == null) return;
+    if (!_dragging) {
+      _onTap(e.position);
+      return;
+    }
+    _dragging = false;
+    final dx = last.dx - start.dx;
+    final dy = last.dy - start.dy;
+    final len = sqrt(dx * dx + dy * dy);
+    if (len > 10) {
+      final size = MediaQuery.sizeOf(context);
+      _wakeUp(Offset(
+        (last.dx + (dx / len) * 80).clamp(24.0, size.width - 24.0),
+        (last.dy + (dy / len) * 80).clamp(24.0, size.height - 24.0),
+      ));
+    }
   }
 
-  
+  void _onPointerCancel(PointerCancelEvent e) {
+    _swipeStart = null;
+    _lastTouchPos = null;
+    _dragging = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return GestureDetector(
-      onTapUp:                _onTap,
-      onDoubleTap:            _onDoubleTap,
-      onLongPressStart:       _onLongPressStart,
-      onLongPressMoveUpdate:  _onLongPressMoveUpdate,
-      onPanStart:             _onPanStart,
-      onPanUpdate:            _onPanUpdate,
-      onPanEnd:               _onPanEnd,
-      child: Listener(
-        behavior: HitTestBehavior.translucent,
-        child: Stack(
-          children: [
-            
-            RepaintBoundary(child: widget.child),
-
-            
-            RepaintBoundary(
-              child: Stack(
-                children: [
-                  
-                  if (_showSpeechBubble)
-                    Positioned(
-                      left: _nekoPosX - 100,
-                      width: 200,
-                      top: _nekoPosY - 64,
-                      height: 48,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: IgnorePointer(
-                          child: AnimatedScale(
-                            scale: _bubbleScale,
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeOutBack,
-                            child: AnimatedOpacity(
-                              opacity: _bubbleOpacity,
-                              duration: const Duration(milliseconds: 200),
-                              child: Material(
-                                type: MaterialType.transparency,
-                                child: CustomPaint(
-                                  painter: SpeechBubblePainter(
-                                    backgroundColor: isDark
-                                        ? AppColors.surfaceElevDark
-                                        : AppColors.surfaceElevLight,
-                                    borderColor: isDark
-                                        ? AppColors.borderDark
-                                        : AppColors.borderLight,
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: _onPointerDown,
+      onPointerMove: _onPointerMove,
+      onPointerUp: _onPointerUp,
+      onPointerCancel: _onPointerCancel,
+      child: Stack(
+        children: [
+          RepaintBoundary(child: widget.child),
+          RepaintBoundary(
+            child: Stack(
+              children: [
+                if (_showSpeechBubble)
+                  Positioned(
+                    left: _nekoPosX - 100,
+                    width: 200,
+                    top: _nekoPosY - 64,
+                    height: 48,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: IgnorePointer(
+                        child: AnimatedScale(
+                          scale: _bubbleScale,
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeOutBack,
+                          child: AnimatedOpacity(
+                            opacity: _bubbleOpacity,
+                            duration: const Duration(milliseconds: 200),
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: CustomPaint(
+                                painter: SpeechBubblePainter(
+                                  backgroundColor: isDark
+                                      ? AppColors.surfaceElevDark
+                                      : AppColors.surfaceElevLight,
+                                  borderColor: isDark
+                                      ? AppColors.borderDark
+                                      : AppColors.borderLight,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    top: 6,
+                                    bottom: 6 + 8,
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 10,
-                                      right: 10,
-                                      top: 6,
-                                      bottom: 6 + 8,
-                                    ),
-                                    child: Text(
-                                      _bubbleText,
-                                      style: TextStyle(
-                                        fontFamily: 'Outfit',
-                                        fontSize: 11,
-                                        color: isDark
-                                            ? AppColors.textPrimaryDark
-                                            : AppColors.textPrimaryLight,
-                                        fontWeight: FontWeight.w600,
-                                        decoration: TextDecoration.none,
-                                      ),
+                                  child: Text(
+                                    _bubbleText,
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
+                                      fontSize: 11,
+                                      color: isDark
+                                          ? AppColors.textPrimaryDark
+                                          : AppColors.textPrimaryLight,
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.none,
                                     ),
                                   ),
                                 ),
@@ -476,63 +480,58 @@ class _CatCursorFollowerState extends State<CatCursorFollower>
                         ),
                       ),
                     ),
-
-                  
-                  if (_showExclamation && !_showSpeechBubble)
-                    Positioned(
-                      left: _nekoPosX + 10,
-                      top:  _nekoPosY - 24,
-                      child: const IgnorePointer(
-                        child: Text(
-                          '!',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                            height: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  
+                  ),
+                if (_showExclamation && !_showSpeechBubble)
                   Positioned(
-                    left: _nekoPosX - 16,
-                    top:  _nekoPosY - 16,
-                    child: IgnorePointer(
-                      child: SizedBox(
-                        width: 32,
-                        height: 32,
-                        child: ClipRect(
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                left: _currentSprite[0] * 32.0,
-                                top:  _currentSprite[1] * 32.0,
-                                child: Image.asset(
-                                  'assets/images/oneko.gif',
-                                  width:  256,
-                                  height: 128,
-                                  fit: BoxFit.fill,
-                                  filterQuality: FilterQuality.none,
-                                ),
-                              ),
-                            ],
-                          ),
+                    left: _nekoPosX + 10,
+                    top: _nekoPosY - 24,
+                    child: const IgnorePointer(
+                      child: Text(
+                        '!',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                          height: 1,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                Positioned(
+                  left: _nekoPosX - 16,
+                  top: _nekoPosY - 16,
+                  child: IgnorePointer(
+                    child: SizedBox(
+                      width: 32,
+                      height: 32,
+                      child: ClipRect(
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              left: _currentSprite[0] * 32.0,
+                              top: _currentSprite[1] * 32.0,
+                              child: Image.asset(
+                                'assets/images/oneko.gif',
+                                width: 256,
+                                height: 128,
+                                fit: BoxFit.fill,
+                                filterQuality: FilterQuality.none,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-
 
 class SpeechBubblePainter extends CustomPainter {
   final Color backgroundColor;
@@ -570,7 +569,6 @@ class SpeechBubblePainter extends CustomPainter {
     path.lineTo(w, h - borderRadius);
     path.quadraticBezierTo(w, h, w - borderRadius, h);
 
-    
     path.lineTo(w / 2 + 10, h);
     path.quadraticBezierTo(w / 2 + 6, h + 4, w / 2 - 2, h + arrowHeight);
     path.quadraticBezierTo(w / 2 + 1, h + 3, w / 2 - 6, h);

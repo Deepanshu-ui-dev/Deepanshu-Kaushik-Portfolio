@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/theme/app_theme.dart';
 
@@ -214,7 +214,7 @@ class _InlineLinkState extends State<_InlineLink> {
         child: Text(
           widget.label,
           style: TextStyle(
-            fontFamily: 'JetBrainsMono',
+            fontFamily: 'Inter',
             fontSize: 11,
             color: _hovered ? AppColors.textPrimary : AppColors.textSecondary,
             decoration: TextDecoration.underline,

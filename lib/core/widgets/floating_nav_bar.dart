@@ -270,7 +270,7 @@ class _FloatingNavBarState extends State<FloatingNavBar>
                                                     AnimatedDefaultTextStyle(
                                                       duration: const Duration(milliseconds: 180),
                                                       style: TextStyle(
-                                                        fontFamily:    'JetBrainsMono',
+                                                        fontFamily:    'Inter',
                                                         fontSize:      9,
                                                         fontWeight:    isActive
                                                             ? FontWeight.w600

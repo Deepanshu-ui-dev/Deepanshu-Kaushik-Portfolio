@@ -174,7 +174,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
                     child: Text(
                       e.value,
                       style: TextStyle(
-                        fontFamily: 'JetBrainsMono',
+                        fontFamily: 'Inter',
                         fontSize: cellSize < 9 ? 7 : 8,
                         color: labelColor,
                         letterSpacing: 0.2,
@@ -208,7 +208,7 @@ class _ContributionGraphState extends State<ContributionGraph> {
                                 child: Text(
                                   labels[i],
                                   style: TextStyle(
-                                    fontFamily: 'JetBrainsMono',
+                                    fontFamily: 'Inter',
                                     fontSize: cellSize < 9 ? 6 : 7,
                                     color: labelColor,
                                   ),
@@ -328,7 +328,7 @@ class _HeatmapCellState extends State<_HeatmapCell> {
         preferBelow: false,
         waitDuration: Duration.zero,
         textStyle: TextStyle(
-          fontFamily: 'JetBrainsMono',
+          fontFamily: 'Inter',
           fontSize: 10,
           color: AppColors.textPrimary,
         ),

@@ -68,7 +68,7 @@ class _ExperienceItemWidgetState extends State<ExperienceItemWidget>
                     child: Text(
                       widget.item.company,
                       style: TextStyle(
-                        fontFamily: 'monospace',
+                        fontFamily: 'Inter',
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.onSurface,
@@ -78,7 +78,7 @@ class _ExperienceItemWidgetState extends State<ExperienceItemWidget>
                   Text(
                     widget.item.duration,
                     style: TextStyle(
-                      fontFamily: 'monospace',
+                      fontFamily: 'Inter',
                       fontSize: 12,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -133,7 +133,7 @@ class _ExperienceItemWidgetState extends State<ExperienceItemWidget>
                                 child: Text(
                                   b,
                                   style: TextStyle(
-                                    fontFamily: 'monospace',
+                                    fontFamily: 'Inter',
                                     fontSize: 13,
                                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                                     height: 1.6,
@@ -177,7 +177,7 @@ class TagChip extends StatelessWidget {
         label,
         style: TextStyle(
           fontSize: 10,
-          fontFamily: 'monospace',
+          fontFamily: 'Inter',
           color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
       ),

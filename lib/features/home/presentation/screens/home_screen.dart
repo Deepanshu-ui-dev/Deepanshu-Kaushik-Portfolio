@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../core/widgets/scroll_fade_in.dart';
-import '../../../../core/widgets/smooth_page_route.dart';
 
 import '../../../../config/portfolio_config.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/shared_widgets.dart';
+import '../../../../core/widgets/scroll_fade_in.dart';
 import '../../../github/data/github_repository.dart';
-import '../../../photography/presentation/screens/gallery_screen.dart';
 import '../widgets/contribution_graph.dart';
-import '../widgets/hero_section.dart';
 
-
-
-
-
+// ------------------------------------------------------------------
+//  HOME SCREEN  (single-page scrollable portfolio)
+// ------------------------------------------------------------------
 
 class HomeScreen extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
@@ -28,7 +23,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late AnimationController _fadeCtrl;
   late Animation<double> _fadeAnim;
 
@@ -36,7 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     _fadeCtrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
+        vsync: this, duration: const Duration(milliseconds: 350));
     _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeOut);
     _fadeCtrl.forward();
   }
@@ -50,11 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final hPad = AppSpacing.horizontalPadding(context);
-    
-    
-    
-    final bottomInset = MediaQuery.of(context).padding.bottom;
-    final bottomClear = bottomInset + 32.0;
+    final bottomClear = MediaQuery.of(context).padding.bottom + 40.0;
 
     return FadeTransition(
       opacity: _fadeAnim,
@@ -62,26 +53,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         bottom: false,
         child: CustomScrollView(
           controller: widget.scrollController,
-          physics: const BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
           slivers: [
+            const SliverToBoxAdapter(child: _BannerImage()),
             SliverPadding(
               padding: EdgeInsets.only(
                 left: hPad,
                 right: hPad,
-                
-                top: AppSpacing.base,
                 bottom: bottomClear,
               ),
               sliver: SliverList.list(
-                children: [
-                  
-                  const RepaintBoundary(child: _LeftPanel()),
-
-                  const SizedBox(height: 24),
-                  const SectionDivider(),
-                  const SizedBox(height: 24),
-
-                  ..._buildRightContent(),
+                children: const [
+                  _ProfileHeader(),
+                  SizedBox(height: 28),
+                  _HomeDivider(),
+                  SizedBox(height: 28),
+                  ScrollFadeIn(
+                    delay: Duration(milliseconds: 60),
+                    child: _AboutSection(),
+                  ),
+                  SizedBox(height: 28),
+                  _HomeDivider(),
+                  SizedBox(height: 28),
+                  ScrollFadeIn(
+                    delay: Duration(milliseconds: 80),
+                    child: _ContactSection(),
+                  ),
+                  SizedBox(height: 28),
+                  _HomeDivider(),
+                  SizedBox(height: 28),
+                  ScrollFadeIn(
+                    delay: Duration(milliseconds: 100),
+                    child: _HomeProjectsSection(),
+                  ),
+                  SizedBox(height: 28),
+                  _HomeDivider(),
+                  SizedBox(height: 28),
+                  ScrollFadeIn(
+                    delay: Duration(milliseconds: 120),
+                    child: _ExperienceSection(),
+                  ),
+                  SizedBox(height: 28),
+                  _HomeDivider(),
+                  SizedBox(height: 28),
+                  ScrollFadeIn(
+                    delay: Duration(milliseconds: 140),
+                    child: _TechStackSection(),
+                  ),
+                  SizedBox(height: 28),
+                  _HomeDivider(),
+                  SizedBox(height: 28),
+                  ScrollFadeIn(
+                    delay: Duration(milliseconds: 160),
+                    child: _GitHubActivitySection(),
+                  ),
+                  SizedBox(height: 40),
                 ],
               ),
             ),
@@ -90,469 +117,265 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       ),
     );
   }
-
-  List<Widget> _buildRightContent() {
-    final isMobile = AppSpacing.isMobile(context);
-    return [
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 0),
-        child: RepaintBoundary(child: _HomeHeatmapSection()),
-      ),
-
-      const SizedBox(height: 32),
-      const SectionDivider(),
-      const SizedBox(height: 32),
-
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 60),
-        child: RepaintBoundary(child: _ExperienceSection()),
-      ),
-      SizedBox(height: isMobile ? 28 : 40),
-
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 120),
-        child: RepaintBoundary(child: _EducationSection()),
-      ),
-
-      const SizedBox(height: 32),
-      const SectionDivider(),
-      const SizedBox(height: 32),
-
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 180),
-        child: RepaintBoundary(child: _ProjectsSection()),
-      ),
-      SizedBox(height: isMobile ? 28 : 40),
-
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 240),
-        child: RepaintBoundary(child: _AchievementsSection()),
-      ),
-
-      const SizedBox(height: 32),
-      const SectionDivider(),
-      const SizedBox(height: 32),
-
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 300),
-        child: RepaintBoundary(child: _LeadershipSection()),
-      ),
-      SizedBox(height: isMobile ? 28 : 40),
-
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 420),
-        child: RepaintBoundary(child: _PhotographySection()),
-      ),
-
-      const SizedBox(height: 32),
-      const SectionDivider(),
-      const SizedBox(height: 32),
-
-      
-      const ScrollFadeIn(
-        delay: Duration(milliseconds: 480),
-        child: RepaintBoundary(child: _HobbiesSection()),
-      ),
-      
-      
-      SizedBox(height: isMobile ? 40 : 56),
-    ];
-  }
 }
 
+// ------------------------------------------------------------------
+//  BANNER
+// ------------------------------------------------------------------
 
-class _LeftPanel extends StatelessWidget {
-  const _LeftPanel();
-
+class _BannerImage extends StatelessWidget {
+  const _BannerImage();
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        RepaintBoundary(child: HeroSection()),
-      ],
+    return SizedBox(
+      height: 140,
+      width: double.infinity,
+      child: Image.asset(
+        'assets/images/profile_banner.png',
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          return Container(
+            color: isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight,
+          );
+        },
+      ),
     );
   }
 }
 
+// ------------------------------------------------------------------
+//  PROFILE HEADER
+// ------------------------------------------------------------------
 
-
-
-
-class _HomeHeatmapSection extends ConsumerWidget {
-  const _HomeHeatmapSection();
+class _ProfileHeader extends StatelessWidget {
+  const _ProfileHeader();
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final stats =
-        ref.watch(gitHubStatsProvider(PortfolioConfig.githubUsername));
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const SectionHeader('ACTIVITY HEATMAP', index: '01'),
-        stats.when(
-          loading: () => const _HeatmapShell(child: _HeatmapSkeleton()),
-          error: (e, _) => _HeatmapShell(
-            child: SizedBox(
-              height: 80,
-              child: Center(
-                child: Text(
-                  '// error: failed to fetch activity',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontFamily: 'JetBrainsMono',
-                        color: AppColors.textSecondary,
-                        fontSize: 10,
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: border, width: 1),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Image.asset(
+              'assets/images/profile.jpeg',
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                color: isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight,
+                child: Icon(LucideIcons.user, size: 24, color: textSec),
+              ),
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  PortfolioConfig.name,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                        letterSpacing: -0.4,
                       ),
                 ),
-              ),
+                const SizedBox(height: 3),
+                Text(
+                  PortfolioConfig.role,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: textSec, fontSize: 12),
+                ),
+                const SizedBox(height: 4),
+                Row(children: [
+                  Icon(LucideIcons.mapPin, size: 11, color: textSec),
+                  const SizedBox(width: 4),
+                  Text(
+                    PortfolioConfig.location,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: textSec, fontSize: 10.5),
+                  ),
+                ]),
+              ],
             ),
           ),
-          data: (data) => _HeatmapShell(
-            child: _ResponsiveHeatmap(data: data),
+          _SmallIconBtn(
+            icon: LucideIcons.fileText,
+            tooltip: 'Resume',
+            onTap: () => launchUrl(Uri.parse(PortfolioConfig.resumeUrl)),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HeatmapShell extends StatelessWidget {
-  final Widget child;
-  const _HeatmapShell({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      child: child,
-    );
-  }
-}
-
-
-class _HeatmapSkeleton extends StatefulWidget {
-  const _HeatmapSkeleton();
-
-  @override
-  State<_HeatmapSkeleton> createState() => _HeatmapSkeletonState();
-}
-
-class _HeatmapSkeletonState extends State<_HeatmapSkeleton>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _shimmerCtrl;
-  late final Animation<double> _shimmer;
-
-  @override
-  void initState() {
-    super.initState();
-    _shimmerCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
-    _shimmer = CurvedAnimation(parent: _shimmerCtrl, curve: Curves.easeInOut);
-  }
-
-  @override
-  void dispose() {
-    _shimmerCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cell = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
-
-    
-    return AnimatedBuilder(
-      animation: _shimmer,
-      builder: (context, _) {
-        final pulse = _shimmer.value; 
-
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final columns = constraints.maxWidth < 420 ? 28 : 42;
-            final cellSize = constraints.maxWidth < 420 ? 6.0 : 8.0;
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: 2,
-                    runSpacing: 2,
-                    children: List.generate(columns, (i) {
-                      final base = (i % 5 == 0)
-                          ? 0.45
-                          : (i % 3 == 0)
-                              ? 0.35
-                              : 0.25;
-                      return _PulseSkeleton(
-                        width: cellSize,
-                        height: cellSize,
-                        color: cell.withValues(alpha: base + pulse * 0.28),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      _PulseSkeleton(
-                        width: constraints.maxWidth * 0.45,
-                        height: 8,
-                        color: cell.withValues(alpha: 0.3 + pulse * 0.25),
-                      ),
-                      const Spacer(),
-                      _PulseSkeleton(
-                        width: constraints.maxWidth * 0.25,
-                        height: 8,
-                        color: cell.withValues(alpha: 0.3 + pulse * 0.25),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-
-class _PulseSkeleton extends StatelessWidget {
-  final double width;
-  final double height;
-  final Color color;
-
-  const _PulseSkeleton({
-    required this.width,
-    required this.height,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(2),
+        ],
       ),
     );
   }
 }
 
-class _ResponsiveHeatmap extends StatelessWidget {
-  final dynamic data;
-  const _ResponsiveHeatmap({required this.data});
+// ------------------------------------------------------------------
+//  ABOUT
+// ------------------------------------------------------------------
+
+class _AboutSection extends StatelessWidget {
+  const _AboutSection();
+
+  static const _bullets = [
+    'UI/UX Designer & Flutter Developer crafting pixel-perfect, high-performance digital products with clean code and bold design.',
+    'Currently working as Founding Designer at BarterNow and freelancing for web & mobile clients worldwide.',
+    'Pursuing B.Tech in Data Science at ABES Engineering College (2023-2027) — blending engineering rigour with creative design thinking.',
+    'Open to collaborating on ambitious design systems, Flutter apps, and product interfaces.',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionTitle('About'),
+        const SizedBox(height: 14),
+        ..._bullets.map((b) => _BulletRow(text: b)),
+      ],
+    );
+  }
+}
+
+class _BulletRow extends StatelessWidget {
+  final String text;
+  const _BulletRow({required this.text});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ContributionGraph(contributions: data.contributions),
-            const SizedBox(height: 10),
-            _HeatmapMeta(
-              totalContributions: data.totalContributions,
-              isDark: isDark,
-              compact: constraints.maxWidth < 460,
-            ),
-          ],
-        ),
-      );
-    });
-  }
-}
-
-class _HeatmapMeta extends StatelessWidget {
-  final int totalContributions;
-  final bool isDark;
-  final bool compact;
-  const _HeatmapMeta({
-    required this.totalContributions,
-    required this.isDark,
-    required this.compact,
-  });
-
-  Color _c(Color dark, Color light) => isDark ? dark : light;
-
-  @override
-  Widget build(BuildContext context) {
-    final labelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
-          fontSize: 9,
-          color: AppColors.textSecondary,
-        );
-
-    final legend = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('Less', style: labelStyle),
-        const SizedBox(width: 4),
-        for (final pair in [
-          [AppColors.contrib0Dark, AppColors.contrib0Light],
-          [AppColors.contrib1Dark, AppColors.contrib1Light],
-          [AppColors.contrib2Dark, AppColors.contrib2Light],
-          [AppColors.contrib3Dark, AppColors.contrib3Light],
-          [AppColors.contrib4Dark, AppColors.contrib4Light],
-        ])
-          Container(
-            width: 8,
-            height: 8,
-            margin: const EdgeInsets.only(left: 2),
-            color: _c(pair[0], pair[1]),
-          ),
-        const SizedBox(width: 4),
-        Text('More', style: labelStyle),
-      ],
-    );
-
-    final countLabel = Text(
-      '$totalContributions activities in the last year',
-      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AppColors.textSecondary,
-          ),
-    );
-
-    if (compact) {
-      return Column(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [countLabel, const SizedBox(height: 6), legend],
-      );
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [Flexible(child: countLabel), legend],
-    );
-  }
-}
-
-
-
-
-
-class _ExperienceSection extends StatelessWidget {
-  const _ExperienceSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
-    final iconColor = isDark ? AppColors.textSecDark : AppColors.textSecLight;
-
-    Widget iconBox(IconData icon) => Container(
-          width: 36,
-          height: 36,
-          decoration:
-              BoxDecoration(border: Border.all(color: border, width: 1)),
-          child: Icon(icon, size: 16, color: iconColor),
-        );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeader('Professional Journey', index: '02'),
-        CollapsibleCard(
-          leading: iconBox(LucideIcons.layers),
-          title: 'BarterNow',
-          subtitle: 'UI/UX Designer — Founding Designer',
-          rightLabel: 'JAN 2026 — Present',
-          initiallyExpanded: true,
-          bullets: const [
-            'Designed the core product interface and visual identity as the founding designer for an early-stage startup.',
-            'Built a scalable design system in Figma, ensuring UI consistency across all product screens and accelerating development workflow.',
-            'Collaborated closely with engineers to translate high-fidelity prototypes into pixel-perfect production interfaces.',
-          ],
-          tags: const ['Figma', 'Framer', 'Design Systems', 'Prototyping'],
-        ),
-        const SizedBox(height: 12),
-        CollapsibleCard(
-          leading: iconBox(LucideIcons.box),
-          title: 'Freelance UI/UX Designer',
-          subtitle: 'Self-Employed',
-          rightLabel: 'May 2025 — Present',
-          initiallyExpanded: true,
-          bullets: const [
-            'Delivered end-to-end UI/UX solutions for web and mobile apps — user flows, wireframes, and high-fidelity prototypes.',
-            'Designed responsive dashboards and product interfaces with focus on usability, accessibility, and clean visual hierarchy.',
-            'Created reusable design systems and component libraries using Figma and Framer for multiple client projects.',
-            'Collaborated with developers and stakeholders to translate design concepts into functional interfaces across platforms.',
-          ],
-          tags: const [
-            'Figma', 'Framer', 'Adobe XD', 'Flutter', 'Dart',
-            'Tailwind CSS', 'JavaScript',
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-
-
-
-
-class _EducationSection extends StatelessWidget {
-  const _EducationSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeader('Academic Foundation', index: '03'),
-        CollapsibleCard(
-          leading: Container(
-            width: 36,
-            height: 36,
-            decoration:
-                BoxDecoration(border: Border.all(color: border, width: 1)),
-            child: Icon(LucideIcons.graduationCap,
-                size: 16,
-                color: isDark
-                    ? AppColors.textSecDark
-                    : AppColors.textSecLight),
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 6, right: 10),
+            child: Container(
+              width: 5, height: 5,
+              decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
+            ),
           ),
-          title: PortfolioConfig.college,
-          subtitle: PortfolioConfig.degree,
-          rightLabel: PortfolioConfig.eduPeriod,
-          initiallyExpanded: false,
-          bullets: const [
-            'Relevant coursework: Data Structures, Algorithm Analysis, Database Management, Artificial Intelligence, Internet Technology, Software Engineering.',
-          ],
-          tags: const ['C++', 'C', 'Python', 'DSA', 'DBMS', 'AI'],
+          Expanded(
+            child: Text(text,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: textSec, height: 1.65, fontSize: 13)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ------------------------------------------------------------------
+//  CONTACT
+// ------------------------------------------------------------------
+
+class _ContactSection extends StatelessWidget {
+  const _ContactSection();
+
+  @override
+  Widget build(BuildContext context) {
+    const links = [
+      _SocialLink('GitHub',   LucideIcons.gitFork,       PortfolioConfig.githubUrl),
+      _SocialLink('LinkedIn', LucideIcons.briefcase,     PortfolioConfig.linkedinUrl),
+      _SocialLink('Twitter',  LucideIcons.messageSquare, PortfolioConfig.twitterUrl),
+      _SocialLink('Mail',     LucideIcons.mail,          'mailto:imdeepanshu4work@gmail.com'),
+      _SocialLink('Framer',   LucideIcons.externalLink,  PortfolioConfig.websiteUrl),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionTitle('Contact'),
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 8, runSpacing: 8,
+          children: links.map((l) => _SocialChip(link: l)).toList(),
         ),
       ],
     );
   }
 }
 
+class _SocialLink {
+  final String label;
+  final IconData icon;
+  final String url;
+  const _SocialLink(this.label, this.icon, this.url);
+}
 
+class _SocialChip extends StatefulWidget {
+  final _SocialLink link;
+  const _SocialChip({required this.link});
+  @override
+  State<_SocialChip> createState() => _SocialChipState();
+}
 
+class _SocialChipState extends State<_SocialChip> {
+  bool _hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final border2 = isDark ? AppColors.border2Dark : AppColors.border2Light;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final textPri = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final hover = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
 
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: () async {
+          final uri = Uri.parse(widget.link.url);
+          if (await canLaunchUrl(uri)) launchUrl(uri);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 140),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          decoration: BoxDecoration(
+            color: _hovered ? hover : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: _hovered ? border2 : border, width: 0.7),
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Icon(widget.link.icon, size: 13, color: _hovered ? textPri : textSec),
+            const SizedBox(width: 7),
+            Text(widget.link.label,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: _hovered ? textPri : textSec,
+                      fontSize: 12, fontWeight: FontWeight.w500)),
+            const SizedBox(width: 4),
+            Icon(LucideIcons.arrowUpRight, size: 11, color: _hovered ? textPri : textSec),
+          ]),
+        ),
+      ),
+    );
+  }
+}
 
-class _ProjectsSection extends StatelessWidget {
-  const _ProjectsSection();
+// ------------------------------------------------------------------
+//  PROJECTS (home preview — 2 featured cards)
+// ------------------------------------------------------------------
+
+class _HomeProjectsSection extends StatelessWidget {
+  const _HomeProjectsSection();
 
   @override
   Widget build(BuildContext context) {
@@ -560,16 +383,28 @@ class _ProjectsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader('Featured Work', index: '04'),
+        const Row(children: [
+          Expanded(child: _SectionTitle('Projects')),
+          _ViewAllBtn(label: 'View All Projects'),
+        ]),
+        const SizedBox(height: 14),
         LayoutBuilder(builder: (context, constraints) {
           if (constraints.maxWidth > AppSpacing.mobileMax) {
             return IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(child: _ProjectCard(data: projects[0])),
+                  Expanded(
+                      child: _HomeProjectCard(project: projects[0])
+                          .animate()
+                          .fade(duration: 400.ms, delay: 60.ms)
+                          .slideY(begin: 0.04, end: 0, duration: 400.ms, delay: 60.ms)),
                   const SizedBox(width: 12),
-                  Expanded(child: _ProjectCard(data: projects[1])),
+                  Expanded(
+                      child: _HomeProjectCard(project: projects[1])
+                          .animate()
+                          .fade(duration: 400.ms, delay: 120.ms)
+                          .slideY(begin: 0.04, end: 0, duration: 400.ms, delay: 120.ms)),
                 ],
               ),
             );
@@ -578,8 +413,7 @@ class _ProjectsSection extends StatelessWidget {
             children: projects
                 .map((p) => Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-                      child: _ProjectCard(data: p),
-                    ))
+                      child: _HomeProjectCard(project: p)))
                 .toList(),
           );
         }),
@@ -588,135 +422,114 @@ class _ProjectsSection extends StatelessWidget {
   }
 }
 
-class _ProjectCard extends StatefulWidget {
-  final ProjectItem data;
-  const _ProjectCard({required this.data});
-
+class _HomeProjectCard extends StatefulWidget {
+  final ProjectItem project;
+  const _HomeProjectCard({required this.project});
   @override
-  State<_ProjectCard> createState() => _ProjectCardState();
+  State<_HomeProjectCard> createState() => _HomeProjectCardState();
 }
 
-class _ProjectCardState extends State<_ProjectCard> {
+class _HomeProjectCardState extends State<_HomeProjectCard> {
   bool _hovered = false;
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textPri = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final surface = isDark ? AppColors.surfaceElevDark : AppColors.surfaceLight;
     final border = isDark ? AppColors.borderDark : AppColors.borderLight;
     final border2 = isDark ? AppColors.border2Dark : AppColors.border2Light;
-    final surface = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
-    final surfaceEl =
-        isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
-    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
-    final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutCubic,
-        transform: Matrix4.translationValues(0.0, _hovered ? -4.0 : 0.0, 0.0)
-          * Matrix4.diagonal3Values(_hovered ? 1.015 : 1.0, _hovered ? 1.015 : 1.0, 1.0),
+        curve: Curves.easeOut,
         decoration: BoxDecoration(
-          color: _hovered ? surfaceEl : surface,
-          border: Border.all(color: _hovered ? border2 : border, width: 1),
+          color: surface,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: _hovered ? border2 : border, width: _hovered ? 1.0 : 0.5),
           boxShadow: _hovered
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.06),
-                    blurRadius: 16,
-                    offset: const Offset(0, 8),
-                  )
-                ]
-              : null,
+              ? [BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.10),
+                  blurRadius: 20, offset: const Offset(0, 6))]
+              : [],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _BrowserMock(isDark: isDark),
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+              child: SizedBox(
+                height: 155, width: double.infinity,
+                child: widget.project.imageAsset != null
+                    ? Stack(fit: StackFit.expand, children: [
+                        Image.asset(widget.project.imageAsset!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => Container(
+                                color: isDark ? AppColors.surfaceDark : AppColors.surfaceElevLight)),
+                      ])
+                    : Container(color: isDark ? AppColors.surfaceDark : AppColors.surfaceElevLight),
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(widget.data.name,
-                            style:
-                                Theme.of(context).textTheme.headlineLarge),
-                      ),
-                      if (widget.data.badge != null) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 7, vertical: 3),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: accent, width: 1),
-                          ),
-                          child: Text(
-                            widget.data.badge!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                    color: accent, letterSpacing: 0.4),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    widget.data.description,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(height: 1.7),
-                  ),
-                  if (widget.data.tags.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 5,
-                      runSpacing: 5,
-                      children: widget.data.tags
-                          .map((t) {
-                            final isUiUx = t == 'UI/UX';
-                            return MouseRegion(
-                              cursor: isUiUx ? SystemMouseCursors.click : SystemMouseCursors.basic,
-                              child: GestureDetector(
-                                onTap: isUiUx ? () => launchUrl(Uri.parse('https://deepanshui.framer.website/')) : null,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 7, vertical: 3),
-                                  color: isDark
-                                      ? AppColors.surfaceElevDark
-                                      : AppColors.surfaceElevLight,
-                                  child: Text(
-                                    t,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(
-                                          color: isUiUx ? accent : textSec,
-                                          decoration: isUiUx ? TextDecoration.underline : null,
-                                          decorationColor: accent,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          })
-                          .toList(),
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Expanded(
+                      child: Text(widget.project.name,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w700, color: textPri,
+                                fontSize: 15, letterSpacing: -0.3),
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
                     ),
-                  ],
+                    if (widget.project.year != null) ...[
+                      const SizedBox(width: 8),
+                      Text(widget.project.year!,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: textSec, fontSize: 11.5)),
+                    ],
+                  ]),
+                  const SizedBox(height: 7),
+                  Text(widget.project.description,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: textSec, height: 1.6, fontSize: 12),
+                      maxLines: 4, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 10),
+                  if (widget.project.tags.isNotEmpty)
+                    Wrap(
+                      spacing: 5, runSpacing: 5,
+                      children: widget.project.tags.map((t) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: isDark ? AppColors.border2Dark : AppColors.borderLight,
+                                width: 0.6),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(t,
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: textSec, fontSize: 10)),
+                        );
+                      }).toList(),
+                    ),
                   const SizedBox(height: 12),
-                  _ProjectLinkRow(
-                    githubUrl: widget.data.githubUrl,
-                    liveUrl: widget.data.liveUrl,
-                    installUrl: widget.data.installUrl,
-                    figmaUrl: widget.data.figmaUrl,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (widget.project.liveUrl != null)
+                        _CardIconBtn(icon: LucideIcons.globe, url: widget.project.liveUrl!, isDark: isDark),
+                      if (widget.project.figmaUrl != null)
+                        _CardIconBtn(icon: LucideIcons.palette, url: widget.project.figmaUrl!, isDark: isDark),
+                      if (widget.project.installUrl != null)
+                        _CardIconBtn(icon: LucideIcons.download, url: widget.project.installUrl!, isDark: isDark),
+                      if (widget.project.githubUrl != null)
+                        _CardIconBtn(icon: LucideIcons.gitFork, url: widget.project.githubUrl!, isDark: isDark),
+                    ],
                   ),
                 ],
               ),
@@ -728,838 +541,606 @@ class _ProjectCardState extends State<_ProjectCard> {
   }
 }
 
-class _BrowserMock extends StatelessWidget {
-  final bool isDark;
-  const _BrowserMock({required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
-    final surface = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
-    final blockA = isDark
-        ? AppColors.surfaceElevDark.withValues(alpha: 0.6)
-        : AppColors.surfaceElevLight;
-    final blockB = isDark
-        ? AppColors.surfaceElevDark.withValues(alpha: 0.35)
-        : AppColors.borderLight;
-
-    return Container(
-      height: 110,
-      decoration: BoxDecoration(
-        color: surface,
-        border: Border(bottom: BorderSide(color: border, width: 1)),
-      ),
-      child: Column(children: [
-        Container(
-          height: 24,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: border, width: 1)),
-          ),
-          child: Row(children: [
-              
-              Container(width: 7, height: 7,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFF5F57))),
-              const SizedBox(width: 5),
-              Container(width: 7, height: 7,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFFFFBD2E))),
-              const SizedBox(width: 5),
-              Container(width: 7, height: 7,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF28C840))),
-              const SizedBox(width: 10),
-              Expanded(child: Container(height: 10, color: blockA)),
-            ]),
-          ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(height: 7, width: 100, color: blockA),
-                const SizedBox(height: 8),
-                Row(children: [
-                  Expanded(child: Container(height: 42, color: blockB)),
-                  const SizedBox(width: 8),
-                  Expanded(child: Container(height: 42, color: blockB)),
-                ]),
-              ],
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-}
-
-class _ProjectLinkRow extends StatelessWidget {
-  final String? githubUrl;
-  final String? liveUrl;
-  final String? figmaUrl;
-  final String? installUrl;
-  const _ProjectLinkRow({this.githubUrl, this.liveUrl, this.figmaUrl, this.installUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    if (githubUrl == null && liveUrl == null && figmaUrl == null && installUrl == null) return const SizedBox.shrink();
-    return Wrap(spacing: 16, runSpacing: 8, children: [
-      if (githubUrl != null)
-        _LinkBtn(icon: LucideIcons.code2, label: 'GitHub', url: githubUrl!),
-      if (installUrl != null)
-        _LinkBtn(icon: LucideIcons.download, label: 'Install', url: installUrl!),
-      if (liveUrl != null)
-        _LinkBtn(icon: LucideIcons.arrowUpRight, label: 'Live', url: liveUrl!),
-      if (figmaUrl != null)
-        _LinkBtn(icon: LucideIcons.palette, label: 'Figma', url: figmaUrl!),
-    ]);
-  }
-}
-
-class _LinkBtn extends StatefulWidget {
+class _CardIconBtn extends StatefulWidget {
   final IconData icon;
-  final String label;
   final String url;
-  const _LinkBtn({required this.icon, required this.label, required this.url});
-
+  final bool isDark;
+  const _CardIconBtn({required this.icon, required this.url, required this.isDark});
   @override
-  State<_LinkBtn> createState() => _LinkBtnState();
+  State<_CardIconBtn> createState() => _CardIconBtnState();
 }
 
-class _LinkBtnState extends State<_LinkBtn> {
+class _CardIconBtnState extends State<_CardIconBtn> {
   bool _hovered = false;
-
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
-    final textPri =
-        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
-
+    final border = widget.isDark ? AppColors.borderDark : AppColors.borderLight;
+    final iconColor = widget.isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final hoverBg = widget.isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
-      cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTapDown: (_) => setState(() => _hovered = true),
-        onTapUp: (_) => setState(() => _hovered = false),
-        onTapCancel: () => setState(() => _hovered = false),
         onTap: () async {
           final uri = Uri.parse(widget.url);
-          if (await canLaunchUrl(uri)) await launchUrl(uri);
+          if (await canLaunchUrl(uri)) launchUrl(uri);
         },
-        child: AnimatedScale(
-          scale: _hovered ? 0.96 : 1.0,
-          duration: const Duration(milliseconds: 120),
-          curve: Curves.easeOutCubic,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              border: Border.all(color: accent),
-              color: _hovered ? accent.withValues(alpha: 0.12) : Colors.transparent,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(widget.icon, size: 14, color: _hovered ? accent : textPri),
-                const SizedBox(width: 8),
-                Text(
-                  widget.label.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: _hovered ? accent : textPri,
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-              ],
-            ),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          width: 28, height: 28,
+          margin: const EdgeInsets.only(left: 6),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _hovered ? hoverBg : Colors.transparent,
+            border: Border.all(color: border, width: 0.6),
           ),
+          child: Icon(widget.icon, size: 13,
+              color: _hovered
+                  ? (widget.isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight)
+                  : iconColor),
         ),
       ),
     );
   }
 }
 
+// ------------------------------------------------------------------
+//  EXPERIENCE
+// ------------------------------------------------------------------
 
-
-
-
-class _AchievementsSection extends StatelessWidget {
-  const _AchievementsSection();
-
-  static const _items = [
-    {
-      'number': '01',
-      'title': '450+ problems solved on LeetCode',
-      'subtitle': 'Consistent practice in Data Structures & Algorithms.'
-    },
-    {
-      'number': '02',
-      'title': 'Core team member of Elixir Tech Community',
-      'subtitle': 'Contributing to events and technical initiatives for 1,500+ members.'
-    },
-  ];
+class _ExperienceSection extends StatelessWidget {
+  const _ExperienceSection();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader('Milestones & Impact', index: '05'),
-        ..._items.map(
-              (e) => _AchievementRow(
-                number: e['number']!,
-                title: e['title']!,
-                subtitle: e['subtitle']!,
-              ),
-            ),
+        const _SectionTitle('Experience'),
+        const SizedBox(height: 16),
+        const _ExpCard(
+          role: 'Founding Designer',
+          company: 'BarterNow',
+          period: 'Jan 2026 — Present',
+          summary: 'Designing the core product interface and visual identity as the founding designer for an early-stage startup focused on sponsorship matching.',
+          bullets: [
+            'Built a scalable design system in Figma ensuring UI consistency across all product screens.',
+            'Collaborated with engineers to translate high-fidelity prototypes into pixel-perfect production interfaces.',
+            'Established brand guidelines, typography, colour tokens, and icon system from scratch.',
+          ],
+          tags: ['Figma', 'Framer', 'Design Systems', 'Prototyping'],
+        ),
+        const SizedBox(height: 14),
+        const _ExpCard(
+          role: 'Freelance UI/UX Designer',
+          company: 'Self-Employed',
+          period: 'May 2025 — Present',
+          summary: 'Delivering end-to-end design solutions for web and mobile apps across multiple client projects worldwide.',
+          bullets: [
+            'Designed responsive dashboards and product interfaces focused on usability and clean visual hierarchy.',
+            'Created reusable design systems and component libraries using Figma and Framer.',
+            'Collaborated with developers to translate design concepts into functional cross-platform interfaces.',
+          ],
+          tags: ['Figma', 'Framer', 'Flutter', 'Dart', 'Tailwind CSS'],
+        ),
+        const SizedBox(height: 24),
+        _StatsRow(),
       ],
     );
   }
 }
 
-class _AchievementRow extends StatefulWidget {
-  final String number;
-  final String title;
-  final String subtitle;
-  const _AchievementRow(
-      {required this.number, required this.title, required this.subtitle});
-
-  @override
-  State<_AchievementRow> createState() => _AchievementRowState();
-}
-
-class _AchievementRowState extends State<_AchievementRow> {
-  bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
-    final textPri =
-        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
-    final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
-    final hoverBg = isDark
-        ? AppColors.surfaceElevDark.withValues(alpha: 0.4)
-        : AppColors.surfaceElevLight.withValues(alpha: 0.5);
-
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        margin: const EdgeInsets.only(bottom: 6),
-        decoration: BoxDecoration(
-          color: _hovered ? hoverBg : Colors.transparent,
-          borderRadius: BorderRadius.circular(4),
-          border: Border(
-            left: BorderSide(
-              color: _hovered ? accent : Colors.transparent,
-              width: 2.5,
-            ),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 180),
-                style: (Theme.of(context).textTheme.bodyMedium ?? const TextStyle())
-                    .copyWith(
-                      color: _hovered ? accent : textSec, 
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'JetBrainsMono',
-                    ),
-                child: Text(widget.number),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AnimatedDefaultTextStyle(
-                      duration: const Duration(milliseconds: 180),
-                      style: (Theme.of(context).textTheme.bodyLarge ?? const TextStyle()).copyWith(
-                        color: _hovered ? accent : textPri,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Outfit',
-                      ),
-                      child: Text(widget.title),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(widget.subtitle,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: textSec, height: 1.5)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-
-
-
-class _LeadershipSection extends StatelessWidget {
-  const _LeadershipSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SectionHeader('Community Leadership', index: '06'),
-        CollapsibleCard(
-          leading: Container(
-            width: 36,
-            height: 36,
-            decoration:
-                BoxDecoration(border: Border.all(color: border, width: 1)),
-            child: Icon(Icons.groups_outlined,
-                size: 16,
-                color: isDark
-                    ? AppColors.textSecDark
-                    : AppColors.textSecLight),
-          ),
-          title: 'Google Developer Group on Campus',
-          subtitle: 'Co-Organiser — ABES Engineering College',
-          rightLabel: 'Aug 2025 — Present',
-          initiallyExpanded: false,
-          bullets: const [
-            'Led a 40-member organizing team to plan and execute technical workshops, events, and hackathons.',
-            'Organised a 36-hour offline hackathon with participation from 750+ students.',
-            'Helped grow the campus developer community to over 1,100 active members.',
-          ],
-          tags: const [
-            'Event Management',
-            'Community Building',
-            'Technical Leadership',
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-
-
-
-
-class _PhotoCategory {
-  final String label;
-  final String subtitle;
-  final String imagePath;
-
-  const _PhotoCategory({
-    required this.label,
-    required this.subtitle,
-    required this.imagePath,
+class _ExpCard extends StatelessWidget {
+  final String role;
+  final String company;
+  final String period;
+  final String summary;
+  final List<String> bullets;
+  final List<String> tags;
+  const _ExpCard({
+    required this.role, required this.company, required this.period,
+    required this.summary, required this.bullets, required this.tags,
   });
-}
-
-class _PhotographySection extends StatelessWidget {
-  const _PhotographySection();
-
- static const _categories = [
-  _PhotoCategory(
-    label: 'Moments',
-    subtitle: 'Campus Life',
-    imagePath: 'assets/images/aabes.jpeg',
-  ),
-  _PhotoCategory(
-    label: 'Casual',
-    subtitle: 'Cafe Vibes',
-    imagePath: 'assets/images/cafe.jpeg',
-  ),
-  _PhotoCategory(
-    label: 'Nature',
-    subtitle: 'Mountain Escapes',
-    imagePath: 'assets/images/mount.jpeg',
-  ),
-  _PhotoCategory(
-    label: 'Details',
-    subtitle: 'Floral Close-ups',
-    imagePath: 'assets/images/flower.jpeg',
-  ),
-  _PhotoCategory(
-    label: 'Cutie',
-    subtitle: 'Adorable Moments',
-    imagePath: 'assets/images/cat.jpeg',
-  ),
-  _PhotoCategory(
-    label: 'Lunch',
-    subtitle: 'Food Stories',
-    imagePath: 'assets/images/sq.jpeg',
-  ),
-  _PhotoCategory(
-    label: 'Heat',
-    subtitle: 'Fire & Energy',
-    imagePath: 'assets/images/fire.jpg',
-  ),
-];
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textPri = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
     final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
-    final textTer = isDark ? AppColors.textTerDark : AppColors.textTerLight;
     final border = isDark ? AppColors.borderDark : AppColors.borderLight;
     final border2 = isDark ? AppColors.border2Dark : AppColors.border2Light;
+    final surface = isDark ? AppColors.surfaceElevDark : AppColors.surfaceLight;
+    final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: surface,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: border, width: 0.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Expanded(
+              child: RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: role,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700, color: textPri, fontSize: 14),
+                  ),
+                  TextSpan(
+                    text: '  ·  $company',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: textSec, fontSize: 12.5),
+                  ),
+                ]),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(period,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: textSec, fontSize: 10.5)),
+          ]),
+          const SizedBox(height: 8),
+          Text(summary,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: textSec, height: 1.6, fontSize: 12.5)),
+          const SizedBox(height: 10),
+          ...bullets.map((b) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6, right: 8),
+                    child: Container(
+                        width: 4, height: 4,
+                        decoration: BoxDecoration(color: accent, shape: BoxShape.circle)),
+                  ),
+                  Expanded(
+                      child: Text(b,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: textSec, height: 1.6, fontSize: 12))),
+                ]),
+              )),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 5, runSpacing: 5,
+            children: tags.map((t) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+              decoration: BoxDecoration(
+                border: Border.all(color: isDark ? border2 : border, width: 0.6),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(t,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: textSec, fontSize: 10)),
+            )).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatsRow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textPri = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+
+    const stats = [
+      ('8+', 'Projects\nShipped'),
+      ('3+', 'Client\nProjects'),
+      ('Figma\n& Flutter', 'Core\nSkills'),
+      ('450+', 'LeetCode\nSolved'),
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: border, width: 0.5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: stats.asMap().entries.map((entry) {
+          final i = entry.key;
+          final stat = entry.value;
+          return Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+              decoration: BoxDecoration(
+                border: Border(
+                  right: i < stats.length - 1
+                      ? BorderSide(color: border, width: 0.5)
+                      : BorderSide.none,
+                ),
+              ),
+              child: Column(children: [
+                Text(stat.$1,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800, color: textPri,
+                          fontSize: 15, fontFamily: 'Inter')),
+                const SizedBox(height: 3),
+                Text(stat.$2,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: textSec, fontSize: 9, height: 1.4, letterSpacing: 0.3)),
+              ]),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+// ------------------------------------------------------------------
+//  TECH STACK
+// ------------------------------------------------------------------
+
+class _TechStackSection extends StatefulWidget {
+  const _TechStackSection();
+  @override
+  State<_TechStackSection> createState() => _TechStackSectionState();
+}
+
+class _TechStackSectionState extends State<_TechStackSection> {
+  String _active = 'All';
+
+  static const _categories = ['All', 'Design', 'Languages', 'Frameworks', 'Tools'];
+
+  static const _techItems = [
+    _TechItem('Figma',        LucideIcons.penTool,    'Design'),
+    _TechItem('Framer',       LucideIcons.layers,     'Design'),
+    _TechItem('Adobe XD',     LucideIcons.pencil,     'Design'),
+    _TechItem('Photoshop',    LucideIcons.image,      'Design'),
+    _TechItem('Dart',         LucideIcons.code2,      'Languages'),
+    _TechItem('C++',          LucideIcons.terminal,   'Languages'),
+    _TechItem('HTML5',        LucideIcons.globe,      'Languages'),
+    _TechItem('CSS3',         LucideIcons.palette,    'Languages'),
+    _TechItem('JavaScript',   LucideIcons.zap,        'Languages'),
+    _TechItem('Python',       LucideIcons.terminal,   'Languages'),
+    _TechItem('Flutter',      LucideIcons.smartphone, 'Frameworks'),
+    _TechItem('Riverpod',     LucideIcons.layers,     'Frameworks'),
+    _TechItem('Tailwind CSS', LucideIcons.wind,       'Frameworks'),
+    _TechItem('React',        LucideIcons.atom,       'Frameworks'),
+    _TechItem('Git',          LucideIcons.gitBranch,  'Tools'),
+    _TechItem('GitHub',       LucideIcons.gitFork,    'Tools'),
+    _TechItem('Supabase',     LucideIcons.database,   'Tools'),
+    _TechItem('Firebase',     LucideIcons.flame,      'Tools'),
+    _TechItem('VS Code',      LucideIcons.code,       'Tools'),
+    _TechItem('Hive',         LucideIcons.hexagon,    'Tools'),
+  ];
+
+  List<_TechItem> get _filtered => _active == 'All'
+      ? _techItems
+      : _techItems.where((t) => t.category == _active).toList();
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
     final accent = isDark ? AppColors.accentDark : AppColors.accentLight;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader('Visual Journey', index: '07'),
-
-        
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            'When I\'m not pushing pixels, I\'m chasing light through a viewfinder.\n'
-            'Photography taught me to see before I design — composition, light, and the space between things.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: textSec,
-                  height: 1.75,
-                ),
-          ),
-        ),
-
-        
+        Row(children: [
+          const Expanded(child: _SectionTitle('Tech Stack')),
+          Text('{ select tab to filter }',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: textSec, fontSize: 9.5, fontFamily: 'Inter')),
+        ]),
+        const SizedBox(height: 12),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
           child: Row(
-            children: _categories.asMap().entries.map((entry) {
-              final idx = entry.key;
-              final cat = entry.value;
+            children: _categories.map((cat) {
+              final isActive = cat == _active;
               return Padding(
-                padding: EdgeInsets.only(
-                  right: idx == _categories.length - 1 ? 0 : 12.0,
-                ),
-                child: _PhotoCard(
-                  category: cat,
-                  size: 160,
-                  isDark: isDark,
-                  accent: accent,
-                  border: border,
-                  border2: border2,
+                padding: const EdgeInsets.only(right: 6),
+                child: GestureDetector(
+                  onTap: () => setState(() => _active = cat),
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isActive ? accent : Colors.transparent,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: isActive ? accent : (isDark ? AppColors.borderDark : AppColors.borderLight),
+                          width: 0.7,
+                        ),
+                      ),
+                      child: Text(cat,
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: isActive ? (isDark ? AppColors.bgDark : Colors.white) : textSec,
+                                fontSize: 11,
+                                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500)),
+                    ),
+                  ),
                 ),
               );
             }).toList(),
           ),
         ),
-
-        const SizedBox(height: 12),
-
-        
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '// capturing bits of life',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall
-                  ?.copyWith(color: textTer, fontSize: 10),
-            ),
-            _ViewAllButton(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  SmoothPageRoute(page: const GalleryScreen()),
-                );
-              },
-              isDark: isDark,
-              border: border,
-              border2: border2,
-              textSec: textSec,
-            ),
-          ],
+        const SizedBox(height: 14),
+        Wrap(
+          spacing: 7, runSpacing: 7,
+          children: _filtered.map((t) => _TechChip(item: t)).toList(),
         ),
       ],
     );
   }
 }
 
-class _PhotoCard extends StatefulWidget {
-  final _PhotoCategory category;
-  final double size;
-  final bool isDark;
-  final Color accent;
-  final Color border;
-  final Color border2;
-
-  const _PhotoCard({
-    required this.category,
-    required this.size,
-    required this.isDark,
-    required this.accent,
-    required this.border,
-    required this.border2,
-  });
-
-  @override
-  State<_PhotoCard> createState() => _PhotoCardState();
+class _TechItem {
+  final String label;
+  final IconData icon;
+  final String category;
+  const _TechItem(this.label, this.icon, this.category);
 }
 
-class _PhotoCardState extends State<_PhotoCard> {
+class _TechChip extends StatefulWidget {
+  final _TechItem item;
+  const _TechChip({required this.item});
+  @override
+  State<_TechChip> createState() => _TechChipState();
+}
+
+class _TechChipState extends State<_TechChip> {
   bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = widget.isDark;
-
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            SmoothPageRoute(page: const GalleryScreen()),
-          );
-        },
-        child: MonofolioCornersBox(
-          padding: const EdgeInsets.all(4),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 160),
-            width: widget.size,
-            height: widget.size,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: _hovered ? widget.border2 : widget.border,
-                width: 1,
-              ),
-            ),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                
-                ClipRect(
-                  child: AnimatedScale(
-                    scale: _hovered ? 1.08 : 1.0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutCubic,
-                    child: _SkeletonAssetImage(
-                      assetPath: widget.category.imagePath,
-                      fit: BoxFit.cover,
-                      cacheWidth: 320,
-                      skeletonColor: isDark
-                          ? AppColors.surfaceElevDark
-                          : AppColors.surfaceElevLight,
-                      errorWidget: const SizedBox(),
-                    ),
-                  ),
-                ),
-                
-                Positioned.fill(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withValues(alpha: _hovered ? 0.85 : 0.5),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                
-                Positioned(
-                  left: 12,
-                  right: 12,
-                  bottom: 12,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            width: _hovered ? 16 : 0,
-                            height: 16,
-                            margin: EdgeInsets.only(right: _hovered ? 6.0 : 0.0),
-                            child: AnimatedOpacity(
-                              duration: const Duration(milliseconds: 150),
-                              opacity: _hovered ? 1.0 : 0.0,
-                              child: Icon(
-                                Icons.camera_alt_outlined,
-                                size: 11,
-                                color: widget.accent,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              widget.category.label.toUpperCase(),
-                              style: TextStyle(
-                                fontFamily: 'JetBrainsMono',
-                                fontSize: 10,
-                                letterSpacing: 1.5,
-                                color: _hovered ? widget.accent : Colors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      AnimatedSlide(
-                        offset: _hovered ? Offset.zero : const Offset(0, 0.08),
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeOutCubic,
-                        child: Text(
-                          widget.category.subtitle,
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 10.5,
-                            color: _hovered ? Colors.white : Colors.white.withValues(alpha: 0.75),
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SkeletonAssetImage extends StatefulWidget {
-  final String assetPath;
-  final BoxFit fit;
-  final int? cacheWidth;
-  final Color skeletonColor;
-  final Widget errorWidget;
-
-  const _SkeletonAssetImage({
-    required this.assetPath,
-    required this.fit,
-    required this.skeletonColor,
-    required this.errorWidget,
-    this.cacheWidth,
-  });
-
-  @override
-  State<_SkeletonAssetImage> createState() => _SkeletonAssetImageState();
-}
-
-class _SkeletonAssetImageState extends State<_SkeletonAssetImage> {
-  bool _showContent = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) setState(() => _showContent = true);
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      widget.assetPath,
-      fit: widget.fit,
-      cacheWidth: widget.cacheWidth,
-      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-        if (_showContent && (wasSynchronouslyLoaded || frame != null)) {
-          return child.animate().fadeIn(duration: 400.ms, curve: Curves.easeOut);
-        }
-        return Container(color: widget.skeletonColor)
-            .animate(onPlay: (controller) => controller.repeat())
-            .shimmer(
-              duration: 1200.ms,
-              color: Theme.of(context).brightness == Brightness.dark 
-                  ? Colors.white12 
-                  : Colors.black.withValues(alpha: 0.08),
-              angle: 1.0,
-            );
-      },
-      errorBuilder: (_, __, ___) => widget.errorWidget,
-    );
-  }
-}
-
-class _ViewAllButton extends StatefulWidget {
-  final VoidCallback onTap;
-  final bool isDark;
-  final Color border;
-  final Color border2;
-  final Color textSec;
-
-  const _ViewAllButton({
-    required this.onTap,
-    required this.isDark,
-    required this.border,
-    required this.border2,
-    required this.textSec,
-  });
-
-  @override
-  State<_ViewAllButton> createState() => _ViewAllButtonState();
-}
-
-class _ViewAllButtonState extends State<_ViewAllButton> {
-  bool _hovered = false;
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textPri =
-        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final border2 = isDark ? AppColors.border2Dark : AppColors.border2Light;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final textPri = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final hover = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: _hovered ? widget.border2 : widget.border,
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'View all shots',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontSize: 10,
-                      color: _hovered ? textPri : widget.textSec,
-                    ),
-              ),
-              const SizedBox(width: 4),
-              Icon(
-                Icons.arrow_outward,
-                size: 10,
-                color: _hovered ? textPri : widget.textSec,
-              ),
-            ],
-          ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: _hovered ? hover : Colors.transparent,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: _hovered ? border2 : border, width: 0.6),
         ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(widget.item.icon, size: 12, color: _hovered ? textPri : textSec),
+          const SizedBox(width: 6),
+          Text(widget.item.label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: _hovered ? textPri : textSec,
+                    fontSize: 11.5, fontWeight: FontWeight.w500)),
+        ]),
       ),
     );
   }
 }
 
+// ------------------------------------------------------------------
+//  GITHUB ACTIVITY
+// ------------------------------------------------------------------
 
-
-
-
-
-class _HobbiesSection extends StatelessWidget {
-  const _HobbiesSection();
-
-  static const _hobbies = [
-    _HobbyItem(
-      title: 'Photography',
-      description:
-          'Chasing light through a viewfinder — street, architecture and golden-hour frames.',
-    ),
-    _HobbyItem(
-      title: 'Open Source',
-      description:
-          'Contributing to tools and communities that push the ecosystem forward.',
-    ),
-    _HobbyItem(
-      title: 'Learning New Tech',
-      description:
-          'Constantly staying ahead of the curve with emerging design and dev tools.',
-    ),
-    _HobbyItem(
-      title: 'UI Collecting',
-      description:
-          'Obsessively saving references — interfaces, typography, and spatial compositions.',
-    ),
-  ];
+class _GitHubActivitySection extends ConsumerWidget {
+  const _GitHubActivitySection();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final stats = ref.watch(gitHubStatsProvider(PortfolioConfig.githubUsername));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader('Personal Interests', index: '08'),
-        const SizedBox(height: 20),
-        ..._hobbies.asMap().entries.map((e) {
-          final num = '0${e.key + 1}';
-          final item = e.value;
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 28,
-                  child: Text(num,
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall
-                          ?.copyWith(color: textSec)),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(item.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 4),
-                      Text(item.description,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: textSec)),
-                    ],
-                  ),
-                ),
-              ],
+        Row(children: [
+          const Expanded(child: _SectionTitle('GitHub Activity')),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => launchUrl(Uri.parse(PortfolioConfig.githubUrl)),
+              child: Row(children: [
+                Text('@${PortfolioConfig.githubUsername}',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: textSec, fontSize: 11, fontFamily: 'Inter')),
+                const SizedBox(width: 4),
+                Icon(LucideIcons.externalLink, size: 11, color: textSec),
+              ]),
             ),
-          );
-        }),
+          ),
+        ]),
+        const SizedBox(height: 14),
+        stats.when(
+          loading: () => Wrap(
+            spacing: 2, runSpacing: 2,
+            children: List.generate(48, (i) => Container(
+              width: 8, height: 8,
+              decoration: BoxDecoration(
+                color: (isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight)
+                    .withValues(alpha: 0.3 + (i % 3) * 0.1),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            )),
+          ),
+          error: (_, __) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Text('// error: could not fetch GitHub activity',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: textSec, fontFamily: 'Inter', fontSize: 11)),
+          ),
+          data: (data) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ContributionGraph(contributions: data.contributions),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('${data.totalContributions} contributions in the last year',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: textSec, fontSize: 10.5)),
+                  Row(children: [
+                    Text('Less',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: textSec, fontSize: 9.5)),
+                    const SizedBox(width: 4),
+                    for (final c in [
+                      AppColors.contrib0Dark,
+                      AppColors.contrib2Dark,
+                      AppColors.contrib3Dark,
+                      AppColors.contrib4Dark,
+                      AppColors.contrib5Dark,
+                    ])
+                      Container(
+                        width: 9, height: 9,
+                        margin: const EdgeInsets.only(left: 2),
+                        decoration: BoxDecoration(
+                          color: c, borderRadius: BorderRadius.circular(2)),
+                      ),
+                    const SizedBox(width: 4),
+                    Text('More',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: textSec, fontSize: 9.5)),
+                  ]),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 }
 
-class _HobbyItem {
-  final String title;
-  final String description;
-  const _HobbyItem({required this.title, required this.description});
+// ------------------------------------------------------------------
+//  SHARED WIDGETS
+// ------------------------------------------------------------------
+
+/// Warm gold section title — matches the reference design
+class _SectionTitle extends StatelessWidget {
+  final String text;
+  const _SectionTitle(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFFD4AF37),
+              letterSpacing: -0.5,
+              fontFamily: 'Inter',
+            ));
+  }
+}
+
+class _HomeDivider extends StatelessWidget {
+  const _HomeDivider();
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Divider(
+      height: 1, thickness: 0.4,
+      color: isDark ? AppColors.borderDark : AppColors.borderLight,
+    );
+  }
+}
+
+class _SmallIconBtn extends StatefulWidget {
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+  const _SmallIconBtn({required this.icon, required this.tooltip, required this.onTap});
+  @override
+  State<_SmallIconBtn> createState() => _SmallIconBtnState();
+}
+
+class _SmallIconBtnState extends State<_SmallIconBtn> {
+  bool _hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final hover = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
+
+    return Tooltip(
+      message: widget.tooltip,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 140),
+            width: 32, height: 32,
+            decoration: BoxDecoration(
+              color: _hovered ? hover : Colors.transparent,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: border, width: 0.7),
+            ),
+            child: Icon(widget.icon, size: 15, color: textSec),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ViewAllBtn extends StatefulWidget {
+  final String label;
+  const _ViewAllBtn({required this.label});
+  @override
+  State<_ViewAllBtn> createState() => _ViewAllBtnState();
+}
+
+class _ViewAllBtnState extends State<_ViewAllBtn> {
+  bool _hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final border = isDark ? AppColors.borderDark : AppColors.borderLight;
+    final border2 = isDark ? AppColors.border2Dark : AppColors.border2Light;
+    final textSec = isDark ? AppColors.textSecDark : AppColors.textSecLight;
+    final textPri = isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final hover = isDark ? AppColors.surfaceElevDark : AppColors.surfaceElevLight;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: _hovered ? hover : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: _hovered ? border2 : border, width: 0.7),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Text(widget.label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: _hovered ? textPri : textSec,
+                    fontSize: 11.5, fontWeight: FontWeight.w500)),
+          const SizedBox(width: 4),
+          Icon(LucideIcons.chevronRight, size: 13, color: _hovered ? textPri : textSec),
+        ]),
+      ),
+    );
+  }
 }

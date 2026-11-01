@@ -48,3 +48,6 @@ app.*.map.json
 
 # Ignore sensitive secrets
 lib/config/secrets.dart
+
+# Full-size originals kept locally (assets/images holds web-optimised copies)
+/.image_originals/

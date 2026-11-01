@@ -76,7 +76,7 @@ class _TechChipState extends State<TechChip> {
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 150),
               style: TextStyle(
-                fontFamily: 'JetBrainsMono',
+                fontFamily: 'Inter',
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
                 color: _hovered ? textPri : textSec,
@@ -179,7 +179,7 @@ class EyebrowLabel extends StatelessWidget {
     return Text(
       showSlash ? '/ $text' : text,
       style: TextStyle(
-        fontFamily: 'JetBrainsMono',
+        fontFamily: 'Inter',
         fontSize: 9,
         fontWeight: FontWeight.w400,
         color: textTer,

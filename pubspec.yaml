@@ -28,7 +28,6 @@ dependencies:
   # UI & Animations
   flutter_animate: ^4.2.0-hotfix.1
   flutter_svg: ^2.0.10+1
-  lucide_icons: ^0.257.0
   redacted: ^1.0.12
   supabase_flutter: ^2.5.0
   visibility_detector: ^0.4.0+2
@@ -43,6 +42,7 @@ dependencies:
   # Audio
   just_audio: ^0.10.5
   termos_ui: ^0.1.1
+  lucide_icons_flutter: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -53,25 +53,25 @@ flutter:
   uses-material-design: true
 
   fonts:
-    - family: JetBrainsMono
+    - family: InstrumentSerif
       fonts:
-        - asset: assets/fonts/JetBrainsMono-Regular.ttf
-        - asset: assets/fonts/JetBrainsMono-Bold.ttf
-          weight: 700
-    - family: Outfit
+        - asset: assets/fonts/InstrumentSerif-Regular.ttf
+        - asset: assets/fonts/InstrumentSerif-Italic.ttf
+          style: italic
+    - family: Inter
       fonts:
-        - asset: assets/fonts/Outfit-Regular.ttf
+        - asset: assets/fonts/Inter-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Outfit-Medium.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Outfit-SemiBold.ttf
+        - asset: assets/fonts/Inter-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Outfit-Bold.ttf
+        - asset: assets/fonts/Inter-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Outfit-ExtraBold.ttf
-          weight: 800
 
   assets:
     - assets/fonts/
     - assets/icons/
+    - assets/icons/tech/
+    - assets/audio/
     - assets/images/

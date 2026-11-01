@@ -108,20 +108,20 @@ class AppColors {
   
 
   
-  static const Color contrib0Dark     = Color(0xFF111113); 
-  static const Color contrib1Dark     = Color(0xFF27272A); 
-  static const Color contrib2Dark     = Color(0xFF3F3F46); 
-  static const Color contrib3Dark     = Color(0xFF71717A); 
-  static const Color contrib4Dark     = Color(0xFFE4E4E7); 
-  static const Color contrib5Dark     = Color(0xFFFFFFFF); 
+  static const Color contrib0Dark     = Color(0xFF161B22); 
+  static const Color contrib1Dark     = Color(0xFF0E4429); 
+  static const Color contrib2Dark     = Color(0xFF006D32); 
+  static const Color contrib3Dark     = Color(0xFF26A641); 
+  static const Color contrib4Dark     = Color(0xFF39D353); 
+  static const Color contrib5Dark     = Color(0xFF56F076); 
 
   
-  static const Color contrib0Light    = Color(0xFFE4E4E7); 
-  static const Color contrib1Light    = Color(0xFFD4D4D8); 
-  static const Color contrib2Light    = Color(0xFFA1A1AA); 
-  static const Color contrib3Light    = Color(0xFF71717A); 
-  static const Color contrib4Light    = Color(0xFF3F3F46); 
-  static const Color contrib5Light    = Color(0xFF09090B); 
+  static const Color contrib0Light    = Color(0xFFEBEDF0); 
+  static const Color contrib1Light    = Color(0xFF9BE9A8); 
+  static const Color contrib2Light    = Color(0xFF40C463); 
+  static const Color contrib3Light    = Color(0xFF30A14E); 
+  static const Color contrib4Light    = Color(0xFF216E39); 
+  static const Color contrib5Light    = Color(0xFF19532A); 
 
   
   
@@ -293,7 +293,7 @@ class AppTheme {
   static ThemeData light() => _build(isDark: false);
 
   static ThemeData _build({required bool isDark}) {
-    const mono = 'JetBrainsMono';
+    const mono = 'Inter';
 
     final bg           = isDark ? AppColors.bgDark           : AppColors.bgLight;
     final surface      = isDark ? AppColors.surfaceDark      : AppColors.surfaceLight;
@@ -348,43 +348,43 @@ class AppTheme {
 
         
         displayLarge: TextStyle(
-          fontFamily: 'Outfit', fontSize: 36, fontWeight: FontWeight.w800,
+          fontFamily: 'Inter', fontSize: 36, fontWeight: FontWeight.w800,
           color: textPrimary, letterSpacing: -1.2, height: 1.0,
         ),
         displayMedium: TextStyle(
-          fontFamily: 'Outfit', fontSize: 28, fontWeight: FontWeight.w700,
+          fontFamily: 'Inter', fontSize: 28, fontWeight: FontWeight.w700,
           color: textPrimary, letterSpacing: -0.8, height: 1.05,
         ),
         displaySmall: TextStyle(
-          fontFamily: 'Outfit', fontSize: 22, fontWeight: FontWeight.w700,
+          fontFamily: 'Inter', fontSize: 22, fontWeight: FontWeight.w700,
           color: textPrimary, letterSpacing: -0.5, height: 1.1,
         ),
 
         
         headlineLarge: TextStyle(
-          fontFamily: 'Outfit', fontSize: 17, fontWeight: FontWeight.w600,
+          fontFamily: 'Inter', fontSize: 17, fontWeight: FontWeight.w600,
           color: textPrimary, letterSpacing: -0.2, height: 1.35,
         ),
         headlineMedium: TextStyle(
-          fontFamily: 'Outfit', fontSize: 15, fontWeight: FontWeight.w600,
+          fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w600,
           color: textPrimary, letterSpacing: -0.1, height: 1.35,
         ),
         headlineSmall: TextStyle(
-          fontFamily: 'Outfit', fontSize: 14, fontWeight: FontWeight.w600,
+          fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600,
           color: textPrimary, letterSpacing: 0, height: 1.35,
         ),
 
         
         bodyLarge: TextStyle(
-          fontFamily: 'Outfit', fontSize: 15, fontWeight: FontWeight.w400,
+          fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w400,
           color: textPrimary, height: 1.65, letterSpacing: 0,
         ),
         bodyMedium: TextStyle(
-          fontFamily: 'Outfit', fontSize: 13.5, fontWeight: FontWeight.w400,
+          fontFamily: 'Inter', fontSize: 13.5, fontWeight: FontWeight.w400,
           color: textSec, height: 1.65, letterSpacing: 0,
         ),
         bodySmall: TextStyle(
-          fontFamily: 'Outfit', fontSize: 12, fontWeight: FontWeight.w400,
+          fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w400,
           color: textSec, height: 1.6, letterSpacing: 0,
         ),
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:termos_ui/termos_ui.dart';
 import 'package:monofolio/core/theme/app_theme.dart';
 import 'package:monofolio/core/widgets/tap_scale.dart';
@@ -76,7 +76,7 @@ class _PortfolioDrawerState extends State<PortfolioDrawer>
                   Text(
                     'portfolio@dk:',
                     style: TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Inter',
                       fontSize: 11,
                       letterSpacing: 0.3,
                       color: accent,
@@ -86,7 +86,7 @@ class _PortfolioDrawerState extends State<PortfolioDrawer>
                   Text(
                     '~',
                     style: TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Inter',
                       fontSize: 11,
                       color: textTer,
                     ),
@@ -94,7 +94,7 @@ class _PortfolioDrawerState extends State<PortfolioDrawer>
                   Text(
                     ' \$',
                     style: TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Inter',
                       fontSize: 11,
                       color: textTer,
                     ),
@@ -161,7 +161,7 @@ class _PortfolioDrawerState extends State<PortfolioDrawer>
                   Text(
                     '// preferences',
                     style: TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Inter',
                       fontSize: 10,
                       letterSpacing: 1.5,
                       color: textTer,
@@ -175,7 +175,7 @@ class _PortfolioDrawerState extends State<PortfolioDrawer>
                       Text(
                         'Heavy Effects',
                         style: TextStyle(
-                          fontFamily: 'JetBrainsMono',
+                          fontFamily: 'Inter',
                           fontSize: 12,
                           color: textPri,
                         ),
@@ -193,7 +193,7 @@ class _PortfolioDrawerState extends State<PortfolioDrawer>
                   Text(
                     'Anim Speed',
                     style: TextStyle(
-                      fontFamily: 'JetBrainsMono',
+                      fontFamily: 'Inter',
                       fontSize: 12,
                       color: textPri,
                     ),
@@ -324,7 +324,7 @@ class _DrawerNavItemState extends State<_DrawerNavItem> {
                         Text(
                           widget.prefix,
                           style: TextStyle(
-                            fontFamily: 'JetBrainsMono',
+                            fontFamily: 'Inter',
                             fontSize: 12,
                             color: widget.textTer,
                           ),
@@ -332,7 +332,7 @@ class _DrawerNavItemState extends State<_DrawerNavItem> {
                         AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 150),
                           style: TextStyle(
-                            fontFamily: 'JetBrainsMono',
+                            fontFamily: 'Inter',
                             fontSize: 14,
                             letterSpacing: 0.5,
                             fontWeight: active ? FontWeight.w700 : FontWeight.w400,
