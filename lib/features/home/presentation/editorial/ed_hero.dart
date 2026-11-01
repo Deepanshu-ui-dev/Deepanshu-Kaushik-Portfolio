@@ -30,16 +30,19 @@ class EdHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
-    final narrow = MediaQuery.sizeOf(context).width < 600;
-    final avatar = narrow ? 60.0 : 72.0;
+    final width = MediaQuery.sizeOf(context).width;
+    final narrow = width < 600;
+    final veryNarrow = width < 400;
+    final avatar = veryNarrow ? 52.0 : (narrow ? 60.0 : 72.0);
 
     return ColumnBox(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Banner image — shorter on mobile
           Container(
-            height: narrow ? 150 : 210,
+            height: veryNarrow ? 110 : (narrow ? 140 : 210),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: ed.line2),
@@ -52,10 +55,11 @@ class EdHero extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(edPad(context) - 8, 16, edPad(context) - 8, 18),
+            padding: EdgeInsets.fromLTRB(edPad(context) - 8, 14, edPad(context) - 8, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Avatar + name row
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -68,7 +72,7 @@ class EdHero extends StatelessWidget {
                           width: avatar,
                           height: avatar,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(9),
                             border: Border.all(color: h ? ed.line2 : ed.line, width: 1.2),
                           ),
                           clipBehavior: Clip.antiAlias,
@@ -83,43 +87,78 @@ class EdHero extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Name + open-to-work badge — wrap gracefully
                           Wrap(
                             crossAxisAlignment: WrapCrossAlignment.center,
-                            spacing: 10,
+                            spacing: 8,
                             runSpacing: 4,
                             children: [
-                              Text(PortfolioConfig.name, style: ed.serif(narrow ? 26 : 30)),
+                              Text(
+                                PortfolioConfig.name,
+                                style: ed.serif(veryNarrow ? 20 : (narrow ? 24 : 30)),
+                              ),
                               if (PortfolioConfig.openToWork) const OpenToWork(),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           Text(
                             PortfolioConfig.headline,
-                            style: ed.sans(13.5, color: ed.ink2, w: FontWeight.w500, h: 1.3),
+                            style: ed.sans(
+                              veryNarrow ? 11.5 : 13,
+                              color: ed.ink2,
+                              w: FontWeight.w500,
+                              h: 1.35,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           Row(children: [
-                            Icon(LucideIcons.mapPin, size: 10.5, color: ed.ink3),
+                            Icon(LucideIcons.mapPin, size: 10, color: ed.ink3),
                             const SizedBox(width: 4),
-                            Text(PortfolioConfig.location, style: ed.mono(10.5, color: ed.ink3)),
+                            Flexible(
+                              child: Text(
+                                PortfolioConfig.location,
+                                style: ed.mono(10, color: ed.ink3),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ]),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 14),
-                Wrap(spacing: 8, runSpacing: 8, children: [
-                  _Cta('View projects', LucideIcons.arrowDown, onTap: onViewWork, filled: true),
-                  _Cta('Résumé', LucideIcons.fileText, onTap: () => openUrl(PortfolioConfig.resumeUrl)),
-                  _Cta('GitHub', LucideIcons.arrowUpRight, onTap: () => openUrl(PortfolioConfig.githubUrl)),
-                  _Cta('Copy email', LucideIcons.copy, onTap: onCopyEmail),
-                ]),
+                const SizedBox(height: 12),
+                // CTA buttons — scrollable row on mobile to prevent bad wrapping
+                if (narrow)
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    child: Row(
+                      children: [
+                        _Cta('View projects', LucideIcons.arrowDown, onTap: onViewWork, filled: true),
+                        const SizedBox(width: 8),
+                        _Cta('Résumé', LucideIcons.fileText, onTap: () => openUrl(PortfolioConfig.resumeUrl)),
+                        const SizedBox(width: 8),
+                        _Cta('GitHub', LucideIcons.arrowUpRight, onTap: () => openUrl(PortfolioConfig.githubUrl)),
+                        const SizedBox(width: 8),
+                        _Cta('Copy email', LucideIcons.copy, onTap: onCopyEmail),
+                      ],
+                    ),
+                  )
+                else
+                  Wrap(spacing: 8, runSpacing: 8, children: [
+                    _Cta('View projects', LucideIcons.arrowDown, onTap: onViewWork, filled: true),
+                    _Cta('Résumé', LucideIcons.fileText, onTap: () => openUrl(PortfolioConfig.resumeUrl)),
+                    _Cta('GitHub', LucideIcons.arrowUpRight, onTap: () => openUrl(PortfolioConfig.githubUrl)),
+                    _Cta('Copy email', LucideIcons.copy, onTap: onCopyEmail),
+                  ]),
               ],
             ),
           ),

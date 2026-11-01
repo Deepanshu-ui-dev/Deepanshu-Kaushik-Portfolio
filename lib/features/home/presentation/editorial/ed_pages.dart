@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/portfolio_config.dart';
-import '../../../../core/widgets/scroll_fade_in.dart';
 import 'ed_music_player.dart';
 import 'ed_primitives.dart';
 import 'ed_projects.dart';
-import 'ed_sections.dart' show PulseDot;
 import 'ed_theme.dart';
 
 void openAboutPage(BuildContext context) {
@@ -80,7 +77,7 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 01. The Person ──────────────────────────────────────────
-          const SectionBand('[ 01 ] THE PERSON BEHIND THE PIXELS'),
+          SectionBand(narrow ? 'The Person' : '[ 01 ] THE PERSON BEHIND THE PIXELS'),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 28, edPad(context), 28),
             child: Column(
@@ -153,7 +150,7 @@ class AboutPage extends StatelessWidget {
                     final is2Col = c.maxWidth < 600;
                     final w = is2Col ? c.maxWidth / 2 : c.maxWidth / 4;
                     const items = [
-                      ('2+ Years', 'Flutter Specialist'),
+                      ('3+ Years', 'Flutter Specialist'),
                       ('10+ Apps', 'Shipped to Prod'),
                       ('450+', 'LeetCode Solved'),
                       ('Top 100', 'Flipkart Grid 6.0'),
@@ -246,15 +243,15 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 02. Audio Player ────────────────────────────────────────
-          const SectionBand('[ 02 ] CURRENT ROTATION & AUDIO'),
+          SectionBand(narrow ? 'Audio Rotation' : '[ 02 ] CURRENT ROTATION & AUDIO'),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 24),
             child: const EdMusicPlayer(),
           ),
 
           // ── 03. Bucket List ─────────────────────────────────────────
-          const SectionBand('[ 03 ] LIFE BUCKET LIST & ASPIRATIONS',
-              trailing: MonoTag('8 GOALS')),
+          SectionBand(narrow ? 'Bucket List' : '[ 03 ] LIFE BUCKET LIST & ASPIRATIONS',
+              trailing: const MonoTag('8 GOALS')),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: Column(
@@ -270,7 +267,7 @@ class AboutPage extends StatelessWidget {
                   final w = twoCol ? (c.maxWidth - 12) / 2 : c.maxWidth;
                   const goals = [
                     (
-                      title: 'Build and deploy 3 production Flutter apps',
+                      title: 'Build and deploy 10+ production applications',
                       status: 'Achieved',
                       done: true,
                       tag: 'Engineering'
@@ -409,7 +406,7 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 04. Community & Leadership ──────────────────────────────
-          const SectionBand('[ 04 ] COMMUNITY CONTRIBUTIONS & LEADERSHIP'),
+          SectionBand(narrow ? 'Community' : '[ 04 ] COMMUNITY CONTRIBUTIONS & LEADERSHIP'),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: Column(
@@ -430,13 +427,13 @@ class AboutPage extends StatelessWidget {
                       // GDG Card
                       SizedBox(
                         width: w,
-                        child: _MomentCard(
+                        child: const _MomentCard(
                           title: 'Google Developer Group',
                           role: 'Co-Organizer',
                           period: '2025 – Present',
                           tagline: 'From curious attendee to co-organizer.',
                           imageAsset: 'assets/images/gdg1.jpeg',
-                          stats: const [('500+', 'Attendees'), ('6', 'Events')],
+                          stats: [('500+', 'Attendees'), ('6', 'Events')],
                           description:
                               'Organizing technical meetups, Flutter hack nights, and mentorship sessions for the local engineering community.',
                         ),
@@ -444,13 +441,13 @@ class AboutPage extends StatelessWidget {
                       // CodeChef Card
                       SizedBox(
                         width: w,
-                        child: _MomentCard(
+                        child: const _MomentCard(
                           title: 'CodeChef ABESEC Chapter',
                           role: 'Graphics & Creative Lead',
                           period: '2024 – Present',
                           tagline: 'Shaping visual identity and CP culture.',
                           imageAsset: 'assets/images/gdg2.jpeg',
-                          stats: const [('750+', 'Learners'), ('2018', 'Founded')],
+                          stats: [('750+', 'Learners'), ('2018', 'Founded')],
                           description:
                               'Leading brand identity, event posters, and design systems for competitive programming contests like Clash of Coders.',
                         ),
@@ -463,7 +460,7 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 05. Writing & Notes ─────────────────────────────────────
-          const SectionBand('[ 05 ] ESSAYS & THOUGHT NOTES'),
+          SectionBand(narrow ? 'Essays & Notes' : '[ 05 ] ESSAYS & THOUGHT NOTES'),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 32),
             child: Column(
@@ -655,6 +652,8 @@ class SkillsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final narrow = width < 600;
 
     return EdSubScaffold(
       trail: '/ skills',
@@ -677,11 +676,12 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 01. Design & UI/UX ──────────────────────────────────────
-          const SectionBand('[ 01 ] DESIGN & UI/UX', trailing: MonoTag('6 TOOLS')),
+          SectionBand(narrow ? 'Design & UI/UX' : '[ 01 ] DESIGN & UI/UX',
+              trailing: const MonoTag('6 TOOLS')),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
-            child: _SkillGrid(
-              skills: const [
+            child: const _SkillGrid(
+              skills: [
                 (
                   name: 'Figma',
                   icon: 'figma',
@@ -729,11 +729,12 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 02. Languages ───────────────────────────────────────────
-          const SectionBand('[ 02 ] CORE LANGUAGES', trailing: MonoTag('6 LANGUAGES')),
+          SectionBand(narrow ? 'Core Languages' : '[ 02 ] CORE LANGUAGES',
+              trailing: const MonoTag('6 LANGUAGES')),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
-            child: _SkillGrid(
-              skills: const [
+            child: const _SkillGrid(
+              skills: [
                 (
                   name: 'Dart',
                   icon: 'dart',
@@ -781,12 +782,12 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 03. Frameworks & Architecture ───────────────────────────
-          const SectionBand('[ 03 ] FRAMEWORKS & STATE ARCHITECTURES',
-              trailing: MonoTag('4 FRAMEWORKS')),
+          SectionBand(narrow ? 'Frameworks & State' : '[ 03 ] FRAMEWORKS & STATE ARCHITECTURES',
+              trailing: const MonoTag('4 FRAMEWORKS')),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
-            child: _SkillGrid(
-              skills: const [
+            child: const _SkillGrid(
+              skills: [
                 (
                   name: 'Flutter',
                   icon: 'flutter',
@@ -820,12 +821,12 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 04. Databases & Cloud Backend ───────────────────────────
-          const SectionBand('[ 04 ] DATABASE, CLOUD & DISTRIBUTED BACKEND',
-              trailing: MonoTag('7 PLATFORMS')),
+          SectionBand(narrow ? 'Cloud & Backend' : '[ 04 ] DATABASE, CLOUD & DISTRIBUTED BACKEND',
+              trailing: const MonoTag('7 PLATFORMS')),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
-            child: _SkillGrid(
-              skills: const [
+            child: const _SkillGrid(
+              skills: [
                 (
                   name: 'Node.js',
                   icon: 'nodedotjs',
@@ -880,12 +881,12 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 05. DevOps & Tools ──────────────────────────────────────
-          const SectionBand('[ 05 ] DEVELOPER TOOLING & SYSTEMS',
-              trailing: MonoTag('4 TOOLS')),
+          SectionBand(narrow ? 'Developer Tooling' : '[ 05 ] DEVELOPER TOOLING & SYSTEMS',
+              trailing: const MonoTag('4 TOOLS')),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 32),
-            child: _SkillGrid(
-              skills: const [
+            child: const _SkillGrid(
+              skills: [
                 (
                   name: 'Git & GitHub',
                   icon: 'git',
@@ -933,7 +934,7 @@ class _SkillGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, c) {
       final cols = c.maxWidth >= 720 ? 3 : (c.maxWidth >= 480 ? 2 : 1);
-      final spacing = 12.0;
+      const spacing = 12.0;
       final w = (c.maxWidth - spacing * (cols - 1)) / cols;
 
       return Wrap(
@@ -1137,7 +1138,7 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           // ── 01. Direct Message Composer ─────────────────────────────
-          const SectionBand('[ 01 ] SEND A DIRECT MESSAGE'),
+          SectionBand(narrow ? 'Send a Message' : '[ 01 ] SEND A DIRECT MESSAGE'),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 28, edPad(context), 28),
             child: Column(
@@ -1211,7 +1212,7 @@ class _ContactPageState extends State<ContactPage> {
                       onTap: () {
                         Clipboard.setData(const ClipboardData(text: PortfolioConfig.email));
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Email copied to clipboard: ${PortfolioConfig.email}'),
+                          content: const Text('Email copied to clipboard: ${PortfolioConfig.email}'),
                           behavior: SnackBarBehavior.floating,
                           width: 320,
                           backgroundColor: ed.ink,
@@ -1225,8 +1226,8 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           // ── 02. Direct Channels & Networks ──────────────────────────
-          const SectionBand('[ 02 ] DIRECT CHANNELS & PROFILES',
-              trailing: MonoTag('5 NETWORKS')),
+          SectionBand(narrow ? 'Direct Channels' : '[ 02 ] DIRECT CHANNELS & PROFILES',
+              trailing: const MonoTag('5 NETWORKS')),
           ColumnBox(
             padding: EdgeInsets.zero,
             child: LayoutBuilder(builder: (context, c) {
@@ -1314,7 +1315,7 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           // ── 03. Availability & Working Preferences ──────────────────
-          const SectionBand('[ 03 ] AVAILABILITY & WORKING PREFERENCES'),
+          SectionBand(narrow ? 'Availability' : '[ 03 ] AVAILABILITY & WORKING PREFERENCES'),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 32),
             child: LayoutBuilder(builder: (context, c) {

@@ -13,6 +13,7 @@ import '../../../github/data/github_repository.dart';
 import '../../../photography/presentation/screens/gallery_screen.dart';
 import '../widgets/contribution_graph.dart';
 import 'ed_music_player.dart';
+import 'ed_pages.dart' show openAboutPage;
 import 'ed_primitives.dart';
 import 'ed_projects.dart' show edRoute;
 import 'ed_theme.dart';
@@ -128,7 +129,7 @@ class EdAbout extends StatelessWidget {
     final ed = Ed.of(context);
     final narrow = MediaQuery.sizeOf(context).width < 600;
     return ColumnBox(
-      padding: EdgeInsets.fromLTRB(edPad(context), 22, edPad(context), 28),
+      padding: EdgeInsets.fromLTRB(edPad(context), narrow ? 18 : 22, edPad(context), narrow ? 20 : 28),
       child: ScrollFadeIn(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +146,7 @@ class EdAbout extends StatelessWidget {
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
                   width: 2.5,
-                  height: narrow ? 52 : 36,
+                  height: narrow ? 44 : 36,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       begin: Alignment.topCenter,
@@ -164,14 +165,14 @@ class EdAbout extends StatelessWidget {
                 ),
               ]),
             ),
-            const SizedBox(height: 16),
-            // Detail bullets
-            for (int i = 0; i < PortfolioConfig.aboutBullets.length; i++)
+            const SizedBox(height: 14),
+            // Detail bullets - concise and scannable on mobile
+            for (int i = 0; i < (narrow ? 2 : PortfolioConfig.aboutBullets.length); i++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 4, right: 10),
+                    padding: const EdgeInsets.only(top: 5, right: 10),
                     child: Container(
                       width: 5,
                       height: 5,
@@ -181,10 +182,22 @@ class EdAbout extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(child: Text(PortfolioConfig.aboutBullets[i], style: ed.sans(13, color: ed.ink2, h: 1.5))),
+                  Expanded(
+                    child: Text(
+                      PortfolioConfig.aboutBullets[i],
+                      style: ed.sans(narrow ? 12.5 : 13, color: ed.ink2, h: 1.45),
+                    ),
+                  ),
                 ]),
               ),
-            const SizedBox(height: 18),
+            if (narrow) ...[
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: PillButton('Read full story', icon: LucideIcons.arrowRight, onTap: () => openAboutPage(context)),
+              ),
+            ],
+            const SizedBox(height: 16),
             const EdMusicPlayer(),
           ],
         ),
@@ -338,6 +351,7 @@ class EdExperience extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
+    final narrow = MediaQuery.sizeOf(context).width < 600;
     const roles = PortfolioConfig.experience;
     return ColumnBox(
       padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 26),
@@ -347,7 +361,7 @@ class EdExperience extends StatelessWidget {
           children: [
             for (int i = 0; i < roles.length; i++) ...[
               if (i > 0) Container(height: 1, color: ed.line),
-              _RoleBlock(roles[i], initiallyOpen: i == 0),
+              _RoleBlock(roles[i], initiallyOpen: !narrow && i == 0),
             ],
             const SizedBox(height: 24),
             const _StatsStrip(),
@@ -507,7 +521,8 @@ class _StatsStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
     const stats = PortfolioConfig.stats;
-    final narrow = MediaQuery.sizeOf(context).width < 520;
+    // On phones narrower than 480px, show 2 per row to avoid cramped cells
+    final narrow = MediaQuery.sizeOf(context).width < 480;
     final perRow = narrow ? 2 : stats.length;
 
     Widget cell(StatItem s, int i) {
@@ -580,6 +595,7 @@ class EdTechStack extends StatefulWidget {
 
 class _EdTechStackState extends State<EdTechStack> {
   String _active = 'All';
+  bool _showAll = false;
 
   static const _icons = <String, IconData>{
     'All': LucideIcons.layers,
@@ -594,9 +610,15 @@ class _EdTechStackState extends State<EdTechStack> {
 
   @override
   Widget build(BuildContext context) {
+    final ed = Ed.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final narrow = width < 600;
     final items = _active == 'All'
         ? PortfolioConfig.techStack
         : PortfolioConfig.techStack.where((t) => t.category == _active).toList();
+    final displayItems = (narrow && _active == 'All' && !_showAll)
+        ? items.take(10).toList()
+        : items;
     final tabs = [
       for (final cat in PortfolioConfig.techCategories)
         _Tab(
@@ -606,7 +628,10 @@ class _EdTechStackState extends State<EdTechStack> {
           count: cat == 'All'
               ? PortfolioConfig.techStack.length
               : PortfolioConfig.techStack.where((t) => t.category == cat).length,
-          onTap: () => setState(() => _active = cat),
+          onTap: () => setState(() {
+            _active = cat;
+            _showAll = false;
+          }),
           expand: false,
         ),
     ];
@@ -616,10 +641,25 @@ class _EdTechStackState extends State<EdTechStack> {
         padding: EdgeInsets.fromLTRB(edPad(context), 20, edPad(context), 18),
         child: const ScrollFadeIn(child: _FlutterToolkit()),
       ),
-      ColumnBox(
-        padding: EdgeInsets.fromLTRB(edPad(context), 4, edPad(context), 0),
-        child: Wrap(spacing: 4, runSpacing: 4, children: tabs),
-      ),
+      if (narrow)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: edPad(context)),
+          child: Row(
+            children: [
+              for (int i = 0; i < tabs.length; i++) ...[
+                if (i > 0) const SizedBox(width: 6),
+                tabs[i],
+              ],
+            ],
+          ),
+        )
+      else
+        ColumnBox(
+          padding: EdgeInsets.fromLTRB(edPad(context), 4, edPad(context), 0),
+          child: Wrap(spacing: 4, runSpacing: 4, children: tabs),
+        ),
       ColumnBox(
         padding: EdgeInsets.fromLTRB(edPad(context), 14, edPad(context), 26),
         child: AnimatedSize(
@@ -629,12 +669,49 @@ class _EdTechStackState extends State<EdTechStack> {
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 220),
             child: SizedBox(
-              key: ValueKey(_active),
+              key: ValueKey('$_active-$_showAll'),
               width: double.infinity,
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 9,
-                children: [for (final t in items) _TechChip(t)],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 9,
+                    children: [for (final t in displayItems) _TechChip(t)],
+                  ),
+                  if (narrow && _active == 'All' && items.length > 10) ...[
+                    const SizedBox(height: 12),
+                    Center(
+                      child: Hover(
+                        onTap: () => setState(() => _showAll = !_showAll),
+                        semanticLabel: _showAll ? 'Show fewer skills' : 'Show all skills',
+                        builder: (_, h) => Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: h ? ed.raised : ed.card,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: h ? ed.line2 : ed.line),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                _showAll ? 'Show less' : 'View all ${items.length} skills',
+                                style: ed.mono(10.5, color: h ? ed.ink : ed.ink2, w: FontWeight.w600),
+                              ),
+                              const SizedBox(width: 5),
+                              Icon(
+                                _showAll ? LucideIcons.chevronUp : LucideIcons.chevronDown,
+                                size: 13,
+                                color: h ? ed.ink : ed.ink2,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
@@ -682,61 +759,70 @@ class _FlutterToolkit extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 16, 18, 14),
-            child: Row(
-              children: [
-                Container(
-                  width: 38,
-                  height: 38,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF02569B).withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: const Color(0xFF02569B).withValues(alpha: 0.3)),
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+            child: LayoutBuilder(builder: (context, c) {
+              final veryNarrow = c.maxWidth < 380;
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF02569B).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(9),
+                      border: Border.all(color: const Color(0xFF02569B).withValues(alpha: 0.3)),
+                    ),
+                    child: TechLogo(flutter, active: true, size: 18),
                   ),
-                  child: TechLogo(flutter, active: true, size: 20),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text('Flutter', style: ed.sans(16, color: ed.ink, w: FontWeight.w700, h: 1.2)),
-                          Text('  &  ', style: ed.sans(15, color: ed.ink3, h: 1.2)),
-                          TechLogo(dart, active: true, size: 14),
-                          const SizedBox(width: 5),
-                          Text('Dart', style: ed.sans(16, color: ed.ink, w: FontWeight.w700, h: 1.2)),
-                          const SizedBox(width: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: ed.live.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: ed.live.withValues(alpha: 0.3)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Name row — badge wraps below on very narrow screens
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Row(mainAxisSize: MainAxisSize.min, children: [
+                              Text('Flutter', style: ed.sans(veryNarrow ? 14 : 16, color: ed.ink, w: FontWeight.w700, h: 1.2)),
+                              Text('  &  ', style: ed.sans(veryNarrow ? 13 : 15, color: ed.ink3, h: 1.2)),
+                              TechLogo(dart, active: true, size: 13),
+                              const SizedBox(width: 4),
+                              Text('Dart', style: ed.sans(veryNarrow ? 14 : 16, color: ed.ink, w: FontWeight.w700, h: 1.2)),
+                            ]),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: ed.live.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: ed.live.withValues(alpha: 0.3)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  PulseDot(color: ed.live, size: 4),
+                                  const SizedBox(width: 4),
+                                  Text('PRIMARY FOCUS', style: ed.mono(7.5, color: ed.live, w: FontWeight.w700)),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                PulseDot(color: ed.live, size: 4.5),
-                                const SizedBox(width: 4.5),
-                                Text('PRIMARY FOCUS', style: ed.mono(8, color: ed.live, w: FontWeight.w700)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        'Core specialization — production architecture, reactive state & high-performance UI',
-                        style: ed.mono(10, color: ed.ink3),
-                      ),
-                    ],
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Core specialization — production architecture, reactive state & high-performance UI',
+                          style: ed.mono(veryNarrow ? 9.5 : 10, color: ed.ink3),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
           ),
           Container(height: 1, color: ed.line),
           LayoutBuilder(builder: (_, c) {
@@ -947,79 +1033,100 @@ class _EdGitHubState extends ConsumerState<EdGitHub> {
 
     return ColumnBox(
       padding: EdgeInsets.fromLTRB(edPad(context), 20, edPad(context), 26),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header metrics row + Year selector
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: LayoutBuilder(builder: (_, outer) {
+        final narrow = outer.maxWidth < 520;
+        // Year pill tabs widget — reused in both layouts
+        final yearTabs = Container(
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            color: ed.card,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: ed.line),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: [
-                    _GitHubMetricBadge(
-                      icon: LucideIcons.gitCommit,
-                      label: data.maybeWhen(
-                        data: (d) => '${d.$2} contributions in $_year',
-                        orElse: () => 'Live contributions',
+              for (final y in years)
+                Hover(
+                  onTap: () => setState(() => _year = y),
+                  semanticLabel: 'Show $y',
+                  builder: (_, h) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 160),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: y == _year
+                          ? (ed.dark ? const Color(0xFF27272A) : ed.ink)
+                          : (h ? ed.raised : Colors.transparent),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '$y',
+                      style: ed.mono(
+                        10,
+                        color: y == _year
+                            ? (ed.dark ? Colors.white : ed.paper)
+                            : (h ? ed.ink : ed.ink2),
+                        w: y == _year ? FontWeight.w700 : FontWeight.w500,
                       ),
-                      color: ed.live,
                     ),
-                    const _GitHubMetricBadge(
-                      icon: LucideIcons.folderGit2,
-                      label: '10+ Public Repos',
-                    ),
-                    const _GitHubMetricBadge(
-                      icon: LucideIcons.flame,
-                      label: 'Daily Engineering Streak',
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              // Year pill tabs
-              Container(
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  color: ed.card,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: ed.line),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (final y in years)
-                      Hover(
-                        onTap: () => setState(() => _year = y),
-                        semanticLabel: 'Show $y',
-                        builder: (_, h) => AnimatedContainer(
-                          duration: const Duration(milliseconds: 160),
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: y == _year
-                                ? (ed.dark ? const Color(0xFF27272A) : ed.ink)
-                                : (h ? ed.raised : Colors.transparent),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Text(
-                            '$y',
-                            style: ed.mono(
-                              10,
-                              color: y == _year
-                                  ? (ed.dark ? Colors.white : ed.paper)
-                                  : (h ? ed.ink : ed.ink2),
-                              w: y == _year ? FontWeight.w700 : FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
             ],
           ),
+        );
+
+        final metricBadges = [
+          _GitHubMetricBadge(
+            icon: LucideIcons.gitCommit,
+            label: data.maybeWhen(
+              data: (d) => '${d.$2} contributions in $_year',
+              orElse: () => 'Live contributions',
+            ),
+            color: ed.live,
+          ),
+          const _GitHubMetricBadge(
+            icon: LucideIcons.folderGit2,
+            label: '10+ Public Repos',
+          ),
+          const _GitHubMetricBadge(
+            icon: LucideIcons.flame,
+            label: 'Daily Streak',
+          ),
+        ];
+
+        return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // On mobile: stack metrics above year tabs; on wide: side by side
+          if (narrow) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Activity', style: ed.mono(10, color: ed.ink3, ls: 0.8)),
+                yearTabs,
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: metricBadges,
+            ),
+          ] else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
+                    children: metricBadges,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                yearTabs,
+              ],
+            ),
           const SizedBox(height: 16),
           // Heatmap Card
           Container(
@@ -1097,7 +1204,8 @@ class _EdGitHubState extends ConsumerState<EdGitHub> {
             ),
           ),
         ],
-      ),
+        );
+      }),
     );
   }
 }
@@ -1212,16 +1320,18 @@ class EdPhotography extends StatelessWidget {
         ColumnBox(
           padding: EdgeInsets.fromLTRB(edPad(context), 16, edPad(context), 20),
           child: LayoutBuilder(builder: (context, c) {
-            final perRow = c.maxWidth >= 540 ? 3 : 2;
+            final narrow = c.maxWidth < 540;
+            final perRow = narrow ? 2 : (c.maxWidth >= 720 ? 3 : 2);
             const spacing = 12.0;
             final itemW = (c.maxWidth - spacing * (perRow - 1)) / perRow;
             final itemH = itemW * 0.82;
+            final photos = narrow ? _previewPhotos.take(4).toList() : _previewPhotos;
 
             return Wrap(
               spacing: spacing,
               runSpacing: spacing,
               children: [
-                for (final photo in _previewPhotos)
+                for (final photo in photos)
                   Hover(
                     onTap: () => Navigator.of(context).push(edRoute(const GalleryScreen())),
                     semanticLabel: photo.$2,
@@ -1332,12 +1442,14 @@ class EdPhotography extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  '14 original full-resolution captures in the gallery',
+                  MediaQuery.sizeOf(context).width < 440
+                      ? '14 photos in gallery'
+                      : '14 original captures in gallery',
                   style: ed.mono(10.5, color: ed.ink3),
                 ),
               ),
               PillButton(
-                'View all photos',
+                'View all',
                 icon: LucideIcons.arrowUpRight,
                 onTap: () => Navigator.of(context).push(edRoute(const GalleryScreen())),
               ),

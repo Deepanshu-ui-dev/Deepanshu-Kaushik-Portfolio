@@ -139,8 +139,13 @@ class SectionBand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
+    final narrow = MediaQuery.sizeOf(context).width < 600;
+    final veryNarrow = MediaQuery.sizeOf(context).width < 400;
+    final effectiveH = narrow ? 44.0 : height;
+    final titleSize = veryNarrow ? 18.0 : (narrow ? 20.0 : 24.0);
+
     return Container(
-      height: height,
+      height: effectiveH,
       decoration: BoxDecoration(
         color: ed.page,
         border: Border.symmetric(horizontal: BorderSide(color: ed.line)),
@@ -150,14 +155,19 @@ class SectionBand extends StatelessWidget {
           Positioned.fill(child: CustomPaint(painter: HatchPainter(ed.hatch))),
           ColumnBox(
             child: SizedBox(
-              height: height - 2,
+              height: effectiveH - 2,
               child: Row(
                 children: [
                   Expanded(
                     child: Text(title,
-                        style: ed.serif(24), maxLines: 1, overflow: TextOverflow.ellipsis),
+                        style: ed.serif(titleSize),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
                   ),
-                  if (trailing != null) trailing!,
+                  if (trailing != null) ...[
+                    const SizedBox(width: 8),
+                    trailing!,
+                  ],
                 ],
               ),
             ),

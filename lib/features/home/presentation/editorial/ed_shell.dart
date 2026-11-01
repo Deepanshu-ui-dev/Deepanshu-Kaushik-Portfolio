@@ -215,11 +215,13 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
         SectionBand(
           'Projects',
           key: _keys[EdSection.work],
-          trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-            const ProjectsViewToggle(),
-            const SizedBox(width: 8),
-            PillButton('View all', icon: LucideIcons.arrowRight, onTap: () => openProjectsPage(context)),
-          ]),
+          trailing: width < 540
+              ? PillButton('View all', icon: LucideIcons.arrowRight, onTap: () => openProjectsPage(context))
+              : Row(mainAxisSize: MainAxisSize.min, children: [
+                  const ProjectsViewToggle(),
+                  const SizedBox(width: 8),
+                  PillButton('View all', icon: LucideIcons.arrowRight, onTap: () => openProjectsPage(context)),
+                ]),
         ),
         const EdProjects(count: 2),
         SectionBand('Experience', key: _keys[EdSection.experience]),
@@ -230,7 +232,7 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
           'Photography',
           key: _keys[EdSection.photography],
           trailing: PillButton(
-            'Explore gallery',
+            width < 540 ? 'Gallery' : 'Explore gallery',
             icon: LucideIcons.arrowRight,
             onTap: () => Navigator.of(context).push(edRoute(const GalleryScreen())),
           ),

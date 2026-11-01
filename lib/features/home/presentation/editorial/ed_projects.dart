@@ -437,6 +437,8 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final narrow = width < 600;
     final extra = p.tags.length > 3 ? p.tags.length - 3 : 0;
     return Hover(
       onTap: () => openProject(context, p, heroPrefix),
@@ -445,7 +447,7 @@ class ProjectCard extends StatelessWidget {
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOut,
         transform: Matrix4.translationValues(0, h ? -4 : 0, 0),
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(narrow ? 12 : 14),
         decoration: BoxDecoration(
           color: ed.card,
           borderRadius: BorderRadius.circular(14),
@@ -462,8 +464,8 @@ class ProjectCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProjectCover(p, hovered: h, height: 185, heroTag: '$heroPrefix-${p.name}'),
-            const SizedBox(height: 14),
+            ProjectCover(p, hovered: h, height: narrow ? 155 : 185, heroTag: '$heroPrefix-${p.name}'),
+            SizedBox(height: narrow ? 10 : 14),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Column(
@@ -505,7 +507,7 @@ class ProjectCard extends StatelessWidget {
                   Text(
                     p.description,
                     style: ed.sans(13, color: ed.ink2, h: 1.45),
-                    maxLines: 3,
+                    maxLines: narrow ? 2 : 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -994,7 +996,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
     final ed = Ed.of(context);
     final results = _results;
     final width = MediaQuery.sizeOf(context).width;
-    final narrow = width < 600;
     final twoUp = width >= 640;
 
     final gridRows = <Widget>[];
@@ -1177,7 +1178,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
           ]),
         ),
         // Section band divider before project grid
-        SectionBand('[ 01 ] ALL PROJECTS'),
+        const SectionBand('[ 01 ] ALL PROJECTS'),
         ColumnBox(
           padding: EdgeInsets.fromLTRB(edPad(context), 16, edPad(context), 24),
           child: AnimatedSwitcher(
@@ -1213,7 +1214,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
           ),
         ),
         // GitHub footer band
-        SectionBand('[ 02 ] MORE ON GITHUB'),
+        const SectionBand('[ 02 ] MORE ON GITHUB'),
         ColumnBox(
           padding: EdgeInsets.fromLTRB(edPad(context), 22, edPad(context), 28),
           child: Row(children: [
@@ -1232,24 +1233,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 }
 
-class _HighlightBadge extends StatelessWidget {
-  final String text;
-  final Color color;
-  const _HighlightBadge(this.text, this.color);
-  @override
-  Widget build(BuildContext context) {
-    final ed = Ed.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
-      decoration: BoxDecoration(
-        color: ed.card,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: ed.line),
-      ),
-      child: Text(text, style: ed.mono(9.5, color: color)),
-    );
-  }
-}
 
 class _ViewToggleBtn extends StatelessWidget {
   final IconData icon;

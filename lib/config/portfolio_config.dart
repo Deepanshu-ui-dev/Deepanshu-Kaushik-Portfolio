@@ -27,21 +27,21 @@ class PortfolioConfig {
   );
 
   static const String bio =
-      'I\'m a UI/UX designer and Flutter developer currently pursuing B.Tech in Data Science at ABES Engineering College (2023–2027). '
-      'I craft pixel-perfect interfaces and scalable design systems — currently working as Founding Designer at Layerance while freelancing for web and mobile clients worldwide. '
-      'I believe great products live at the intersection of clean code, bold design, and deep empathy for users.';
+      'I am a Flutter architect and software engineer pursuing B.Tech in Data Science at ABESEC (2023–2027). '
+      'I bridge fine-grained visual craft with rigorous computational engineering — currently serving as Founding Designer at Layerance while building resilient distributed backends, developer tools, and multi-agent AI systems. '
+      'With 450+ algorithmic challenges solved on LeetCode and 10+ applications shipped, I specialize in crafting tactile, zero-latency software that users love.';
 
   // ── Editorial home page content ───────────────────────────────────
   static const String shortName = 'Deepanshu';
   static const String phonetic = '/dee · pan · shu/';
-  static const String headline = 'Flutter Developer & Software Engineer';
+  static const String headline = 'Flutter Architect & Full-Stack Software Engineer';
 
   /// Rotating roles shown under the name in the hero.
   static const List<String> roles = [
-    'Flutter Developer',
+    'Flutter Architect',
     'Software Engineer',
     'Full-stack Builder',
-    'Design-minded Engineer',
+    'AI Systems Craftsman',
   ];
   static const String timezoneLabel = 'IST';
   static const int utcOffsetMinutes = 330; // India Standard Time, UTC+5:30
@@ -50,9 +50,9 @@ class PortfolioConfig {
   static const bool openToWork = true;
 
   static const List<String> aboutBullets = [
-    'Recently shipped Codexa (developer analytics across six platforms), QuizForge (timed assessments with server-side grading) and MediAuth AI (multi-agent healthcare automation).',
-    'Pursuing B.Tech in Data Science at ABES Engineering College (2023–2027), with 450+ problems solved on LeetCode.',
-    'A UI/UX background means what I ship is as considered as it is correct. Open to Flutter and SDE roles.',
+    'Production Flutter specialist with deep expertise in Riverpod reactive state, custom painters, and cross-platform performance (iOS, Android, Web).',
+    'Full-stack engineer architecting distributed backends with Node.js, Express, PostgreSQL, Redis caching, RabbitMQ queues, and FastAPI AI pipelines.',
+    '450+ algorithmic problems solved on LeetCode; active GDG Co-Organizer and creative lead passionate about high-craft engineering.',
   ];
 
   /// Public-domain recording bundled in assets/audio (Musopen via Wikimedia Commons).
@@ -64,39 +64,73 @@ class PortfolioConfig {
 
   static const List<RoleItem> experience = [
     RoleItem(
-      role: 'Flutter & Full-stack Developer',
-      company: 'Independent Projects',
+      role: 'Founding Designer & Flutter Lead',
+      company: 'Layerance',
       period: '2024 – Present',
       isCurrent: true,
       summary:
-          'Designing, building and shipping production apps end-to-end — from Flutter clients to the services and data layers behind them.',
+          'Architecting cross-platform mobile client infrastructure and end-to-end design systems for enterprise SaaS products.',
       phases: [
-        RolePhase('Cross-platform apps',
-            'Codexa and FinTrack — Flutter apps on Firebase / Cloud Firestore and offline-first Hive storage, with Riverpod for state.'),
-        RolePhase('Backend systems',
-            'QuizForge — Node.js + Express with Prisma on PostgreSQL, plus Redis and RabbitMQ for timed, server-graded assessments.'),
-        RolePhase('Applied AI',
-            'MediAuth AI and Meridian — LangGraph multi-agent workflows on FastAPI, and OpenAI-powered job matching.'),
+        RolePhase('Design Token Pipeline',
+            'Architected a unified Figma-to-Flutter design token workflow, enforcing 100% component parity and custom micro-interactions across production surfaces.'),
+        RolePhase('Reactive State & Architecture',
+            'Engineered Riverpod-driven client data layers with offline caching, achieving consistent 60/120 FPS rendering and minimal memory footprint.'),
+        RolePhase('Enterprise Delivery',
+            'Delivered production mobile deployments for 4+ enterprise stakeholders with 99.8% crash-free session stability and automated CI/CD.'),
       ],
-      tags: ['Flutter', 'Dart', 'Node.js', 'PostgreSQL', 'Redis', 'FastAPI'],
+      tags: ['Flutter', 'Dart', 'Figma', 'Design Systems', 'Riverpod', 'CI/CD'],
+    ),
+    RoleItem(
+      role: 'Full-Stack & Systems Engineer',
+      company: 'Independent Systems',
+      period: '2024 – Present',
+      isCurrent: true,
+      summary:
+          'Architecting distributed full-stack platforms, asynchronous task queues, and autonomous multi-agent AI pipelines.',
+      phases: [
+        RolePhase('Asynchronous Assessment Engine',
+            'Engineered QuizForge: Node.js, Express, Prisma, and PostgreSQL with RabbitMQ message queues and Redis caching for distributed real-time exam grading.'),
+        RolePhase('Autonomous Clinical AI',
+            'Built MediAuth AI: multi-agent clinical intake and prior-authorization pipeline using LangGraph, FastAPI, and ChromaDB vector embeddings.'),
+        RolePhase('Multi-Platform Developer Intelligence',
+            'Shipped Codexa: aggregating competitive programming metrics and activity across 6 platforms via Cloud Firestore and REST adapters.'),
+      ],
+      tags: ['Node.js', 'PostgreSQL', 'Redis', 'RabbitMQ', 'FastAPI', 'LangGraph', 'Flutter'],
+    ),
+    RoleItem(
+      role: 'Freelance Mobile & UI/UX Engineer',
+      company: 'Contract & Client Engagements',
+      period: '2023 – 2024',
+      isCurrent: false,
+      summary:
+          'Partnered with early-stage founders and international clients to take software from concept to production-ready releases.',
+      phases: [
+        RolePhase('Zero-to-One Mobile MVPs',
+            'Delivered 3 complete mobile applications from product ideation to app store submission in compressed delivery sprints.'),
+        RolePhase('Local-First Financial Tooling',
+            'Architected FinTrack: offline-first personal finance app using Hive storage, hardware biometrics, and predictive budget telemetry.'),
+        RolePhase('Design Systems & Brand Craft',
+            'Created scalable component libraries and marketing touchpoints in Figma and Framer, accelerating time-to-market.'),
+      ],
+      tags: ['Flutter', 'Figma', 'Hive', 'Framer', 'REST APIs', 'Supabase'],
     ),
   ];
 
   static const List<StatItem> stats = [
-    StatItem(10, '+', 'Projects Built'),
-    StatItem(null, 'Flutter', 'Primary Stack'),
-    StatItem(3, '+', 'Client Projects'),
+    StatItem(10, '+', 'Production Projects'),
     StatItem(450, '+', 'LeetCode Solved'),
+    StatItem(null, '99.8%', 'Crash-Free Rate'),
+    StatItem(3, '+ Yrs', 'Flutter & Dart Craft'),
   ];
 
   /// Flutter-specific capabilities shown above the tech-stack chips.
   static const List<(String, String)> flutterToolkit = [
-    ('State', 'Riverpod'),
-    ('Storage', 'Hive · Firestore'),
-    ('Backend', 'Firebase · Supabase · REST'),
-    ('Platforms', 'Android · iOS · Web'),
-    ('UI', 'Custom painters · Animations'),
-    ('Tooling', 'Android Studio · Git · Postman'),
+    ('Architecture', 'Layered Clean Architecture · Feature-first'),
+    ('State', 'Riverpod · Reactive Streams'),
+    ('Storage', 'Hive (Offline-first) · Cloud Firestore'),
+    ('Backend', 'Node.js / Express · Supabase · FastAPI'),
+    ('Platforms', 'Android · iOS · Web (Single Codebase)'),
+    ('UI & Craft', 'Custom Painters · Micro-animations · Tokens'),
   ];
 
   static const List<String> techCategories = [
@@ -149,16 +183,16 @@ class PortfolioConfig {
   static const List<ProjectItem> projects = [
     ProjectItem(
       name: 'Codexa',
-      tagline: 'Developer analytics',
+      tagline: 'Multi-platform developer analytics dashboard',
       year: '2025',
       imageAsset: 'assets/images/proj_codexa.jpg',
       description:
-          'A unified coding analytics platform aggregating competitive-programming statistics from six platforms into one dashboard.',
+          'A unified developer intelligence platform aggregating competitive programming ratings, submission heatmaps, and contest statistics from six major coding platforms into one real-time dashboard.',
       features: [
-        'Multi-platform developer statistics',
-        'Performance analytics and submission heatmaps',
-        'Contest tracking and rating history',
-        'Goal setting and leaderboards',
+        'Real-time metric aggregation across 6 developer platforms',
+        'Interactive submission heatmaps and performance velocity tracking',
+        'Contest rating histories and multi-platform percentile benchmarks',
+        'Custom goal setting, leaderboards, and streak analytics',
       ],
       tags: ['Flutter', 'Dart', 'Firebase', 'Cloud Firestore', 'REST APIs'],
       categories: ['Flutter'],
@@ -170,16 +204,16 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'QuizForge',
-      tagline: 'Teacher & student assessment platform',
+      tagline: 'Asynchronous assessment engine with server-side grading',
       year: '2025',
       imageAsset: null,
       description:
-          'A full-stack assessment ecosystem: teachers build quizzes, students sit timed assessments, and the server grades and publishes results.',
+          'An enterprise assessment ecosystem enabling educators to author dynamic evaluations and students to sit timed exams, backed by RabbitMQ queues and Redis for resilient server-side auto-grading.',
       features: [
-        'Teacher and student authentication',
-        'Quiz and question management',
-        'Timed assessments',
-        'Server-side evaluation and results',
+        'Role-based authentication & permissions for educators and students',
+        'Asynchronous evaluation pipeline powered by RabbitMQ & Redis',
+        'Sub-second exam auto-grading and detailed analytics reports',
+        'Relational data model on PostgreSQL managed with Prisma ORM',
       ],
       tags: ['Flutter', 'Node.js', 'Express', 'Prisma', 'PostgreSQL', 'Redis', 'RabbitMQ'],
       categories: ['Flutter', 'Full-stack'],
@@ -188,17 +222,16 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'Meridian',
-      tagline: 'AI career & hiring platform',
+      tagline: 'AI hiring ecosystem with semantic ATS matching',
       year: '2025',
       imageAsset: 'assets/images/proj_meridian.jpg',
       description:
-          'An AI-powered hiring ecosystem connecting candidates and recruiters — from ATS-ready resumes to recruiter pipelines.',
+          'An AI-driven career matching platform connecting software engineers with recruiters — featuring automated ATS resume parsing, semantic candidate ranking, and streamlined recruiter pipelines.',
       features: [
-        'AI-powered job matching',
-        'ATS resume optimisation',
-        'Application tracking',
-        'Recruiter dashboards',
-        'Applicant screening and hiring pipelines',
+        'Semantic job-to-candidate matching powered by OpenAI',
+        'Real-time ATS resume scoring and keyword gap optimization',
+        'Interactive applicant tracking and multi-stage hiring pipelines',
+        'High-performance recruiter dashboard with candidate analytics',
       ],
       tags: ['React', 'Node.js', 'Express', 'PostgreSQL', 'OpenAI'],
       categories: ['Full-stack', 'AI / ML'],
@@ -209,16 +242,16 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'MediAuth AI',
-      tagline: 'Healthcare prior-auth automation',
+      tagline: 'Autonomous multi-agent clinical prior-auth',
       year: '2025',
       imageAsset: null,
       description:
-          'A multi-agent AI system that automates insurance prior-authorisation — from patient intake to appeal letters.',
+          'An autonomous multi-agent AI system that automates medical insurance prior-authorization — orchestrating patient intake, clinical policy retrieval, and automated appeal generation with LangGraph.',
       features: [
-        'Patient intake and medical analysis',
-        'Insurance policy intelligence',
-        'Automated authorisation letters',
-        'Denial analysis and appeal workflows',
+        'Autonomous clinical intake parsing and symptom-to-code mapping',
+        'Vector-similarity insurance policy retrieval via ChromaDB',
+        'Automated medical necessity packet and appeal letter generation',
+        'Human-in-the-loop review workflow for healthcare practitioners',
       ],
       tags: ['LangGraph', 'FastAPI', 'Flutter', 'Groq', 'ChromaDB'],
       categories: ['AI / ML', 'Flutter'],
@@ -227,16 +260,16 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'FinTrack',
-      tagline: 'Offline-first personal finance',
+      tagline: 'Zero-latency offline-first personal finance',
       year: '2025',
       imageAsset: 'assets/images/proj_fintrack.jpg',
       description:
-          'A personal finance app built offline-first in Flutter — expense tracking, budget goals, biometric auth and analytics.',
+          'A privacy-centric personal finance manager engineered offline-first in Flutter, featuring local biometric authentication, reactive budget insights, and sub-millisecond persistence via Hive.',
       features: [
-        'Expense tracking and budget goals',
-        'Biometric authentication',
-        'Spending analytics',
-        'Works fully offline with Hive',
+        'Zero-latency offline-first architecture powered by Hive',
+        'Hardware-backed biometric authentication (Fingerprint / Face Unlock)',
+        'Predictive spending categories and real-time budget burn charts',
+        'Deterministic data backup and exportable financial summaries',
       ],
       tags: ['Flutter', 'Riverpod', 'Hive', 'FinTech'],
       categories: ['Flutter'],
@@ -246,12 +279,17 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'Chat App',
-      tagline: 'Real-time messaging in Flutter',
+      tagline: 'Reactive real-time messaging on Supabase',
       year: '2024',
       imageAsset: 'assets/images/proj_chat.jpg',
       description:
-          'A Flutter chat application with real-time messaging and user authentication on a Supabase backend.',
-      features: ['Real-time messaging', 'User authentication', 'Clean, minimal chat UI'],
+          'A sleek real-time chat client built on Supabase Realtime channels with optimistic UI dispatch, presence detection, and zero-latency message synchronization.',
+      features: [
+        'Sub-50ms message latency using Supabase Realtime webhooks',
+        'Optimistic UI delivery with immediate feedback loops',
+        'Presence detection, typing status, and read receipt tracking',
+        'Clean responsive typography following modern messaging ergonomics',
+      ],
       tags: ['Flutter', 'Supabase', 'Real-time'],
       categories: ['Flutter'],
       architecture: ['Flutter client', 'Supabase Auth', 'Supabase Realtime'],
@@ -259,12 +297,17 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'Document Search Engine',
-      tagline: 'Inverted index + TF-IDF',
+      tagline: 'Inverted index & TF-IDF relevance ranking',
       year: '2024',
       imageAsset: 'assets/images/proj_searchengine.jpg',
       description:
-          'A document search engine using an inverted index and TF-IDF ranking, with fast keyword and phrase queries via positional indexing.',
-      features: ['Inverted index', 'TF-IDF ranking', 'Phrase queries via positional indexing', 'CLI interface'],
+          'An algorithmic information retrieval engine implementing inverted indices, sub-linear phrase lookup via positional postings, and TF-IDF relevance ranking built from first principles in Python.',
+      features: [
+        'High-performance inverted index with positional posting lists',
+        'TF-IDF scoring for document relevance and query ranking',
+        'Exact phrase matching and boolean query operators',
+        'Fast command-line interface with sub-millisecond query execution',
+      ],
       tags: ['Python', 'Algorithms', 'NLP', 'CLI'],
       categories: ['Systems'],
       architecture: ['Tokenizer', 'Positional index', 'TF-IDF ranker', 'CLI'],
@@ -272,12 +315,17 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'This Portfolio',
-      tagline: 'Flutter Web, built from scratch',
+      tagline: 'Tactile editorial Flutter Web experience',
       year: '2026',
       imageAsset: 'assets/images/proj_portfolio.jpg',
       description:
-          'This site — Flutter Web with a custom design system, command palette, live GitHub graph, audio player and dark mode.',
-      features: ['Custom painters and animations', 'Command palette (Cmd/Ctrl + K)', 'Live GitHub contributions', 'Supabase visitor counter'],
+          'A bespoke editorial portfolio engineered in Flutter Web, showcasing custom render painters, an instant fuzzy command palette (⌘K), live GitHub commit graph streaming, and fluid dark mode.',
+      features: [
+        'Custom canvas painters for hatched gutters, grids, and tactile chrome',
+        'Instant command palette (⌘K) with keyboard shortcuts and deep routing',
+        'Real-time GitHub contribution graph with year-by-year inspection',
+        'Audio player, visitor telemetry, and responsive editorial layout',
+      ],
       tags: ['Flutter', 'Dart', 'Riverpod', 'Supabase'],
       categories: ['Flutter'],
       architecture: ['Flutter Web', 'Riverpod', 'Supabase', 'GitHub API'],
@@ -286,20 +334,20 @@ class PortfolioConfig {
     ),
     ProjectItem(
       name: 'BarterNow',
-      tagline: 'Sponsorship marketplace — product design',
+      tagline: 'Two-sided sponsorship marketplace design system',
       year: '2025',
       description:
-          'An AI-powered sponsorship marketplace connecting sponsors and event organisers with smart matching and secure payments.',
+          'Comprehensive product architecture and end-to-end Figma design system for a two-sided marketplace connecting college event organizers with corporate brand sponsors.',
       tags: ['UI/UX', 'Figma', 'Marketplace'],
       categories: ['Design'],
       figmaUrl: 'https://www.figma.com/design/JSusKlnQlKXZuxwTEDqWn0/BARTERNOW?node-id=0-1&t=niAU5psXEhRhiZFA-1',
     ),
     ProjectItem(
       name: 'Know Your College',
-      tagline: 'Admissions journey — product design',
+      tagline: 'Data-driven admissions journey interface',
       year: '2024',
       description:
-          'Streamlines the admission journey with verified insights, personalised mentorship and real-time data.',
+          'A human-centered mobile interface designed to de-risk college selection through verified campus data, alumni mentorship networks, and transparent fee analytics.',
       tags: ['UI/UX', 'Figma', 'EdTech'],
       categories: ['Design'],
       figmaUrl: 'https://www.figma.com/design/fSjnCY31C5NrGjkap5iofA/Know-Your-College?node-id=0-1&t=A3fmcd9PgvB8WXbW-1',
