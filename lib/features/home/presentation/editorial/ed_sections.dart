@@ -129,75 +129,56 @@ class EdAbout extends StatelessWidget {
     final ed = Ed.of(context);
     final narrow = MediaQuery.sizeOf(context).width < 600;
     return ColumnBox(
-      padding: EdgeInsets.fromLTRB(edPad(context), narrow ? 18 : 22, edPad(context), narrow ? 20 : 28),
+      padding: EdgeInsets.fromLTRB(edPad(context), narrow ? 22 : 28, edPad(context), narrow ? 24 : 32),
       child: ScrollFadeIn(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Statement card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-              decoration: BoxDecoration(
-                color: ed.card,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: ed.line),
-              ),
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(
-                  width: 2.5,
-                  height: narrow ? 44 : 36,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xFF02569B), Color(0xFF3DDC84)],
-                    ),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Text(
-                    'I build production Flutter apps and the systems behind them — from reactive UIs to multi-agent AI workflows.',
-                    style: ed.sans(narrow ? 14 : 15.5, color: ed.ink, w: FontWeight.w600, h: 1.45),
-                  ),
-                ),
-              ]),
+            // Bio — primary weight so it reads as an intro, not a caption
+            Text(
+              PortfolioConfig.bio,
+              style: ed.sans(narrow ? 14 : 15, color: ed.ink, h: 1.7, w: FontWeight.w400),
             ),
-            const SizedBox(height: 14),
-            // Detail bullets - concise and scannable on mobile
-            for (int i = 0; i < (narrow ? 2 : PortfolioConfig.aboutBullets.length); i++)
+            const SizedBox(height: 18),
+            // Thin divider before bullets
+            Container(height: 1, color: ed.line),
+            const SizedBox(height: 16),
+            for (int i = 0; i < PortfolioConfig.aboutBullets.length; i++)
               Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 10),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 5, right: 10),
+                    padding: const EdgeInsets.only(top: 7, right: 10),
                     child: Container(
-                      width: 5,
-                      height: 5,
+                      width: 4,
+                      height: 4,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ed.ink3,
+                        color: ed.ink2,
                       ),
                     ),
                   ),
                   Expanded(
                     child: Text(
                       PortfolioConfig.aboutBullets[i],
-                      style: ed.sans(narrow ? 12.5 : 13, color: ed.ink2, h: 1.45),
+                      style: ed.sans(narrow ? 13 : 13.5, color: ed.ink2, h: 1.55),
                     ),
                   ),
                 ]),
               ),
-            if (narrow) ...[
-              const SizedBox(height: 4),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: PillButton('Read full story', icon: LucideIcons.arrowRight, onTap: () => openAboutPage(context)),
-              ),
-            ],
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                PillButton('Read full story',
+                    icon: LucideIcons.arrowRight,
+                    onTap: () => openAboutPage(context)),
+                const SizedBox(width: 8),
+                PillButton('View résumé',
+                    icon: LucideIcons.fileText,
+                    onTap: () => openUrl(PortfolioConfig.resumeUrl)),
+              ],
+            ),
+            const SizedBox(height: 20),
             const EdMusicPlayer(),
           ],
         ),
@@ -237,7 +218,7 @@ class EdContact extends StatelessWidget {
       children: [
         // Intro tagline
         ColumnBox(
-          padding: EdgeInsets.fromLTRB(edPad(context), 14, edPad(context), 12),
+          padding: EdgeInsets.fromLTRB(edPad(context), 16, edPad(context), 14),
           child: Row(
             children: [
               Text(
@@ -247,7 +228,14 @@ class EdContact extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(child: Container(height: 1, color: ed.line)),
               const SizedBox(width: 10),
-              Text(PortfolioConfig.email, style: ed.mono(10, color: ed.ink2)),
+              Hover(
+                onTap: () => openUrl('mailto:${PortfolioConfig.email}'),
+                semanticLabel: PortfolioConfig.email,
+                builder: (_, h) => Text(
+                  PortfolioConfig.email,
+                  style: ed.mono(10, color: h ? ed.ink : ed.ink2),
+                ),
+              ),
             ],
           ),
         ),
@@ -300,40 +288,34 @@ class _ContactCell extends StatelessWidget {
       semanticLabel: s.label,
       builder: (_, h) => AnimatedContainer(
         duration: const Duration(milliseconds: 160),
-        height: 52,
+        height: 60,
         color: h ? ed.raised.withValues(alpha: 0.7) : Colors.transparent,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Row(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 24,
-              height: 24,
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 160),
+              width: 28,
+              height: 28,
               decoration: BoxDecoration(
-                color: ed.card,
-                borderRadius: BorderRadius.circular(5),
+                color: h ? ed.raised : ed.card,
+                borderRadius: BorderRadius.circular(7),
                 border: Border.all(color: h ? ed.line2 : ed.line),
               ),
               alignment: Alignment.center,
               child: s.svg != null
                   ? SvgPicture.asset(s.svg!,
-                      width: 12,
-                      height: 12,
+                      width: 14,
+                      height: 14,
                       colorFilter: ColorFilter.mode(h ? ed.ink : ed.ink2, BlendMode.srcIn))
-                  : Icon(s.icon, size: 12, color: h ? ed.ink : ed.ink2),
+                  : Icon(s.icon, size: 14, color: h ? ed.ink : ed.ink2),
             ),
-            const SizedBox(width: 9),
-            Flexible(
-              child: Text(s.label,
-                  style: ed.sans(12, color: h ? ed.ink : ed.ink2, w: FontWeight.w500),
-                  overflow: TextOverflow.ellipsis),
-            ),
-            const SizedBox(width: 6),
-            AnimatedSlide(
-              duration: const Duration(milliseconds: 160),
-              offset: h ? const Offset(0.2, -0.2) : Offset.zero,
-              child: Icon(LucideIcons.arrowUpRight, size: 11, color: h ? ed.ink : ed.ink3),
-            ),
+            const SizedBox(height: 5),
+            Text(s.label,
+                style: ed.mono(9.5, color: h ? ed.ink : ed.ink3, w: FontWeight.w500),
+                overflow: TextOverflow.ellipsis),
           ],
         ),
       ),

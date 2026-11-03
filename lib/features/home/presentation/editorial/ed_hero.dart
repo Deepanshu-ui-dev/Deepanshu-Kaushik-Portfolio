@@ -40,9 +40,9 @@ class EdHero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Banner image — shorter on mobile
+          // Banner image
           Container(
-            height: veryNarrow ? 110 : (narrow ? 140 : 210),
+            height: veryNarrow ? 120 : (narrow ? 160 : 230),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: ed.line2),
@@ -55,7 +55,7 @@ class EdHero extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(edPad(context) - 8, 14, edPad(context) - 8, 16),
+            padding: EdgeInsets.fromLTRB(edPad(context) - 8, 16, edPad(context) - 8, 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -72,8 +72,11 @@ class EdHero extends StatelessWidget {
                           width: avatar,
                           height: avatar,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9),
-                            border: Border.all(color: h ? ed.line2 : ed.line, width: 1.2),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: h ? ed.line2 : ed.line,
+                              width: 1.5,
+                            ),
                           ),
                           clipBehavior: Clip.antiAlias,
                           child: AnimatedScale(
@@ -87,12 +90,12 @@ class EdHero extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Name + open-to-work badge — wrap gracefully
+                          // Name + open-to-work badge
                           Wrap(
                             crossAxisAlignment: WrapCrossAlignment.center,
                             spacing: 8,
@@ -100,24 +103,24 @@ class EdHero extends StatelessWidget {
                             children: [
                               Text(
                                 PortfolioConfig.name,
-                                style: ed.serif(veryNarrow ? 20 : (narrow ? 24 : 30)),
+                                style: ed.serif(veryNarrow ? 22 : (narrow ? 26 : 32)),
                               ),
                               if (PortfolioConfig.openToWork) const OpenToWork(),
                             ],
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 4),
                           Text(
                             PortfolioConfig.headline,
                             style: ed.sans(
-                              veryNarrow ? 11.5 : 13,
+                              veryNarrow ? 12 : 13.5,
                               color: ed.ink2,
                               w: FontWeight.w500,
-                              h: 1.35,
+                              h: 1.4,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 4),
                           Row(children: [
                             Icon(LucideIcons.mapPin, size: 10, color: ed.ink3),
                             const SizedBox(width: 4),
@@ -134,8 +137,8 @@ class EdHero extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                // CTA buttons — scrollable row on mobile to prevent bad wrapping
+                const SizedBox(height: 14),
+                // CTA buttons
                 if (narrow)
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -274,20 +277,20 @@ class _Cta extends StatelessWidget {
       semanticLabel: label,
       builder: (_, h) => AnimatedContainer(
         duration: const Duration(milliseconds: 160),
-        height: 30,
-        padding: const EdgeInsets.symmetric(horizontal: 11),
+        height: 32,
+        padding: const EdgeInsets.symmetric(horizontal: 13),
         decoration: BoxDecoration(
           color: filled ? (h ? ed.ink.withValues(alpha: 0.88) : ed.ink) : (h ? ed.raised : ed.card),
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(7),
           border: Border.all(color: filled ? ed.ink : (h ? ed.line2 : ed.line)),
           boxShadow: h
               ? [BoxShadow(color: Colors.black.withValues(alpha: filled ? 0.22 : 0.06), blurRadius: 10, offset: const Offset(0, 3))]
               : null,
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Text(label, style: ed.sans(12, color: filled ? ed.paper : (h ? ed.ink : ed.ink2), w: FontWeight.w500, h: 1)),
+          Text(label, style: ed.sans(12.5, color: filled ? ed.paper : (h ? ed.ink : ed.ink2), w: FontWeight.w500, h: 1)),
           const SizedBox(width: 6),
-          Icon(icon, size: 12, color: filled ? ed.paper : (h ? ed.ink : ed.ink3)),
+          Icon(icon, size: 12.5, color: filled ? ed.paper : (h ? ed.ink : ed.ink3)),
         ]),
       ),
     );

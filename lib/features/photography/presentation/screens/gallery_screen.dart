@@ -75,8 +75,7 @@ class GalleryScreen extends StatelessWidget {
               );
             }),
           ),
-
-          const SizedBox(height: 48),
+          const ColumnBox(child: SizedBox(height: 24)),
         ],
       ),
     );

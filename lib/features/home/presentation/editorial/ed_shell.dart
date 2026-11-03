@@ -261,14 +261,10 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
         child: Scaffold(
           backgroundColor: ed.page,
           body: Stack(children: [
-            // Dot-grid background in the black side backgrounds
+            // Hatched gutter background framing the editorial paper column
             Positioned.fill(
               child: RepaintBoundary(child: CustomPaint(
-                painter: DotGridPainter(
-                  ed.dark ? const Color(0xFF2B2B30) : const Color(0xFFE2E2E6),
-                  spacing: 22,
-                  radius: 1.1,
-                ),
+                painter: HatchPainter(ed.hatch),
               )),
             ),
             SmoothScroll(

@@ -66,7 +66,7 @@ class ProjectCover extends StatelessWidget {
   final String? heroTag;
   final bool colour;
   const ProjectCover(this.p,
-      {super.key, this.hovered = false, this.height = 180, this.heroTag, this.colour = true});
+      {super.key, this.hovered = false, this.height = 240, this.heroTag, this.colour = true});
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class ProjectCover extends StatelessWidget {
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,
-          alignment: Alignment.center,
+          alignment: Alignment.topCenter,
           errorBuilder: (_, __, ___) => Container(
             color: ed.raised,
             alignment: Alignment.center,
@@ -447,7 +447,7 @@ class ProjectCard extends StatelessWidget {
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOut,
         transform: Matrix4.translationValues(0, h ? -4 : 0, 0),
-        padding: EdgeInsets.all(narrow ? 12 : 14),
+        padding: EdgeInsets.all(narrow ? 12 : 16),
         decoration: BoxDecoration(
           color: ed.card,
           borderRadius: BorderRadius.circular(14),
@@ -464,8 +464,8 @@ class ProjectCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProjectCover(p, hovered: h, height: narrow ? 155 : 185, heroTag: '$heroPrefix-${p.name}'),
-            SizedBox(height: narrow ? 10 : 14),
+            ProjectCover(p, hovered: h, height: narrow ? 200 : 250, heroTag: '$heroPrefix-${p.name}'),
+            SizedBox(height: narrow ? 12 : 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Column(
@@ -478,7 +478,7 @@ class ProjectCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           p.name,
-                          style: ed.sans(17.5, color: ed.ink, w: FontWeight.w700, h: 1.2),
+                          style: ed.sans(18, color: ed.ink, w: FontWeight.w700, h: 1.2),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -498,23 +498,23 @@ class ProjectCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       p.tagline!,
-                      style: ed.mono(11, color: ed.ink3, ls: 0.2),
+                      style: ed.mono(10.5, color: ed.ink3, ls: 0.2),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   Text(
                     p.description,
-                    style: ed.sans(13, color: ed.ink2, h: 1.45),
-                    maxLines: narrow ? 2 : 3,
+                    style: ed.sans(13.5, color: ed.ink2, h: 1.5),
+                    maxLines: narrow ? 3 : 4,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
             if (fill) const Spacer(),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             Container(height: 1, color: ed.line),
             const SizedBox(height: 12),
             Row(
@@ -908,13 +908,11 @@ class _EdSubScaffoldState extends ConsumerState<EdSubScaffold> {
         child: Scaffold(
           backgroundColor: ed.page,
           body: Stack(children: [
-            // Dot-grid background in the side black backgrounds
+            // Hatched gutter background framing the editorial paper column
             Positioned.fill(
-              child: CustomPaint(
-                painter: DotGridPainter(
-                  ed.dark ? const Color(0xFF2B2B30) : const Color(0xFFE2E2E6),
-                  spacing: 22,
-                  radius: 1.1,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: HatchPainter(ed.hatch),
                 ),
               ),
             ),

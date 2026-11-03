@@ -43,13 +43,13 @@ class AboutPage extends StatelessWidget {
           // Hero band — full-bleed with hatched gutters
           PageHeroBand(
             title: 'About',
-            badge: '[ DEEPANSHU KAUSHIK ]',
+            badge: '[ ${PortfolioConfig.name.toUpperCase()} ]',
             description:
-                'Computer Science engineer, Flutter architect, and design-minded software builder crafting tactile digital products, distributed backends, and multi-agent AI systems.',
+                '${PortfolioConfig.headline} crafting tactile cross-platform products, distributed backends, and multi-agent AI systems.',
             highlights: [
               (label: '✦ Available for SWE roles', color: ed.live),
-              (label: '📍 Greater Noida / Delhi NCR, India', color: ed.ink2),
-              (label: '🎓 B.Tech Data Science @ ABESEC', color: ed.ink2),
+              (label: '📍 ${PortfolioConfig.location}', color: ed.ink2),
+              (label: '🎓 ${PortfolioConfig.degree} @ ABESEC', color: ed.ink2),
             ],
             onBack: () => goHome(context),
             extra: Padding(
@@ -139,7 +139,7 @@ class AboutPage extends StatelessWidget {
                   ),
                 const SizedBox(height: 22),
 
-                // Stat strip
+                // Stat strip — synced to PortfolioConfig.stats
                 Container(
                   decoration: BoxDecoration(
                     color: ed.card,
@@ -148,13 +148,11 @@ class AboutPage extends StatelessWidget {
                   ),
                   child: LayoutBuilder(builder: (context, c) {
                     final is2Col = c.maxWidth < 600;
-                    final w = is2Col ? c.maxWidth / 2 : c.maxWidth / 4;
-                    const items = [
-                      ('3+ Years', 'Flutter Specialist'),
-                      ('10+ Apps', 'Shipped to Prod'),
-                      ('450+', 'LeetCode Solved'),
-                      ('Top 100', 'Flipkart Grid 6.0'),
+                    final items = [
+                      for (final s in PortfolioConfig.stats)
+                        ('${s.value ?? ''}${s.suffix}', s.label),
                     ];
+                    final w = is2Col ? c.maxWidth / 2 : c.maxWidth / items.length;
                     return Wrap(
                       children: [
                         for (int i = 0; i < items.length; i++)
@@ -164,7 +162,7 @@ class AboutPage extends StatelessWidget {
                                 horizontal: 16, vertical: 14),
                             decoration: BoxDecoration(
                               border: Border(
-                                right: (!is2Col && i < 3) || (is2Col && i % 2 == 0)
+                                right: (!is2Col && i < items.length - 1) || (is2Col && i % 2 == 0)
                                     ? BorderSide(color: ed.line)
                                     : BorderSide.none,
                                 bottom: is2Col && i < 2
@@ -190,7 +188,7 @@ class AboutPage extends StatelessWidget {
 
                 const SizedBox(height: 22),
 
-                // Education block
+                // Education block — synced to PortfolioConfig college and degree
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
@@ -218,13 +216,13 @@ class AboutPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'ABES Engineering College',
+                              PortfolioConfig.college,
                               style: ed.sans(14,
                                   color: ed.ink, w: FontWeight.w600),
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'B.Tech in Computer Science & Engineering (Data Science) • 2023 – 2027',
+                              '${PortfolioConfig.degree} • ${PortfolioConfig.eduPeriod}',
                               style: ed.mono(10.5, color: ed.ink2),
                             ),
                             const SizedBox(height: 4),
@@ -279,7 +277,7 @@ class AboutPage extends StatelessWidget {
                       tag: 'Community'
                     ),
                     (
-                      title: 'Solve 450+ algorithmic challenges on LeetCode',
+                      title: 'Solve 350+ algorithmic challenges on LeetCode',
                       status: 'Achieved',
                       done: true,
                       tag: 'DSA'
@@ -493,7 +491,32 @@ class AboutPage extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 48),
+          // ── 06. Connect & Socials ───────────────────────────────────
+          SectionBand(narrow ? 'Connect' : '[ 06 ] GET IN TOUCH & COLLABORATION'),
+          ColumnBox(
+            padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 30),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Want to build something together?',
+                          style: ed.sans(14, color: ed.ink, w: FontWeight.w600)),
+                      const SizedBox(height: 4),
+                      Text('Always open to software engineering opportunities, hackathons, and collaborations.',
+                          style: ed.mono(11, color: ed.ink3)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 14),
+                PillButton('Say Hello',
+                    icon: LucideIcons.send,
+                    filled: true,
+                    onTap: () => openContactPage(context)),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -618,8 +641,9 @@ class _ThoughtItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
     return Hover(
-      builder: (_, h) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+      builder: (_, h) => AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -630,11 +654,11 @@ class _ThoughtItem extends StatelessWidget {
                 Text(date, style: ed.mono(10, color: ed.ink3)),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 9),
             Text(title,
-                style: ed.serif(18, italic: h, color: h ? ed.ink : ed.ink)),
-            const SizedBox(height: 5),
-            Text(excerpt, style: ed.sans(12.5, color: ed.ink2, h: 1.5)),
+                style: ed.serif(h ? 19 : 18, italic: h, color: ed.ink)),
+            const SizedBox(height: 6),
+            Text(excerpt, style: ed.sans(13, color: ed.ink2, h: 1.55)),
           ],
         ),
       ),
@@ -919,7 +943,32 @@ class SkillsPage extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 48),
+          // ── 05. Open Source Experiments ─────────────────────────────
+          SectionBand(narrow ? 'Source Code' : '[ 05 ] OPEN SOURCE EXPERIMENTS'),
+          ColumnBox(
+            padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 30),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Looking for open-source implementations?',
+                          style: ed.sans(14, color: ed.ink, w: FontWeight.w600)),
+                      const SizedBox(height: 4),
+                      Text('Explore repositories, algorithmic solutions, and production Flutter architectures on GitHub.',
+                          style: ed.mono(11, color: ed.ink3)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 14),
+                PillButton('GitHub Repos',
+                    icon: LucideIcons.arrowUpRight,
+                    filled: true,
+                    onTap: () => openUrl(PortfolioConfig.githubUrl)),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -1260,7 +1309,7 @@ class _ContactPageState extends State<ContactPage> {
                 ),
                 (
                   label: 'Framer',
-                  handle: 'deepanshui',
+                  handle: PortfolioConfig.framerHandle,
                   url: PortfolioConfig.websiteUrl,
                   icon: 'assets/icons/tech/framer.svg',
                 ),
@@ -1372,7 +1421,41 @@ class _ContactPageState extends State<ContactPage> {
             }),
           ),
 
-          const SizedBox(height: 48),
+          // ── 04. Direct Links & Resume ───────────────────────────────
+          SectionBand(narrow ? 'Links & Resume' : '[ 04 ] DIRECT RESUME & REPOSITORIES'),
+          ColumnBox(
+            padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 30),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Prefer reading credentials directly?',
+                          style: ed.sans(14, color: ed.ink, w: FontWeight.w600)),
+                      const SizedBox(height: 4),
+                      Text('Download my updated résumé or check out open-source repositories on GitHub.',
+                          style: ed.mono(11, color: ed.ink3)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    PillButton('Download Résumé',
+                        icon: LucideIcons.download,
+                        filled: true,
+                        onTap: () => openUrl(PortfolioConfig.resumeUrl)),
+                    PillButton('GitHub',
+                        icon: LucideIcons.arrowUpRight,
+                        onTap: () => openUrl(PortfolioConfig.githubUrl)),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
