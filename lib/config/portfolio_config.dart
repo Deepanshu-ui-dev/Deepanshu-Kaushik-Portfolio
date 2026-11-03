@@ -9,11 +9,11 @@ class PortfolioConfig {
   static const String phone = '+91 9582405021';
 
   static const String githubUrl = 'https://github.com/Deepanshu-ui-dev';
-  static const String resumeUrl = 'https://drive.google.com/file/d/1pljNCb9yXzrtyHjMgQpAuhskZcyRy6FW/view?usp=sharing';
+  static const String resumeUrl = 'https://drive.google.com/file/d/1pmUJ7YIkmHIeHix5EdRUmW0xJWNAEdqR/view?usp=drivesdk';
   static const String githubUsername = 'Deepanshu-ui-dev';
   static const String linkedinUrl = 'https://www.linkedin.com/in/imdeepanshukaushik/';
   static const String twitterUrl = 'https://x.com/Deepanshu25u';
-  static const String websiteUrl = 'https://imdeepanshu.framer.ai/';
+  static const String websiteUrl = 'https://www.deepanshux.tech/';
   static const String framerUrl = 'https://imdeepanshu.framer.ai/';
   static const String framerHandle = 'imdeepanshu.framer.ai';
   static const String visitorApiUrl = 'https://api.counterapi.dev/v1/deepanshux.tech/visits';
@@ -30,7 +30,7 @@ class PortfolioConfig {
 
   static const String bio =
       'I am a Flutter developer and software engineer pursuing B.Tech in Data Science at ABESEC (2023–2027). '
-      'I bridge visual craft with solid engineering — currently working as a Frontend Engineer at BarterNow while building full-stack platforms, developer tools, and multi-agent AI systems. '
+      'I bridge visual craft with solid engineering currently working as a Frontend Engineer at BarterNow while building full-stack platforms, developer tools, and multi-agent AI systems. '
       'With 350+ algorithmic problems solved on LeetCode and a portfolio of shipped web and mobile applications, I focus on building polished, reliable software that users enjoy.';
 
   // ── Editorial home page content ───────────────────────────────────
