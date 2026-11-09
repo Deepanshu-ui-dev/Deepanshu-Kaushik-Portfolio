@@ -908,14 +908,6 @@ class _EdSubScaffoldState extends ConsumerState<EdSubScaffold> {
         child: Scaffold(
           backgroundColor: ed.page,
           body: Stack(children: [
-            // Hatched gutter background framing the editorial paper column
-            Positioned.fill(
-              child: RepaintBoundary(
-                child: CustomPaint(
-                  painter: HatchPainter(ed.hatch),
-                ),
-              ),
-            ),
             SmoothScroll(
               controller: _scroll,
               child: SingleChildScrollView(
@@ -942,6 +934,8 @@ class _EdSubScaffoldState extends ConsumerState<EdSubScaffold> {
                 onToggleTheme: () => ref.read(themeModeProvider.notifier).toggle(),
               ),
             ),
+            // Same faint film grain as the home page.
+            Positioned.fill(child: PaperGrain(opacity: ed.dark ? 0.045 : 0.03)),
           ]),
         ),
       ),
@@ -1037,7 +1031,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
       trail: '/ projects',
       onSearch: () => _searchFocus.requestFocus(),
       builder: (context, _) => Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        // Hero band — full-bleed with hatched gutters like home page sections
+        // Hero — same look as the home hero
         PageHeroBand(
           title: 'Projects',
           badge: '[ 0${PortfolioConfig.projects.length} ]',
@@ -1176,8 +1170,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
           ]),
         ),
         // Section band divider before project grid
-        const SectionBand('[ 01 ] ALL PROJECTS'),
+        const SectionBand('all projects'),
         ColumnBox(
+            reveal: true,
           padding: EdgeInsets.fromLTRB(edPad(context), 16, edPad(context), 24),
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 280),
@@ -1212,8 +1207,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
           ),
         ),
         // GitHub footer band
-        const SectionBand('[ 02 ] MORE ON GITHUB'),
+        const SectionBand('more on github'),
         ColumnBox(
+            reveal: true,
           padding: EdgeInsets.fromLTRB(edPad(context), 22, edPad(context), 28),
           child: Row(children: [
             Expanded(
@@ -1486,14 +1482,16 @@ class ProjectDetailPage extends StatelessWidget {
             ]),
           ]),
         ),
-        const SectionBand('Overview'),
+        const SectionBand('overview'),
         ColumnBox(
+            reveal: true,
           padding: EdgeInsets.fromLTRB(edPad(context), 20, edPad(context), 24),
           child: Text(p.description, style: ed.sans(15, color: ed.ink, h: 1.65)),
         ),
         if (p.features.isNotEmpty) ...[
-          const SectionBand('Features'),
+          const SectionBand('features'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 20, edPad(context), 24),
             child: LayoutBuilder(builder: (_, c) {
               final cols = c.maxWidth >= 560 ? 2 : 1;
@@ -1524,8 +1522,9 @@ class ProjectDetailPage extends StatelessWidget {
           ),
         ],
         if (p.architecture.isNotEmpty) ...[
-          const SectionBand('Architecture'),
+          const SectionBand('architecture'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 20, edPad(context), 24),
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
@@ -1543,8 +1542,9 @@ class ProjectDetailPage extends StatelessWidget {
             ]),
           ),
         ],
-        const SectionBand('Tech Stack'),
+        const SectionBand('tech stack'),
         ColumnBox(
+            reveal: true,
           padding: EdgeInsets.fromLTRB(edPad(context), 20, edPad(context), 26),
           child: Wrap(spacing: 8, runSpacing: 8, children: [for (final t in p.tags) _TechTag(t)]),
         ),

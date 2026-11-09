@@ -22,7 +22,7 @@ void openContactPage(BuildContext context) {
 }
 
 // ════════════════════════════════════════════════════════════════════
-//  ABOUT PAGE — Editorial full-bleed with hatched gutters & divisions
+//  ABOUT PAGE
 // ════════════════════════════════════════════════════════════════════
 
 class AboutPage extends StatelessWidget {
@@ -40,7 +40,7 @@ class AboutPage extends StatelessWidget {
       builder: (context, scroll) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Hero band — full-bleed with hatched gutters
+          // Hero — same look as the home hero
           PageHeroBand(
             title: 'About',
             badge: '[ ${PortfolioConfig.name.toUpperCase()} ]',
@@ -77,8 +77,9 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 01. The Person ──────────────────────────────────────────
-          SectionBand(narrow ? 'The Person' : '[ 01 ] THE PERSON BEHIND THE PIXELS'),
+          const SectionBand('the person'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 28, edPad(context), 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,16 +242,18 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 02. Audio Player ────────────────────────────────────────
-          SectionBand(narrow ? 'Audio Rotation' : '[ 02 ] CURRENT ROTATION & AUDIO'),
+          const SectionBand('audio rotation'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 24),
             child: const EdMusicPlayer(),
           ),
 
           // ── 03. Bucket List ─────────────────────────────────────────
-          SectionBand(narrow ? 'Bucket List' : '[ 03 ] LIFE BUCKET LIST & ASPIRATIONS',
+          SectionBand('bucket list',
               trailing: const MonoTag('8 GOALS')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -404,8 +407,9 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 04. Community & Leadership ──────────────────────────────
-          SectionBand(narrow ? 'Community' : '[ 04 ] COMMUNITY CONTRIBUTIONS & LEADERSHIP'),
+          const SectionBand('community'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,8 +462,9 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 05. Writing & Notes ─────────────────────────────────────
-          SectionBand(narrow ? 'Essays & Notes' : '[ 05 ] ESSAYS & THOUGHT NOTES'),
+          const SectionBand('essays & notes'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 32),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,8 +497,9 @@ class AboutPage extends StatelessWidget {
           ),
 
           // ── 06. Connect & Socials ───────────────────────────────────
-          SectionBand(narrow ? 'Connect' : '[ 06 ] GET IN TOUCH & COLLABORATION'),
+          const SectionBand('connect'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 30),
             child: Row(
               children: [
@@ -676,8 +682,6 @@ class SkillsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
-    final width = MediaQuery.sizeOf(context).width;
-    final narrow = width < 600;
 
     return EdSubScaffold(
       trail: '/ skills',
@@ -685,7 +689,7 @@ class SkillsPage extends StatelessWidget {
       builder: (context, scroll) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Hero band — full-bleed with hatched gutters
+          // Hero — same look as the home hero
           PageHeroBand(
             title: 'Skills & Stack',
             badge: '[ 20+ TECHNOLOGIES ]',
@@ -700,9 +704,10 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 01. Design & UI/UX ──────────────────────────────────────
-          SectionBand(narrow ? 'Design & UI/UX' : '[ 01 ] DESIGN & UI/UX',
+          SectionBand('design & ui/ux',
               trailing: const MonoTag('6 TOOLS')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: const _SkillGrid(
               skills: [
@@ -753,9 +758,10 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 02. Languages ───────────────────────────────────────────
-          SectionBand(narrow ? 'Core Languages' : '[ 02 ] CORE LANGUAGES',
+          SectionBand('core languages',
               trailing: const MonoTag('6 LANGUAGES')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: const _SkillGrid(
               skills: [
@@ -806,9 +812,10 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 03. Frameworks & Architecture ───────────────────────────
-          SectionBand(narrow ? 'Frameworks & State' : '[ 03 ] FRAMEWORKS & STATE ARCHITECTURES',
+          SectionBand('frameworks & state',
               trailing: const MonoTag('4 FRAMEWORKS')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: const _SkillGrid(
               skills: [
@@ -845,9 +852,10 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 04. Databases & Cloud Backend ───────────────────────────
-          SectionBand(narrow ? 'Cloud & Backend' : '[ 04 ] DATABASE, CLOUD & DISTRIBUTED BACKEND',
+          SectionBand('cloud & backend',
               trailing: const MonoTag('7 PLATFORMS')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 28),
             child: const _SkillGrid(
               skills: [
@@ -905,9 +913,10 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 05. DevOps & Tools ──────────────────────────────────────
-          SectionBand(narrow ? 'Developer Tooling' : '[ 05 ] DEVELOPER TOOLING & SYSTEMS',
+          SectionBand('developer tooling',
               trailing: const MonoTag('4 TOOLS')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 32),
             child: const _SkillGrid(
               skills: [
@@ -944,8 +953,9 @@ class SkillsPage extends StatelessWidget {
           ),
 
           // ── 05. Open Source Experiments ─────────────────────────────
-          SectionBand(narrow ? 'Source Code' : '[ 05 ] OPEN SOURCE EXPERIMENTS'),
+          const SectionBand('source code'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 30),
             child: Row(
               children: [
@@ -1163,8 +1173,6 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
-    final width = MediaQuery.sizeOf(context).width;
-    final narrow = width < 600;
 
     return EdSubScaffold(
       trail: '/ contact',
@@ -1172,7 +1180,7 @@ class _ContactPageState extends State<ContactPage> {
       builder: (context, scroll) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Hero band — full-bleed with hatched gutters
+          // Hero — same look as the home hero
           PageHeroBand(
             title: 'Get In Touch',
             badge: '[ SAY HELLO ]',
@@ -1187,8 +1195,9 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           // ── 01. Direct Message Composer ─────────────────────────────
-          SectionBand(narrow ? 'Send a Message' : '[ 01 ] SEND A DIRECT MESSAGE'),
+          const SectionBand('send a message'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 28, edPad(context), 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1275,9 +1284,10 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           // ── 02. Direct Channels & Networks ──────────────────────────
-          SectionBand(narrow ? 'Direct Channels' : '[ 02 ] DIRECT CHANNELS & PROFILES',
+          SectionBand('direct channels',
               trailing: const MonoTag('5 NETWORKS')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.zero,
             child: LayoutBuilder(builder: (context, c) {
               final perRow = c.maxWidth >= 600 ? 5 : (c.maxWidth >= 380 ? 3 : 2);
@@ -1364,8 +1374,9 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           // ── 03. Availability & Working Preferences ──────────────────
-          SectionBand(narrow ? 'Availability' : '[ 03 ] AVAILABILITY & WORKING PREFERENCES'),
+          const SectionBand('availability'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 32),
             child: LayoutBuilder(builder: (context, c) {
               final cols = c.maxWidth >= 600 ? 3 : 1;
@@ -1422,8 +1433,9 @@ class _ContactPageState extends State<ContactPage> {
           ),
 
           // ── 04. Direct Links & Resume ───────────────────────────────
-          SectionBand(narrow ? 'Links & Resume' : '[ 04 ] DIRECT RESUME & REPOSITORIES'),
+          const SectionBand('links & resume'),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 30),
             child: Row(
               children: [

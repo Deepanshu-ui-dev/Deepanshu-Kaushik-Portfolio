@@ -55,7 +55,10 @@ class _HoverState extends State<Hover> {
 class ColumnBox extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
-  const ColumnBox({super.key, required this.child, this.padding});
+
+  /// Fade the content in on first scroll into view, like home sections.
+  final bool reveal;
+  const ColumnBox({super.key, required this.child, this.padding, this.reveal = false});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,7 @@ class ColumnBox extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: Ed.column),
           color: ed.paper,
           padding: padding ?? EdgeInsets.symmetric(horizontal: edPad(context)),
-          child: child,
+          child: reveal ? EdReveal(child: child) : child,
         ),
       ),
     );
@@ -194,8 +197,8 @@ class SectionBand extends StatelessWidget {
   }
 }
 
-/// Full-bleed page hero header — matches [SectionBand] aesthetics:
-/// hatched gutters, hairline borders, back link, title + badge, description and highlight pills.
+/// Sub-page hero header, styled like the home hero: back link, title +
+/// badge, description and highlight pills on the paper column.
 class PageHeroBand extends StatelessWidget {
   final String title;
   final String badge;
@@ -219,73 +222,72 @@ class PageHeroBand extends StatelessWidget {
     final ed = Ed.of(context);
     final narrow = MediaQuery.sizeOf(context).width < 600;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: ed.page,
-        border: Border.symmetric(horizontal: BorderSide(color: ed.line)),
-      ),
-      child: Stack(children: [
-        // Hatched gutters — same as SectionBand
-        Positioned.fill(child: CustomPaint(painter: HatchPainter(ed.hatch))),
-        ColumnBox(
-          padding: EdgeInsets.fromLTRB(edPad(context), 30, edPad(context), 24),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            // Back breadcrumb
-            Hover(
-              onTap: onBack,
-              semanticLabel: 'Back home',
-              builder: (_, h) => Row(mainAxisSize: MainAxisSize.min, children: [
-                AnimatedSlide(
-                  duration: const Duration(milliseconds: 160),
-                  offset: Offset(h ? -0.25 : 0, 0),
-                  child: Icon(LucideIcons.arrowLeft, size: 13, color: h ? ed.ink : ed.ink3),
-                ),
-                const SizedBox(width: 6),
-                Text('~/home', style: ed.mono(10.5, color: h ? ed.ink : ed.ink3)),
-              ]),
-            ),
-            const SizedBox(height: 16),
-            // Title + badge row
-            Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Flexible(
-                child: Text(title, style: ed.serif(narrow ? 38 : 50)),
+    // Same treatment as the home hero: content sits on the paper column with
+    // plain page gutters (no hatch), and fades in piece by piece.
+    return ColumnBox(
+      padding: EdgeInsets.fromLTRB(edPad(context), narrow ? 26 : 34, edPad(context), narrow ? 24 : 30),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // Back breadcrumb
+        EdReveal(
+          child: Hover(
+            onTap: onBack,
+            semanticLabel: 'Back home',
+            builder: (_, h) => Row(mainAxisSize: MainAxisSize.min, children: [
+              AnimatedSlide(
+                duration: const Duration(milliseconds: 160),
+                offset: Offset(h ? -0.25 : 0, 0),
+                child: Icon(LucideIcons.arrowLeft, size: 13, color: h ? ed.ink : ed.ink3),
               ),
-              const SizedBox(width: 10),
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: ed.card,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: ed.line2),
-                  ),
-                  child: Text(
-                    badge,
-                    style: ed.mono(10, color: ed.ink2, w: FontWeight.w600, ls: 0.5),
-                  ),
-                ),
-              ),
+              const SizedBox(width: 6),
+              Text('~/home', style: ed.mono(10.5, color: h ? ed.ink : ed.ink3)),
             ]),
-            const SizedBox(height: 8),
-            // Description
-            Text(description, style: ed.sans(13.5, color: ed.ink2, h: 1.5)),
-            const SizedBox(height: 14),
-            // Highlight pills
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              children: [
-                for (final h in highlights)
-                  _HeroPill(label: h.label, color: h.color),
-              ],
-            ),
-            if (extra != null) ...[
-              const SizedBox(height: 16),
-              extra!,
-            ],
-          ]),
+          ),
         ),
+        const SizedBox(height: 16),
+        // Title (letter-by-letter, like the name on home) + badge
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 10,
+          runSpacing: 6,
+          children: [
+            SplitReveal(title, delay: const Duration(milliseconds: 80), style: ed.serif(narrow ? 38 : 50)),
+            EdReveal(
+              delay: const Duration(milliseconds: 400),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: ed.card,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: ed.line2),
+                ),
+                child: Text(
+                  badge,
+                  style: ed.mono(10, color: ed.ink2, w: FontWeight.w600, ls: 0.5),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        EdReveal(
+          delay: const Duration(milliseconds: 240),
+          child: Text(description, style: ed.sans(narrow ? 13.5 : 14.5, color: ed.ink2, h: 1.55)),
+        ),
+        const SizedBox(height: 16),
+        EdReveal(
+          delay: const Duration(milliseconds: 360),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            children: [
+              for (final h in highlights) _HeroPill(label: h.label, color: h.color),
+            ],
+          ),
+        ),
+        if (extra != null) ...[
+          const SizedBox(height: 4),
+          EdReveal(delay: const Duration(milliseconds: 440), child: extra!),
+        ],
       ]),
     );
   }

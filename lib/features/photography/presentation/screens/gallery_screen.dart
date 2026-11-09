@@ -35,7 +35,7 @@ class GalleryScreen extends StatelessWidget {
       builder: (context, scroll) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Hero band — full-bleed with hatched gutters
+          // Hero — same look as the home hero
           PageHeroBand(
             title: 'Photography',
             badge: '[ 14 CAPTURES ]',
@@ -50,8 +50,9 @@ class GalleryScreen extends StatelessWidget {
           ),
 
           // ── Section 01: Gallery Grid ────────────────────────────────
-          const SectionBand('[ 01 ] SELECTED SHOTS & FRAMES', trailing: MonoTag('14 PHOTOS')),
+          const SectionBand('selected shots & frames', trailing: MonoTag('14 PHOTOS')),
           ColumnBox(
+            reveal: true,
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 36),
             child: LayoutBuilder(builder: (context, c) {
               final cols = c.maxWidth >= 760 ? 3 : (c.maxWidth >= 480 ? 2 : 1);
