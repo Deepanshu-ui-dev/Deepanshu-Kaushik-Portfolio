@@ -41,6 +41,19 @@ class Ed {
         color: color ?? ink,
       );
 
+  /// Handwritten margin-note face — used for tiny asides only.
+  TextStyle hand(double size, {Color? color}) => TextStyle(
+        fontFamily: 'ArchitectsDaughter',
+        fontSize: size,
+        height: 1.35,
+        color: color ?? ink3,
+      );
+
+  // ── motion ──────────────────────────────────────────────────────────
+  /// Long, soft ease-out used for every reveal (cubic-bezier(.16,1,.3,1)).
+  static const Curve easeOut = Cubic(0.16, 1, 0.3, 1);
+  static const Curve easeInOut = Cubic(0.65, 0, 0.35, 1);
+
   TextStyle mono(double size, {Color? color, FontWeight w = FontWeight.w400, double ls = 0.2}) =>
       TextStyle(
         fontFamily: 'Inter',

@@ -50,12 +50,12 @@ class GalleryScreen extends StatelessWidget {
           ),
 
           // ── Section 01: Gallery Grid ────────────────────────────────
-          SectionBand('[ 01 ] SELECTED SHOTS & FRAMES', trailing: const MonoTag('14 PHOTOS')),
+          const SectionBand('[ 01 ] SELECTED SHOTS & FRAMES', trailing: MonoTag('14 PHOTOS')),
           ColumnBox(
             padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 36),
             child: LayoutBuilder(builder: (context, c) {
               final cols = c.maxWidth >= 760 ? 3 : (c.maxWidth >= 480 ? 2 : 1);
-              final spacing = 12.0;
+              const spacing = 12.0;
               final w = (c.maxWidth - spacing * (cols - 1)) / cols;
 
               return Wrap(

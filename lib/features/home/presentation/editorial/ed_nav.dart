@@ -358,14 +358,19 @@ class _Tabs extends StatelessWidget {
                   builder: (_, h) => SizedBox(
                     width: widths[i],
                     height: 30,
+                    // Cross-fade two fixed-colour labels instead of animating the
+                    // text style. Changing a paragraph's colour every frame takes
+                    // Flutter's "paint-only" path, which on web re-measures the
+                    // text and trips the `debugSize == size` assertion.
                     child: Center(
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 150),
-                        style: style.copyWith(
-                          color: i == a || h ? ed.ink : ed.ink2,
+                      child: Stack(alignment: Alignment.center, children: [
+                        Text(navItems[i].$1, style: style.copyWith(color: ed.ink2)),
+                        AnimatedOpacity(
+                          duration: const Duration(milliseconds: 150),
+                          opacity: i == a || h ? 1 : 0,
+                          child: Text(navItems[i].$1, style: style.copyWith(color: ed.ink)),
                         ),
-                        child: Text(navItems[i].$1),
-                      ),
+                      ]),
                     ),
                   ),
                 ),

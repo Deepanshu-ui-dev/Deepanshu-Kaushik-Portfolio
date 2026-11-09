@@ -62,7 +62,7 @@ class _ScrollFadeInState extends State<ScrollFadeIn>
   void _maybeAnimate() {
     if (_animated || !mounted) return;
 
-    final tickerEnabled = TickerMode.of(context);
+    final tickerEnabled = TickerMode.valuesOf(context).enabled;
     if (!tickerEnabled) return;
 
     _animated = true;

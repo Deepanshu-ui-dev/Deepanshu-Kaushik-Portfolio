@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../../config/portfolio_config.dart';
+import 'ed_motion.dart';
 import 'ed_theme.dart';
 
 Future<void> openUrl(String url) async {
@@ -61,17 +62,15 @@ class ColumnBox extends StatelessWidget {
     final ed = Ed.of(context);
     final framed = MediaQuery.sizeOf(context).width > Ed.column + 2;
     return Center(
-      child: Container(
-        width: double.infinity,
-        constraints: const BoxConstraints(maxWidth: Ed.column),
-        decoration: BoxDecoration(
+      child: CustomPaint(
+        foregroundPainter: framed ? DashedRulePainter(ed.ink3.withValues(alpha: 0.55), left: true, right: true) : null,
+        child: Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(maxWidth: Ed.column),
           color: ed.paper,
-          border: framed
-              ? Border.symmetric(vertical: BorderSide(color: ed.line))
-              : null,
+          padding: padding ?? EdgeInsets.symmetric(horizontal: edPad(context)),
+          child: child,
         ),
-        padding: padding ?? EdgeInsets.symmetric(horizontal: edPad(context)),
-        child: child,
       ),
     );
   }
@@ -142,20 +141,37 @@ class SectionBand extends StatelessWidget {
     final narrow = MediaQuery.sizeOf(context).width < 600;
     final veryNarrow = MediaQuery.sizeOf(context).width < 400;
     final effectiveH = narrow ? 44.0 : height;
-    final titleSize = veryNarrow ? 18.0 : (narrow ? 20.0 : 24.0);
+    final titleSize = veryNarrow ? 22.0 : (narrow ? 24.0 : 28.0);
+    final rule = ed.ink3.withValues(alpha: 0.55);
 
-    return Container(
-      height: effectiveH,
-      decoration: BoxDecoration(
-        color: ed.page,
-        border: Border.symmetric(horizontal: BorderSide(color: ed.line)),
-      ),
-      child: Stack(
-        children: [
-          Positioned.fill(child: CustomPaint(painter: HatchPainter(ed.hatch))),
-          ColumnBox(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Dotted spacer band between sections, ruled by full-bleed dashes.
+        CustomPaint(
+          foregroundPainter: DashedRulePainter(rule, top: true, bottom: true),
+          child: SizedBox(
+            height: narrow ? 26 : 32,
+            child: Stack(children: [
+              Positioned.fill(child: ColoredBox(color: ed.page)),
+              Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: Ed.column),
+                  child: CustomPaint(
+                    painter: DotGridPainter(ed.line2, spacing: 8, radius: 0.7),
+                    size: const Size(double.infinity, double.infinity),
+                  ),
+                ),
+              ),
+            ]),
+          ),
+        ),
+        // Section heading sitting on its own dashed baseline.
+        CustomPaint(
+          foregroundPainter: DashedRulePainter(rule, bottom: true),
+          child: ColumnBox(
             child: SizedBox(
-              height: effectiveH - 2,
+              height: effectiveH + 6,
               child: Row(
                 children: [
                   Expanded(
@@ -172,8 +188,8 @@ class SectionBand extends StatelessWidget {
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

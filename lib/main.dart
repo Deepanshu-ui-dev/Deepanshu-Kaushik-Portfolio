@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import 'config/portfolio_config.dart';
 import 'core/theme/app_theme.dart';
@@ -21,6 +22,8 @@ void main() async {
   );
 
   GestureBinding.instance.resamplingEnabled = true;
+  // Default is 500ms, which made scroll reveals start noticeably late.
+  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 60);
   PaintingBinding.instance.imageCache.maximumSizeBytes = 256 << 20;
 
   ThemeTransitionUtils.initializeColorCache();

@@ -5,10 +5,10 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../../../config/portfolio_config.dart';
 import '../../../../core/theme/theme_provider.dart';
-import '../../../../core/widgets/scroll_fade_in.dart';
 import '../../../../core/widgets/smooth_scroll.dart';
 import 'ed_nav.dart';
 import 'ed_pages.dart';
+import 'ed_motion.dart';
 import 'ed_primitives.dart';
 import 'ed_sections.dart' show PulseDot;
 import 'ed_theme.dart';
@@ -681,7 +681,7 @@ class EdProjects extends StatelessWidget {
 
     return ColumnBox(
       padding: EdgeInsets.fromLTRB(edPad(context), 22, edPad(context), 24),
-      child: ScrollFadeIn(
+      child: EdReveal(
         child: Column(children: [
           ValueListenableBuilder<bool>(
             valueListenable: edProjectsList,
@@ -1502,7 +1502,7 @@ class ProjectDetailPage extends StatelessWidget {
                 for (int i = 0; i < p.features.length; i++)
                   SizedBox(
                     width: w,
-                    child: ScrollFadeIn(
+                    child: EdReveal(
                       delay: Duration(milliseconds: 60 * i),
                       child: Container(
                         padding: const EdgeInsets.all(14),

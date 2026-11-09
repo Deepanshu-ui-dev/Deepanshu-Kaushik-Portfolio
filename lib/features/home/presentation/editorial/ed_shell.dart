@@ -10,6 +10,7 @@ import '../../../../core/widgets/smooth_scroll.dart';
 import '../../../photography/presentation/screens/gallery_screen.dart';
 import 'ed_command_palette.dart';
 import 'ed_hero.dart';
+import 'ed_motion.dart';
 import 'ed_nav.dart';
 import 'ed_pages.dart';
 import 'ed_primitives.dart';
@@ -210,10 +211,10 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
           avatarKey: _avatarKey,
           avatarVisible: _avatarVisible,
         ),
-        SectionBand('About', key: _keys[EdSection.about]),
+        SectionBand('about', key: _keys[EdSection.about]),
         const EdAbout(),
         SectionBand(
-          'Projects',
+          'projects',
           key: _keys[EdSection.work],
           trailing: width < 540
               ? PillButton('View all', icon: LucideIcons.arrowRight, onTap: () => openProjectsPage(context))
@@ -224,12 +225,12 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
                 ]),
         ),
         const EdProjects(count: 2),
-        SectionBand('Experience', key: _keys[EdSection.experience]),
+        SectionBand('experience', key: _keys[EdSection.experience]),
         const EdExperience(),
-        SectionBand('Tech Stack', key: _keys[EdSection.skills]),
+        SectionBand('tech stack', key: _keys[EdSection.skills]),
         const EdTechStack(),
         SectionBand(
-          'Photography',
+          'photography',
           key: _keys[EdSection.photography],
           trailing: PillButton(
             width < 540 ? 'Gallery' : 'Explore gallery',
@@ -238,9 +239,10 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
           ),
         ),
         const EdPhotography(),
-        SectionBand('GitHub Activity', key: _keys[EdSection.github], trailing: const EdGitHubTrailing()),
+        SectionBand('github activity', key: _keys[EdSection.github], trailing: const EdGitHubTrailing()),
         const EdGitHub(),
-        SectionBand('Contact', key: _keys[EdSection.contact]),
+        SectionBand('say hi', key: _keys[EdSection.contact]),
+        const EdContactLead(),
         const EdContact(),
       ])
         w is SizedBox ? w : RepaintBoundary(child: w),
@@ -261,12 +263,6 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
         child: Scaffold(
           backgroundColor: ed.page,
           body: Stack(children: [
-            // Hatched gutter background framing the editorial paper column
-            Positioned.fill(
-              child: RepaintBoundary(child: CustomPaint(
-                painter: HatchPainter(ed.hatch),
-              )),
-            ),
             SmoothScroll(
               controller: _scroll,
               child: SingleChildScrollView(
@@ -299,7 +295,9 @@ class _EditorialShellState extends ConsumerState<EditorialShell> {
                 onTap: _toTop,
               ),
             ),
-
+            // Faint film grain over everything, like printed paper.
+            // IgnorePointer inside, so it never steals clicks.
+            Positioned.fill(child: PaperGrain(opacity: ed.dark ? 0.045 : 0.03)),
           ]),
         ),
       ),

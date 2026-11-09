@@ -74,7 +74,7 @@ class _EdWelcomeState extends State<EdWelcome>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFFE07B39).withOpacity(ed.dark ? 0.09 : 0.06),
+                      const Color(0xFFE07B39).withValues(alpha: ed.dark ? 0.09 : 0.06),
                       Colors.transparent,
                     ],
                   ),
@@ -181,17 +181,17 @@ class _AvatarState extends State<_Avatar> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(28),
             border: Border.all(
-              color: const Color(0xFFE07B39).withOpacity(0.35),
+              color: const Color(0xFFE07B39).withValues(alpha: 0.35),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFE07B39).withOpacity(0.15),
+                color: const Color(0xFFE07B39).withValues(alpha: 0.15),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(widget.ed.dark ? 0.45 : 0.08),
+                color: Colors.black.withValues(alpha: widget.ed.dark ? 0.45 : 0.08),
                 blurRadius: 32,
                 offset: const Offset(0, 12),
               ),
@@ -252,12 +252,12 @@ class _ExploreButtonState extends State<_ExploreButton> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
           decoration: BoxDecoration(
-            color: _hovered ? bg.withOpacity(0.86) : bg,
+            color: _hovered ? bg.withValues(alpha: 0.86) : bg,
             borderRadius: BorderRadius.circular(100),
             boxShadow: _hovered
                 ? [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.18),
+                      color: Colors.black.withValues(alpha: 0.18),
                       blurRadius: 20,
                       offset: const Offset(0, 6),
                     ),
@@ -302,7 +302,7 @@ class _NoisePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final rng = math.Random(42);
     final p = Paint()
-      ..color = (dark ? Colors.white : Colors.black).withOpacity(0.018);
+      ..color = (dark ? Colors.white : Colors.black).withValues(alpha: 0.018);
     for (var i = 0; i < 3200; i++) {
       canvas.drawCircle(
         Offset(rng.nextDouble() * size.width, rng.nextDouble() * size.height),

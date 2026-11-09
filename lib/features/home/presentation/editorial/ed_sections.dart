@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -8,12 +9,12 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../../config/portfolio_config.dart';
 import '../../../../core/supabase/supabase_config.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/scroll_fade_in.dart';
 import '../../../github/data/github_repository.dart';
 import '../../../photography/presentation/screens/gallery_screen.dart';
 import '../widgets/contribution_graph.dart';
 import 'ed_music_player.dart';
 import 'ed_pages.dart' show openAboutPage;
+import 'ed_motion.dart';
 import 'ed_primitives.dart';
 import 'ed_projects.dart' show edRoute;
 import 'ed_theme.dart';
@@ -130,7 +131,7 @@ class EdAbout extends StatelessWidget {
     final narrow = MediaQuery.sizeOf(context).width < 600;
     return ColumnBox(
       padding: EdgeInsets.fromLTRB(edPad(context), narrow ? 22 : 28, edPad(context), narrow ? 24 : 32),
-      child: ScrollFadeIn(
+      child: EdReveal(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -333,17 +334,16 @@ class EdExperience extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ed = Ed.of(context);
-    final narrow = MediaQuery.sizeOf(context).width < 600;
     const roles = PortfolioConfig.experience;
     return ColumnBox(
       padding: EdgeInsets.fromLTRB(edPad(context), 24, edPad(context), 26),
-      child: ScrollFadeIn(
+      child: EdReveal(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (int i = 0; i < roles.length; i++) ...[
               if (i > 0) Container(height: 1, color: ed.line),
-              _RoleBlock(roles[i], initiallyOpen: !narrow && i == 0),
+              _RoleBlock(roles[i], initiallyOpen: i == 0, tldr: i == 0 && PortfolioConfig.tldr.isNotEmpty),
             ],
             const SizedBox(height: 24),
             const _StatsStrip(),
@@ -357,7 +357,8 @@ class EdExperience extends StatelessWidget {
 class _RoleBlock extends StatefulWidget {
   final RoleItem r;
   final bool initiallyOpen;
-  const _RoleBlock(this.r, {this.initiallyOpen = false});
+  final bool tldr;
+  const _RoleBlock(this.r, {this.initiallyOpen = false, this.tldr = false});
 
   @override
   State<_RoleBlock> createState() => _RoleBlockState();
@@ -397,10 +398,18 @@ class _RoleBlockState extends State<_RoleBlock> {
           const SizedBox(width: 12),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(r.role,
-                  style: ed.sans(14.5, color: ed.ink, w: FontWeight.w600, h: 1.25),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  Text(r.role,
+                      style: ed.sans(14.5, color: ed.ink, w: FontWeight.w600, h: 1.25),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
+                  if (r.isCurrent) const WorkingBadge(),
+                ],
+              ),
               const SizedBox(height: 3),
               Text(narrow ? '${r.company}  ·  ${r.period}' : r.company,
                   style: ed.mono(10.5, color: ed.ink3)),
@@ -439,13 +448,32 @@ class _RoleBlockState extends State<_RoleBlock> {
     ]);
   }
 
+  bool _long = false;
+
   Widget _details(Ed ed, RoleItem r) {
+    // Show the first two phases; the rest sit behind "the long version".
+    const shortCount = 2;
+    final shown = _long ? r.phases.length : r.phases.length.clamp(0, shortCount);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(r.summary, style: ed.sans(13)),
+        Text(r.summary, style: ed.sans(13.5, color: ed.ink2, h: 1.75)),
+        if (widget.tldr) ...[
+          const SizedBox(height: 12),
+          const TldrChat(),
+        ],
         const SizedBox(height: 16),
-        for (int i = 0; i < r.phases.length; i++)
+        AnimatedSize(
+          duration: const Duration(milliseconds: 520),
+          curve: Ed.easeOut,
+          alignment: Alignment.topCenter,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        for (int i = 0; i < shown; i++)
+          EdReveal(
+            delay: Duration(milliseconds: i < shortCount ? 0 : 70 * (i - shortCount)),
+            rise: 8,
+            blur: 6,
+            child:
           IntrinsicHeight(
             child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               SizedBox(
@@ -453,8 +481,8 @@ class _RoleBlockState extends State<_RoleBlock> {
                 child: Stack(alignment: Alignment.topCenter, children: [
                   Positioned(
                     top: i == 0 ? 6 : 0,
-                    bottom: i == r.phases.length - 1 ? null : 0,
-                    height: i == r.phases.length - 1 ? 6 : null,
+                    bottom: i == shown - 1 ? null : 0,
+                    height: i == shown - 1 ? 6 : null,
                     child: Container(width: 1, color: ed.line2),
                   ),
                   Positioned(
@@ -464,7 +492,7 @@ class _RoleBlockState extends State<_RoleBlock> {
                       height: 7,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: i == r.phases.length - 1 && r.isCurrent ? ed.ink : ed.paper,
+                        color: i == shown - 1 && r.isCurrent ? ed.ink : ed.paper,
                         border: Border.all(color: ed.ink2, width: 1.2),
                       ),
                     ),
@@ -474,7 +502,7 @@ class _RoleBlockState extends State<_RoleBlock> {
               const SizedBox(width: 10),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: i == r.phases.length - 1 ? 0 : 16),
+                  padding: EdgeInsets.only(bottom: i == shown - 1 ? 0 : 16),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(r.phases[i].title, style: ed.sans(12.5, color: ed.ink, w: FontWeight.w600, h: 1.3)),
                     const SizedBox(height: 4),
@@ -483,6 +511,28 @@ class _RoleBlockState extends State<_RoleBlock> {
                 ),
               ),
             ]),
+          ),
+          ),
+          ]),
+        ),
+        if (r.phases.length > shortCount)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, left: 26),
+            child: Hover(
+              onTap: () => setState(() => _long = !_long),
+              semanticLabel: _long ? 'Show less' : 'Show the long version',
+              builder: (_, h) => Row(mainAxisSize: MainAxisSize.min, children: [
+                Text(_long ? 'the short version' : 'the long version',
+                    style: ed.sans(13, color: h ? ed.ink : ed.ink2, w: FontWeight.w500)),
+                const SizedBox(width: 4),
+                AnimatedRotation(
+                  turns: _long ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 450),
+                  curve: Curves.elasticOut,
+                  child: Icon(LucideIcons.chevronDown, size: 14, color: h ? ed.ink : ed.ink3),
+                ),
+              ]),
+            ),
           ),
         if (r.tags.isNotEmpty) ...[
           const SizedBox(height: 14),
@@ -621,7 +671,7 @@ class _EdTechStackState extends State<EdTechStack> {
     return Column(children: [
       ColumnBox(
         padding: EdgeInsets.fromLTRB(edPad(context), 20, edPad(context), 18),
-        child: const ScrollFadeIn(child: _FlutterToolkit()),
+        child: const EdReveal(child: _FlutterToolkit()),
       ),
       if (narrow)
         SingleChildScrollView(
@@ -1613,5 +1663,343 @@ class _EdFooterState extends State<EdFooter> {
         ),
       ),
     ]);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  WORKING badge — two little eyes that blink, and go happy on hover.
+// ════════════════════════════════════════════════════════════════════
+
+class WorkingBadge extends StatefulWidget {
+  const WorkingBadge({super.key});
+  @override
+  State<WorkingBadge> createState() => _WorkingBadgeState();
+}
+
+class _WorkingBadgeState extends State<WorkingBadge> with SingleTickerProviderStateMixin {
+  // A 4.2s loop; the eyes close briefly near the end.
+  late final AnimationController _c =
+      AnimationController(vsync: this, duration: const Duration(milliseconds: 4200));
+  bool _happy = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!edReduceMotion(context) && !_c.isAnimating) _c.repeat();
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ed = Ed.of(context);
+    final green = ed.dark ? ed.live : const Color(0xFF15803D);
+    return MouseRegion(
+      onEnter: (_) => setState(() => _happy = true),
+      onExit: (_) => setState(() => _happy = false),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(6, 2, 8, 2),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(99),
+          color: ed.live.withValues(alpha: 0.08),
+          border: Border.all(color: ed.live.withValues(alpha: 0.3)),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          RepaintBoundary(child: AnimatedBuilder(
+            animation: _c,
+            builder: (_, __) {
+              final t = _c.value;
+              // Blink: squash vertically between 92% and 96% of the loop.
+              final blink = t > 0.92 && t < 0.96 ? 0.15 : 1.0;
+              return CustomPaint(size: const Size(11, 6), painter: _EyesPainter(green, blink, _happy));
+            },
+          )),
+          const SizedBox(width: 5),
+          Text('working', style: ed.mono(9.5, color: green)),
+        ]),
+      ),
+    );
+  }
+}
+
+class _EyesPainter extends CustomPainter {
+  final Color color;
+  final double open;
+  final bool happy;
+  _EyesPainter(this.color, this.open, this.happy);
+
+  @override
+  void paint(Canvas canvas, Size s) {
+    if (happy) {
+      final p = Paint()
+        ..color = color
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
+      canvas.drawPath(Path()..moveTo(1, 4.2)..lineTo(2.5, 2.2)..lineTo(4, 4.2), p);
+      canvas.drawPath(Path()..moveTo(7, 4.2)..lineTo(8.5, 2.2)..lineTo(10, 4.2), p);
+      return;
+    }
+    final p = Paint()..color = color;
+    for (final cx in [2.5, 8.5]) {
+      canvas.drawOval(Rect.fromCenter(center: Offset(cx, 3), width: 3.2, height: 3.2 * open), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_EyesPainter old) => old.open != open || old.happy != happy || old.color != color;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  TL;DR — a chat card that "types" the short version of the current role.
+// ════════════════════════════════════════════════════════════════════
+
+class TldrChat extends StatefulWidget {
+  const TldrChat({super.key});
+  @override
+  State<TldrChat> createState() => _TldrChatState();
+}
+
+class _TldrChatState extends State<TldrChat> {
+  bool _open = false;
+  int _shown = 0;
+  bool _typing = false;
+  Timer? _t;
+
+  void _toggle() {
+    setState(() => _open = !_open);
+    if (_open && _shown == 0) _next();
+  }
+
+  void _next() {
+    const msgs = PortfolioConfig.tldr;
+    if (_shown >= msgs.length) {
+      setState(() => _typing = false);
+      return;
+    }
+    setState(() => _typing = true);
+    _t = Timer(Duration(milliseconds: 450 + msgs[_shown].length * 9), () {
+      if (!mounted) return;
+      setState(() {
+        _shown++;
+        _typing = false;
+      });
+      _t = Timer(const Duration(milliseconds: 260), _next);
+    });
+  }
+
+  @override
+  void dispose() {
+    _t?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ed = Ed.of(context);
+    const msgs = PortfolioConfig.tldr;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Hover(
+        onTap: _toggle,
+        semanticLabel: _open ? 'Hide tl;dr' : 'Show tl;dr',
+        builder: (_, h) => AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+            color: _open || h ? ed.raised : ed.card,
+            borderRadius: BorderRadius.circular(99),
+            border: Border.all(color: _open || h ? ed.line2 : ed.line),
+          ),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Icon(LucideIcons.messageCircle, size: 13, color: h || _open ? ed.ink : ed.ink2),
+            const SizedBox(width: 6),
+            Text('tl;dr', style: ed.mono(11, color: h || _open ? ed.ink : ed.ink2, w: FontWeight.w500)),
+          ]),
+        ),
+      ),
+      ClipRect(
+        child: AnimatedSize(
+          duration: const Duration(milliseconds: 500),
+          curve: Ed.easeOut,
+          alignment: Alignment.topCenter,
+          child: !_open
+              ? const SizedBox(width: double.infinity)
+              : Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(maxWidth: 440),
+                  margin: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                  decoration: BoxDecoration(
+                    color: ed.card,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: ed.line),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: ed.dark ? 0.3 : 0.05),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Row(children: [
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.asset('assets/images/profile.png', fit: BoxFit.cover),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(PortfolioConfig.shortName.toLowerCase(),
+                          style: ed.sans(13, color: ed.ink, w: FontWeight.w600, h: 1.2)),
+                      const SizedBox(width: 6),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Text(_typing ? 'typing…' : 'online',
+                            key: ValueKey(_typing), style: ed.mono(10, color: _typing ? ed.ink3 : ed.live)),
+                      ),
+                    ]),
+                    const SizedBox(height: 10),
+                    Semantics(
+                      liveRegion: true,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        for (int i = 0; i < _shown; i++)
+                          _ChatBubble(msgs[i], key: ValueKey('m$i')),
+                      ]),
+                    ),
+                  ]),
+                ),
+        ),
+      ),
+    ]);
+  }
+}
+
+class _ChatBubble extends StatelessWidget {
+  final String text;
+  const _ChatBubble(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ed = Ed.of(context);
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 520),
+      curve: Curves.elasticOut,
+      builder: (_, v, child) => Opacity(
+        opacity: v.clamp(0.0, 1.0),
+        child: Transform.scale(scale: 0.85 + 0.15 * v, alignment: Alignment.bottomLeft, child: child),
+      ),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+        decoration: BoxDecoration(
+          color: ed.raised,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(14),
+            bottomRight: Radius.circular(14),
+            bottomLeft: Radius.circular(14),
+          ),
+        ),
+        child: Text(text, style: ed.sans(13, color: ed.ink, h: 1.45)),
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  CONTACT LEAD — a warm line, the email set large in serif + copy button.
+// ════════════════════════════════════════════════════════════════════
+
+class EdContactLead extends StatefulWidget {
+  const EdContactLead({super.key});
+  @override
+  State<EdContactLead> createState() => _EdContactLeadState();
+}
+
+class _EdContactLeadState extends State<EdContactLead> {
+  bool _copied = false;
+  Timer? _t;
+
+  Future<void> _copy() async {
+    await Clipboard.setData(const ClipboardData(text: PortfolioConfig.email));
+    if (!mounted) return;
+    setState(() => _copied = true);
+    _t?.cancel();
+    _t = Timer(const Duration(milliseconds: 1600), () {
+      if (mounted) setState(() => _copied = false);
+    });
+  }
+
+  @override
+  void dispose() {
+    _t?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ed = Ed.of(context);
+    final narrow = MediaQuery.sizeOf(context).width < 600;
+    return ColumnBox(
+      padding: EdgeInsets.fromLTRB(edPad(context), narrow ? 26 : 34, edPad(context), narrow ? 22 : 28),
+      child: EdReveal(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'i\'m always up for a conversation, about work, ideas, or something completely unrelated.',
+            style: ed.sans(narrow ? 14 : 15, color: ed.ink2, h: 1.65),
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              Hover(
+                onTap: () => openUrl('mailto:${PortfolioConfig.email}'),
+                semanticLabel: 'Email ${PortfolioConfig.email}',
+                builder: (_, h) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: h ? ed.ink : ed.line2)),
+                  ),
+                  child: Text(PortfolioConfig.email,
+                      style: ed.serif(narrow ? 24 : 32, color: ed.ink).copyWith(height: 1.25)),
+                ),
+              ),
+              Hover(
+                onTap: _copy,
+                semanticLabel: _copied ? 'Copied' : 'Copy email address',
+                builder: (_, h) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: h ? ed.raised : Colors.transparent,
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(color: h ? ed.line2 : ed.line),
+                  ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 380),
+                    switchInCurve: Curves.elasticOut,
+                    transitionBuilder: (c, a) => ScaleTransition(scale: a, child: FadeTransition(opacity: a, child: c)),
+                    child: _copied
+                        ? Icon(LucideIcons.check, key: const ValueKey('ok'), size: 15, color: ed.live)
+                        : Icon(LucideIcons.copy, key: const ValueKey('cp'), size: 15, color: h ? ed.ink : ed.ink3),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ]),
+      ),
+    );
   }
 }

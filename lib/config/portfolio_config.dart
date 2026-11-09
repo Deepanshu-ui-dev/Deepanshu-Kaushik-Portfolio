@@ -57,6 +57,33 @@ class PortfolioConfig {
     '350+ algorithmic problems solved on LeetCode; active GDG Co-Organizer passionate about high-craft engineering.',
   ];
 
+  /// Hero "before you hire me" tray — question chip → answer shown in the
+  /// avatar's speech bubble. Rewrite these in your own voice.
+  static const List<(String, String)> askMe = [
+    ('what do you do?',
+        'frontend engineer at BarterNow by day, Flutter apps and full-stack side projects the rest of the time.'),
+    ('what are you best at?',
+        'turning a design into an interface that feels right: Flutter, custom painters, small animations, clean state.'),
+    ('are you open to work?',
+        'yes. full-time roles and freelance. my email is just below, it copies on click.'),
+    ('still studying?',
+        'yep, B.Tech in Data Science at ABESEC, graduating 2027.'),
+    ('what else do you do?',
+        'co-organise GDG events, grind LeetCode (350+), take photos, and keep Satie playing in the background.'),
+  ];
+
+  /// What the avatar says when someone pokes it.
+  static const List<String> pokeLines = ['hey!', 'that tickles.', 'hi there 👋', 'ask me something below.'];
+
+  /// Short "tl;dr" chat messages for the current role, shown in the
+  /// Experience section's chat bubble.
+  static const List<String> tldr = [
+    'hey 👋',
+    'i build the React frontend for BarterNow, a two-sided sponsorship marketplace.',
+    'mostly reusable components, API wiring, and turning Figma into production UI.',
+    'on the side: Flutter apps, full-stack platforms, and a multi-agent AI pipeline.',
+  ];
+
   /// Public-domain recording bundled in assets/audio (Musopen via Wikimedia Commons).
   static const NowPlaying nowPlaying = NowPlaying(
     title: 'Gymnopédie No. 1 ( 1888 )',
